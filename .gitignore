@@ -1,0 +1,36 @@
+# Compiled Java files
+*.class
+
+# Logs
+*.log
+
+# Package files
+*.jar
+*.war
+*.ear
+
+# JVM crash logs
+hs_err_pid*
+
+# Build directories
+bin/
+out/
+target/
+build/
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+
+# MacOS
+.DS_Store
+
+# Temporary files
+*.tmp
+*.swp
+
+# IntelliJ / Eclipse leftovers
+.idea/
+.project
+.classpath
+.settings/
