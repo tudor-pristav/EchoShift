@@ -7,23 +7,18 @@ import javafx.stage.Stage;
 
 public class App extends Application {
 
-  /*   @Override
+      @Override
     public void start(Stage stage) {
+        MainMenuView mainMenuView = new MainMenuView();
 
-        Button button = new Button("Click me");
+        Scene scene = new Scene(mainMenuView.createMainMenu(), 1000, 700);
 
-        button.setOnAction(e -> {
-            button.setText("JavaFX works!");
-        });
-
-        Scene scene = new Scene(button, 300, 200);
-
-        stage.setTitle("JavaFX Test");
+        stage.setTitle("Echo Shift");
         stage.setScene(scene);
         stage.show();
     }
-*/
+
     public static void main(String[] args) {
-        //launch();
+        launch();
     }
 }
