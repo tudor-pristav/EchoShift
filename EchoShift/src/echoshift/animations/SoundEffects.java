@@ -1,7 +1,7 @@
 package echoshift.animations;
 
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.AudioClip;
+
 
 import java.net.URL;
 
@@ -11,19 +11,23 @@ import java.net.URL;
 public class SoundEffects {
 
     private static final String CLICK_SOUND_PATH = "/echoshift/sounds/click_004.mp3";
+    private static final AudioClip CLICK_SOUND;
+
+    static {
+        URL soundUrl = SoundEffects.class.getResource(CLICK_SOUND_PATH);
+
+        if (soundUrl == null) {
+            throw new IllegalStateException("Sound not found: " + CLICK_SOUND_PATH);
+        }
+
+        CLICK_SOUND = new AudioClip(soundUrl.toExternalForm());
+        CLICK_SOUND.setVolume(0.7);
+    }
 
     /**
      * Plays the button click sound once.
      */
     public static void playClickSound() {
-        URL soundUrl = SoundEffects.class.getResource(CLICK_SOUND_PATH);
-
-        Media media = new Media(soundUrl.toExternalForm());
-        MediaPlayer mediaPlayer = new MediaPlayer(media);
-
-        mediaPlayer.setVolume(1);
-
-        mediaPlayer.setOnEndOfMedia(mediaPlayer::dispose);
-        mediaPlayer.play();
+        CLICK_SOUND.play();
     }
 }
