@@ -9,7 +9,8 @@ public class ButtonEffects {
 
     }
     public static void clickAnimation(Button button){
-        button.setOnMousePressed(e -> button.setTranslateY(0));
+        button.setOnMousePressed(e -> {SoundEffects.playClickSound();button.setTranslateY(0); });
         button.setOnMouseReleased(e -> button.setTranslateY(-5));
+
     }
 }
