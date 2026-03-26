@@ -7,9 +7,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.image.Image;
+import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import echoshift.animations.ButtonEffects;
 /**
@@ -29,8 +28,8 @@ public class PlayerLoginView {
     public PlayerLoginView() {
         this.usernameField = createUsernameField();
         this.passwordField = createPasswordField();
-        this.loginButton = createButton("Login", 140, 42);
-        this.menuButton = createButton("Menu", 110, 42);
+        this.loginButton = createButton("Login", 170, 42);
+        this.menuButton = createButton("Menu", 140, 42);
     }
 
     /**
@@ -46,10 +45,10 @@ public class PlayerLoginView {
                 getClass().getResource("/echoshift/styles/buttonStyle.css").toExternalForm()
         );
 
-        Label pageTitle = createFieldLabel("Player Login", 25);
+        Label pageTitle = createFieldLabel("Player Login", 35);
         VBox loginCard = createLoginCard();
 
-        VBox centerContent = new VBox(5, pageTitle, loginCard);
+        VBox centerContent = new VBox(20, pageTitle, loginCard);
         centerContent.setAlignment(Pos.CENTER);
 
         StackPane centerWrapper = new StackPane(centerContent);
@@ -72,7 +71,15 @@ public class PlayerLoginView {
      */
     private BorderPane createRootLayout() {
         BorderPane root = new BorderPane();
-        root.setStyle("-fx-background-color: #9b9b9b;");
+        BackgroundImage bg = new BackgroundImage(
+                new Image(getClass().getResource("/echoshift/images/bg2.png").toExternalForm()),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100, 100, true, true, false, true)
+        );
+
+        root.setBackground(new Background(bg));
         return root;
     }
     /**
@@ -94,16 +101,17 @@ public class PlayerLoginView {
         //custom spacing setting and grouping of the fields
         VBox usernameGroup = new VBox(6, usernameText, usernameField);
         VBox passwordGroup = new VBox(6, passwordText, passwordField);
-        VBox loginButtonSpacing = new VBox(100, passwordGroup, buttonWrapper);
+        VBox loginButtonSpacing = new VBox(130, passwordGroup, buttonWrapper);
+
         //Main container on page, vertical list
-        VBox card = new VBox(32,
+        VBox card = new VBox(40,
                 usernameGroup,
                 loginButtonSpacing
         );
 
         card.setAlignment(Pos.CENTER);
-        card.setPadding(new Insets(18));
-        card.setMaxWidth(320);
+        card.setPadding(new Insets(300));
+        card.setMaxWidth(400);
         card.getStyleClass().add("container");
         return card;
     }
