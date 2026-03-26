@@ -46,10 +46,10 @@ public class PlayerLoginView {
                 getClass().getResource("/echoshift/styles/buttonStyle.css").toExternalForm()
         );
 
-        Label pageTitle = createPageTitle("Player Login");
+        Label pageTitle = createFieldLabel("Player Login", 25);
         VBox loginCard = createLoginCard();
 
-        VBox centerContent = new VBox(18, pageTitle, loginCard);
+        VBox centerContent = new VBox(5, pageTitle, loginCard);
         centerContent.setAlignment(Pos.CENTER);
 
         StackPane centerWrapper = new StackPane(centerContent);
@@ -75,20 +75,6 @@ public class PlayerLoginView {
         root.setStyle("-fx-background-color: #9b9b9b;");
         return root;
     }
-
-    /**
-     * Creates the title shown above the login form.
-     *
-     * @param text the title text
-     * @return the title label
-     */
-    private Label createPageTitle(String text) {
-        Label title = new Label(text);
-        title.setFont(Font.font("Verdana", 26));
-        title.setStyle("-fx-text-fill: black;");
-        return title;
-    }
-
     /**
      * Creates the centered login card containing labels, fields, and button.
      *
@@ -97,24 +83,25 @@ public class PlayerLoginView {
     private VBox createLoginCard() {
 
         //"Username" Label
-        Label usernameText = createFieldLabel("Username");
+        Label usernameText = createFieldLabel("Username", 15);
         //"Password" Label
-        Label passwordText = createFieldLabel("Password");
+        Label passwordText = createFieldLabel("Password",15);
 
-
+        //login button alignment
         VBox buttonWrapper = new VBox(loginButton);
         buttonWrapper.setAlignment(Pos.CENTER);
 
+        //custom spacing setting and grouping of the fields
+        VBox usernameGroup = new VBox(6, usernameText, usernameField);
+        VBox passwordGroup = new VBox(6, passwordText, passwordField);
+        VBox loginButtonSpacing = new VBox(100, passwordGroup, buttonWrapper);
         //Main container on page, vertical list
         VBox card = new VBox(32,
-                usernameText,
-                usernameField,
-                passwordText,
-                passwordField,
-                buttonWrapper
+                usernameGroup,
+                loginButtonSpacing
         );
 
-        card.setAlignment(Pos.CENTER_LEFT);
+        card.setAlignment(Pos.CENTER);
         card.setPadding(new Insets(18));
         card.setMaxWidth(320);
         card.getStyleClass().add("container");
@@ -127,9 +114,9 @@ public class PlayerLoginView {
      * @param text the label text
      * @return the field label
      */
-    private Label createFieldLabel(String text) {
+    private Label createFieldLabel(String text, float size) {
         Label label = new Label(text);
-        label.setFont(Font.font("Verdana", 18));
+        label.setFont(Font.font("Verdana", size));
         label.setStyle("-fx-text-fill: black;");
         return label;
     }
@@ -143,7 +130,7 @@ public class PlayerLoginView {
         TextField field = new TextField();
         field.setPromptText("Username");
         field.setPrefSize(140, 34);
-        field.setFont(Font.font("Arial", 14));
+        field.setFont(Font.font("Verdana", 14));
         return field;
     }
 
@@ -156,7 +143,7 @@ public class PlayerLoginView {
         PasswordField field = new PasswordField();
         field.setPromptText("Password");
         field.setPrefSize(140, 34);
-        field.setFont(Font.font("Arial", 14));
+        field.setFont(Font.font("Verdana", 14));
         return field;
     }
 
@@ -171,7 +158,7 @@ public class PlayerLoginView {
     private Button createButton(String text, double width, double height) {
         Button button = new Button(text);
         button.setPrefSize(width, height);
-        button.setFont(Font.font("Arial", 16));
+        button.setFont(Font.font("Verdana", 16));
 
         //linking the style
         button.getStyleClass().add("button");
