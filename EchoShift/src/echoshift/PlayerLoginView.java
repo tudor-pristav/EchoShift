@@ -61,6 +61,7 @@ public class PlayerLoginView {
         bottomBar.setLeft(menuButton);
 
         root.setBottom(bottomBar);
+        //test
 
         return root;
     }
