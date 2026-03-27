@@ -1,0 +1,10 @@
+{
+  "accounts": [
+    {
+      "id": "player-1001",
+      "username": "tudor",
+      "password": "1234",
+      "role": "player"
+    }
+  ]
+}
