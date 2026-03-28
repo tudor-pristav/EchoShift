@@ -1,4 +1,4 @@
-package echoshift;
+package src.echoshift;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
@@ -10,7 +10,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import echoshift.animations.ButtonEffects;
+import src.echoshift.animations.ButtonEffects;
 /**
  * Builds the Player Login screen for Echo Shift.
  * This class is responsible only for creating the layout and UI elements.

@@ -1,4 +1,4 @@
-package echoshift.animations;
+package src.echoshift.animations;
 import javafx.scene.control.Button;
 
 public class ButtonEffects {

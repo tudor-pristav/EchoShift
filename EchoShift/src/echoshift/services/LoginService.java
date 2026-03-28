@@ -1,4 +1,4 @@
-package echoshift.services;
+package src.echoshift.services;
 
 import com.google.gson.*;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import echoshift.models.UserAccount;
+import src.echoshift.models.UserAccount;
 
 /**
  * Service responsible for handling user authentication.
@@ -86,11 +86,10 @@ public class LoginService {
             for (JsonElement acc : accArr) {
                 accounts.add(new Gson().fromJson(acc, UserAccount.class));
             }
+            return accounts;
 
         } catch (IOException e) {
             throw new RuntimeException("Failed to load accounts from file", e);
         }
-
-        return accounts;
     }
 }
