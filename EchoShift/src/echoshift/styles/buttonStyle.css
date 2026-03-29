@@ -1,0 +1,28 @@
+.button {
+    -fx-background-color: #efeddc;
+    -fx-background-radius: 8;
+    -fx-padding: 8 16 8 16;
+
+    -fx-text-fill: black;
+    -fx-font-size: 17px;
+    -fx-font-weight: bold;
+
+    -fx-border-color: black;
+    -fx-border-width: 2;
+    -fx-border-radius: 8;
+
+    -fx-background-insets: 0;
+    -fx-cursor: hand;
+}
+
+.container{
+    -fx-background-color: #efeddc;
+    -fx-background-radius: 8;
+    -fx-padding: 8 16 8 16;
+
+    -fx-border-color: black;
+    -fx-border-width: 1;
+    -fx-border-radius: 8;
+
+    -fx-background-insets: 0;
+}
