@@ -86,11 +86,10 @@ public class LoginService {
             for (JsonElement acc : accArr) {
                 accounts.add(new Gson().fromJson(acc, UserAccount.class));
             }
+            return accounts;
 
         } catch (IOException e) {
             throw new RuntimeException("Failed to load accounts from file", e);
         }
-
-        return accounts;
     }
 }
