@@ -1,6 +1,6 @@
-package src.echoshift.services;
+package echoshift.services;
 import com.google.gson.*;
-import src.echoshift.models.UserStatistics;
+import echoshift.models.UserStatistics;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -29,7 +29,6 @@ public class UserDataRetrievalService {
 
             JsonObject obj = JsonParser.parseString(json).getAsJsonObject();
 
-            // THIS is correct (object, not array)
             JsonObject statObj = obj.getAsJsonObject("statistics");
 
             return new Gson().fromJson(statObj, UserStatistics.class);

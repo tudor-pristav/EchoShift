@@ -1,4 +1,4 @@
-package src.echoshift.services;
+package echoshift.services;
 
 import com.google.gson.*;
 import java.io.IOException;
@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import src.echoshift.models.UserAccount;
+import echoshift.models.UserAccount;
 
 /**
  * Service responsible for handling user authentication.

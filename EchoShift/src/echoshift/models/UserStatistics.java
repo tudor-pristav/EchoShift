@@ -1,4 +1,4 @@
-package src.echoshift.models;
+package echoshift.models;
 
 /**
  * Represents all gameplay statistics and currency for a player.
@@ -24,7 +24,7 @@ public class UserStatistics {
     private int wordsTyped;
 
     // --- Currency ---
-    private int coins;
+    private String coins;
 
     // --- Constructor (default values = 0) ---
     public UserStatistics() {
@@ -36,7 +36,7 @@ public class UserStatistics {
         this.highScore = 0;
         this.highestLevel = 1;
         this.wordsTyped = 0;
-        this.coins = 0;
+        this.coins = "0";
     }
 
     // --- Getters ---
@@ -72,7 +72,7 @@ public class UserStatistics {
         return wordsTyped;
     }
 
-    public int getCoins() {
+    public String getCoins() {
         return coins;
     }
 }

@@ -1,4 +1,4 @@
-package src.echoshift.models;
+package echoshift.models;
 
 public class UserAccount {
     private String id;

@@ -5,6 +5,18 @@
       "username": "tudor",
       "password": "1234",
       "role": "player"
+    },
+    {
+      "id": "player-1002",
+      "username": "hugo",
+      "password": "6969",
+      "role": "player"
+    },
+    {
+      "id": "player-1002",
+      "username": "michael",
+      "password": "password",
+      "role": "player"
     }
   ]
 }
