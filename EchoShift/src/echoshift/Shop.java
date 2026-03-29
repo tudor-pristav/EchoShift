@@ -17,7 +17,7 @@ public class Shop {
 
     private static final String FONT = "Arial";
 
-    // Toast components (kept as fields so we can reuse them)
+    // Toast notification stuff
     private Label toastLabel;
     private StackPane toastContainer;
 
@@ -30,11 +30,13 @@ public class Shop {
                 -fx-background-position: center;
                 """);
 
-        // ==================== TOP BAR ====================
+        // Top bar components
+        // Title label
         Label title = new Label("Shop");
         title.setFont(Font.font(FONT, 36));
         title.setStyle("-fx-text-fill: black;");
 
+        // Coin
         Label coinLabel = new Label("$XXXX");
         coinLabel.setFont(Font.font(FONT, 20));
         coinLabel.setStyle("""
@@ -43,18 +45,20 @@ public class Shop {
                 -fx-padding: 8 20;
                \s""");
 
+        // Top bar assemble
         HBox topBar = new HBox(20, title, coinLabel);
         topBar.setAlignment(Pos.CENTER_LEFT);
         topBar.setPadding(new Insets(15, 30, 15, 30));
         topBar.setStyle("-fx-background-color: #1f1e3350;");
 
-        // ==================== CENTER - SHOP ITEMS ====================
+        // Shop item grid pane
         GridPane itemsGrid = new GridPane();
         itemsGrid.setHgap(15);
         itemsGrid.setVgap(15);
         itemsGrid.setPadding(new Insets(30));
         itemsGrid.setAlignment(Pos.TOP_CENTER);
 
+        // Adding shop items
         for (int i = 0; i < 8; i++) {
             String itemName = "Item " + (i + 1);
             VBox itemBox = createShopItem(itemName, "Description\nLevel required: 3");
@@ -72,12 +76,14 @@ public class Shop {
             itemsGrid.add(itemBox, i % 4, i / 4);
         }
 
+        // Make item grid scrollable
         ScrollPane scrollPane = new ScrollPane(itemsGrid);
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
         scrollPane.setStyle("-fx-background-color: transparent; -fx-background-insets: 0;");
         scrollPane.getStyleClass().add("shop-scroll-pane");
 
+        // For scroll pane transparency
         Platform.runLater(() -> {
             var viewport = scrollPane.lookup(".viewport");
             if (viewport != null) {
@@ -85,7 +91,8 @@ public class Shop {
             }
         });
 
-        // ==================== BOTTOM BAR ====================
+        // Bottom Bar componenets
+        // Back button
         Button backButton = createButton("Back");
         backButton.setOnAction(e -> System.out.println("Back clicked"));
 
@@ -93,6 +100,7 @@ public class Shop {
         bottomBar.setAlignment(Pos.CENTER_LEFT);
         bottomBar.setPadding(new Insets(15, 30, 15, 30));
 
+        // Timer
         Label timerLabel = new Label("2:43");
         timerLabel.setFont(Font.font(FONT, 18));
         timerLabel.setStyle("-fx-text-fill: black;");
@@ -101,12 +109,14 @@ public class Shop {
         timerPane.setPadding(new Insets(0, 30, 0, 0));
         timerPane.setAlignment(Pos.CENTER_RIGHT);
 
+        // Bottom bar assemble
         BorderPane bottomContainer = new BorderPane();
         bottomContainer.setLeft(bottomBar);
         bottomContainer.setRight(timerPane);
         bottomContainer.setStyle("-fx-background-color: #1f1e3350;");
 
-        // ==================== TOAST (Permanent) ====================
+        // Toast notification
+        // Starts fully transparent, becomes opaque when activated
         toastLabel = new Label();
         toastLabel.setFont(Font.font(FONT, 16));
         toastLabel.setStyle("""
@@ -127,7 +137,7 @@ public class Shop {
         // Main container: BorderPane + Toast on top
         StackPane mainContainer = new StackPane(root, toastContainer);
 
-        // Assemble the BorderPane content
+        // Assemble root
         root.setTop(topBar);
         root.setCenter(scrollPane);
         root.setBottom(bottomContainer);
@@ -135,6 +145,7 @@ public class Shop {
         return mainContainer;
     }
 
+    // Shop item creation helper
     private VBox createShopItem(String itemName, String description) {
         VBox itemBox = new VBox(8);
         itemBox.setAlignment(Pos.CENTER);
@@ -170,6 +181,7 @@ public class Shop {
         return itemBox;
     }
 
+    // Button creation helper
     private Button createButton(String text) {
         Button btn = new Button(text);
         btn.setFont(Font.font(FONT, 18));
@@ -185,7 +197,7 @@ public class Shop {
         return btn;
     }
 
-    // ==================== SHOW TOAST ====================
+    // Activating toast for 2.5 seconds
     private void showPurchaseToast(String itemName) {
         if (toastLabel == null || toastContainer == null) return;
 

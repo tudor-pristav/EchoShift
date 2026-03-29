@@ -21,7 +21,7 @@ public class CustomLevelModifier {
                 -fx-background-position: center;
                 """);
 
-        // ==================== TOP TITLE ====================
+        // Top Bar
         Label confirmationTitle = new Label("Are you sure, player_name?");
         confirmationTitle.setFont(Font.font(FONT, 28));
         confirmationTitle.setStyle("-fx-text-fill: white;");
@@ -29,8 +29,12 @@ public class CustomLevelModifier {
         HBox titleBar = new HBox(confirmationTitle);
         titleBar.setAlignment(Pos.CENTER_LEFT);
         titleBar.setPadding(new Insets(25, 40, 15, 40));
+        titleBar.setStyle("""
+                -fx-background-color: #1f1e3388;\s
+                -fx-padding: 25;\s
+                """);
 
-        // ==================== MAIN CONTENT PANEL ====================
+        // Center Panel
         VBox mainPanel = new VBox(20);
         mainPanel.setStyle("""
                 -fx-background-color: #1f1e3388;
@@ -68,7 +72,7 @@ public class CustomLevelModifier {
         VBox settingsBox = new VBox(18);
         settingsBox.setAlignment(Pos.TOP_LEFT);
 
-        Label settingsTitle = new Label("Modifiable setting 1");
+        Label settingsTitle = new Label("Settings");
         settingsTitle.setFont(Font.font(FONT, 18));
         settingsTitle.setStyle("-fx-text-fill: white;");
 
@@ -82,7 +86,7 @@ public class CustomLevelModifier {
 
         mainPanel.getChildren().add(contentHBox);
 
-        // ==================== BOTTOM BUTTONS ====================
+        // Nav buttons
         Button backButton = createBottomButton("Back");
         Button playButton = createBottomButton("Play");
 
@@ -90,7 +94,7 @@ public class CustomLevelModifier {
         buttonBox.setAlignment(Pos.CENTER);
         buttonBox.setPadding(new Insets(20, 0, 10, 0));
 
-        // ==================== BOTTOM TIMER BAR ====================
+        // Bottom bar
         Label timerLabel = new Label("2:43");
         timerLabel.setFont(Font.font(FONT, 22));
         timerLabel.setStyle("-fx-text-fill: white;");
@@ -101,7 +105,7 @@ public class CustomLevelModifier {
         bottomBar.setRight(timerLabel);
         BorderPane.setAlignment(timerLabel, Pos.CENTER_RIGHT);
 
-        // ==================== ASSEMBLE ====================
+        // Assembling
         VBox centerArea = new VBox(20, mainPanel, buttonBox);
         centerArea.setAlignment(Pos.CENTER);
 
@@ -112,7 +116,7 @@ public class CustomLevelModifier {
         return root;
     }
 
-    // Updated button style - light gray background with black text
+    // Button creation helper
     private Button createBottomButton(String text) {
         Button btn = new Button(text);
         btn.setFont(Font.font(FONT, 18));
@@ -128,14 +132,18 @@ public class CustomLevelModifier {
         return btn;
     }
 
+    // Setting row creation helper
     private HBox createSettingRow(String labelText, String buttonText) {
+        // New HBox
         HBox row = new HBox(30);
         row.setAlignment(Pos.CENTER_LEFT);
 
+        // Setting label
         Label label = new Label(labelText);
         label.setFont(Font.font(FONT, 17));
         label.setStyle("-fx-text-fill: white;");
 
+        // Setting button
         Button btn = new Button(buttonText);
         btn.setFont(Font.font(FONT, 16));
         btn.setStyle("""
@@ -149,6 +157,7 @@ public class CustomLevelModifier {
                 """);
         btn.setPrefWidth(140);
 
+        // Assemble
         row.getChildren().addAll(label, btn);
         return row;
     }
