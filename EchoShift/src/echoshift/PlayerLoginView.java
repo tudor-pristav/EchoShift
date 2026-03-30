@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import echoshift.animations.ButtonEffects;
+
 /**
  * Builds the Player Login screen for Echo Shift.
  * This class is responsible only for creating the layout and UI elements.
@@ -65,6 +66,7 @@ public class PlayerLoginView {
 
         return root;
     }
+
     /**
      * Creates the main root layout for the page.
      *
@@ -83,6 +85,7 @@ public class PlayerLoginView {
         root.setBackground(new Background(bg));
         return root;
     }
+
     /**
      * Creates the centered login card containing labels, fields, and button.
      *
@@ -93,7 +96,7 @@ public class PlayerLoginView {
         //"Username" Label
         Label usernameText = createFieldLabel("Username", 15);
         //"Password" Label
-        Label passwordText = createFieldLabel("Password",15);
+        Label passwordText = createFieldLabel("Password", 15);
 
         //login button alignment
         VBox buttonWrapper = new VBox(loginButton);
@@ -159,8 +162,8 @@ public class PlayerLoginView {
     /**
      * Creates a primary action button, used here for Login.
      *
-     * @param text button text
-     * @param width preferred width
+     * @param text   button text
+     * @param width  preferred width
      * @param height preferred height
      * @return the styled button
      */

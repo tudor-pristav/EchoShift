@@ -1,4 +1,5 @@
 package echoshift.animations;
+
 import javafx.scene.control.Button;
 
 public class ButtonEffects {
@@ -8,8 +9,12 @@ public class ButtonEffects {
         button.setOnMouseExited(e -> button.setTranslateY(-3));
 
     }
-    public static void clickAnimation(Button button){
-        button.setOnMousePressed(e -> {SoundEffects.playClickSound();button.setTranslateY(0); });
+
+    public static void clickAnimation(Button button) {
+        button.setOnMousePressed(e -> {
+            SoundEffects.playClickSound();
+            button.setTranslateY(0);
+        });
         button.setOnMouseReleased(e -> button.setTranslateY(-5));
 
     }

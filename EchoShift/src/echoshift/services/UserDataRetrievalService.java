@@ -1,4 +1,5 @@
 package echoshift.services;
+
 import com.google.gson.*;
 import echoshift.models.UserStatistics;
 

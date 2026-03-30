@@ -1,11 +1,13 @@
 package echoshift.services;
 
 import com.google.gson.*;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+
 import echoshift.models.UserAccount;
 
 /**
@@ -36,7 +38,7 @@ public class LoginService {
      * @param username the username entered by the user
      * @param password the password entered by the user
      * @return the matching {@link UserAccount} if authentication is successful;
-     *         {@code null} if the username is not found or the password is incorrect
+     * {@code null} if the username is not found or the password is incorrect
      */
     public UserAccount login(String username, String password) {
 

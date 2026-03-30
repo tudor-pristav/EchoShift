@@ -9,7 +9,6 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
 public class MainMenuView {
-
     public Parent createMainMenu() {
         BorderPane root = new BorderPane();
         root.setStyle("-fx-background-color: #d9d9d9;");

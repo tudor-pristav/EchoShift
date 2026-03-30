@@ -5,21 +5,24 @@ import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
-public class CustomLevelModifier {
+public class CustomLevelModifierView {
 
     private static final String FONT = "Arial";
 
     public Parent createModifier() {
         BorderPane root = new BorderPane();
-        root.setStyle("""
-                -fx-background-image: url('assets/bg2.png');
-                -fx-background-size: cover;
-                -fx-background-repeat: no-repeat;
-                -fx-background-position: center;
-                """);
+        BackgroundImage bg = new BackgroundImage(
+                new Image(getClass().getResource("/echoshift/images/bg2.png").toExternalForm()),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100, 100, true, true, false, true)
+        );
+        root.setBackground(new Background(bg));
 
         // Top Bar
         Label confirmationTitle = new Label("Are you sure, player_name?");

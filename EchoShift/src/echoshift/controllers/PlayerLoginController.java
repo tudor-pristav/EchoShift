@@ -32,6 +32,7 @@ public class PlayerLoginController {
         view.getLoginButton().setOnAction(e -> handleLogin());
         view.getMenuButton().setOnAction(e -> goToMenu());
     }
+
     private void handleLogin() {
 
         String username = view.getUsernameField().getText().trim();
@@ -65,7 +66,7 @@ public class PlayerLoginController {
         PlayerHomeView homeView = new PlayerHomeView(session);
 
         // attach controller
-       // new PlayerHomeController(stage, homeView, session);
+        // new PlayerHomeController(stage, homeView, session);
 
         // switch scene
         stage.setScene(new Scene(homeView.createPlayerHomePage(), 1280, 720));
