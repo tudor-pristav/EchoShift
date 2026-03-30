@@ -23,11 +23,11 @@ public class ConfirmLevelView {
     /**
      * Creates the Confirm Level page UI.
      *
-     * @param playerName      the name of the player
-     * @param levelTitle      the title of the level
-     * @param levelDescription the description of the level
-     * @param levelImage      the image representing the level cover
-     * @return the root node containing the Confirm Level UI
+     * @param playerName the name of the player.
+     * @param levelTitle the title of the level.
+     * @param levelDescription the description of the level.
+     * @param levelImage the image representing the level cover.
+     * @return the root node containing the Confirm Level UI.
      */
     public Parent createConfirmLevelPage(String playerName, String levelTitle, String levelDescription, Image levelImage) {
         BorderPane root = new BorderPane();
@@ -131,10 +131,10 @@ public class ConfirmLevelView {
     /**
      * Creates a generic menu button with specified size.
      *
-     * @param text   the button text
-     * @param width  preferred width
-     * @param height preferred height
-     * @return the styled menu button
+     * @param text the text that is displayed.
+     * @param width the preferred width.
+     * @param height the preferred height.
+     * @return the styled menu button.
      */
     private Button createMenuButton(String text, double width, double height) {
         Button button = new Button(text);

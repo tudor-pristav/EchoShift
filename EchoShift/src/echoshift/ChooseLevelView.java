@@ -11,8 +11,8 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Represents the Choose Level screen where players can select available levels.
- * Locked levels are shown with reduced opacity and disabled.
+ * A display of levels where the user may select from.
+ * Locked levels are shown with reduced opacity and unclickable.
  *
  * @author Matthew Taylor
  */
@@ -21,8 +21,8 @@ public class ChooseLevelView {
     /**
      * Creates the Choose Level page UI.
      *
-     * @param playerName the name of the player to display in the title
-     * @return the root node containing the Choose Level UI
+     * @param playerName the name of the player.
+     * @return the root node containing the Choose Level UI.
      */
     public Parent createChooseLevelPage(String playerName) {
         BorderPane root = new BorderPane();
@@ -87,9 +87,9 @@ public class ChooseLevelView {
     /**
      * Creates a button representing a level.
      *
-     * @param text   the text to display on the button
-     * @param locked true if the level is locked and should be disabled and dimmed
-     * @return the styled level button
+     * @param text the text to display on the button.
+     * @param locked true if the level is locked and should be disabled and dimmed.
+     * @return the styled level button.
      */
     private Button createLevelButton(String text, boolean locked) {
         Button button = new Button(text);
