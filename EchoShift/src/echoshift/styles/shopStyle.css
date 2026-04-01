@@ -1,0 +1,86 @@
+.shop-root {
+    -fx-background-color: transparent;
+}
+
+.top-bar {
+    -fx-background-color: #1f1e3350;
+}
+
+.shop-title {
+    -fx-text-fill: black;
+}
+
+.coin-label {
+    -fx-text-fill: black;
+    -fx-background-color: #d6d6d6;
+    -fx-padding: 8 20;
+}
+
+.shop-item {
+    -fx-background-color: #d6d6d6;
+    -fx-padding: 10;
+    -fx-cursor: hand;
+}
+
+.shop-item-image {
+    -fx-background-color: #1f1e33aa;
+    -fx-border-color: #555;
+    -fx-border-width: 2;
+    -fx-background-radius: 6;
+}
+
+.image-placeholder {
+    -fx-text-fill: black;
+}
+
+.shop-item-name {
+    -fx-text-fill: black;
+}
+
+.shop-item-desc {
+    -fx-text-fill: #666;
+}
+
+.shop-button {
+    -fx-background-color: #d6d6d6;
+    -fx-text-fill: black;
+    -fx-padding: 10 25;
+    -fx-border-color: #555;
+    -fx-border-width: 2;
+    -fx-cursor: hand;
+}
+
+.bottom-bar {
+    -fx-background-color: #1f1e3350;
+}
+
+.timer-label {
+    -fx-text-fill: black;
+}
+
+/* Toast styles */
+.toast-container {
+    /* positioning handled in Java */
+}
+
+.toast-label {
+    -fx-padding: 14 40;
+    -fx-background-radius: 50;
+    -fx-font-weight: bold;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 3, 3);
+}
+
+.toast-success {
+    -fx-background-color: #4ade80;
+    -fx-text-fill: #1f1e33;
+}
+
+.toast-error {
+    -fx-background-color: #ef4444;
+    -fx-text-fill: white;
+}
+
+.shop-scroll-pane {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+}

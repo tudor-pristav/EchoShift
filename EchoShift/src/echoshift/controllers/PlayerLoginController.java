@@ -1,6 +1,6 @@
 package echoshift.controllers;
 
-import echoshift.PlayerLoginView;
+import echoshift.UI.PlayerLoginView;
 import echoshift.models.Session;
 import echoshift.models.UserAccount;
 import echoshift.models.UserStatistics;
@@ -9,7 +9,7 @@ import echoshift.services.UserDataRetrievalService;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
-import echoshift.PlayerHomeView;
+import echoshift.UI.PlayerHomeView;
 
 public class PlayerLoginController {
     private final Stage stage;

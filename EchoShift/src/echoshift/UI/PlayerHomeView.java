@@ -1,4 +1,4 @@
-package echoshift;
+package echoshift.UI;
 
 import echoshift.animations.ButtonEffects;
 import javafx.geometry.Insets;

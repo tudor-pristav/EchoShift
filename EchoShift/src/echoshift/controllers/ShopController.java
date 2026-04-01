@@ -1,7 +1,7 @@
 package echoshift.controllers;
 
-import echoshift.PlayerHomeView;
-import echoshift.ShopView;
+import echoshift.UI.PlayerHomeView;
+import echoshift.UI.ShopView;
 import echoshift.models.Session;
 import echoshift.models.UserAccount;
 import echoshift.services.ShopService;

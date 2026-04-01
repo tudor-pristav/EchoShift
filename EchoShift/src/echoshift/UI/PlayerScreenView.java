@@ -1,5 +1,6 @@
-package echoshift;
+package echoshift.UI;
 
+import echoshift.App;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -7,8 +8,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-
-import javax.swing.*;
 
 /**
  * This class creates the main player screen for the Echo Shift game.
