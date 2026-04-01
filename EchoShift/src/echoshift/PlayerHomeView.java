@@ -42,7 +42,7 @@ public class PlayerHomeView {
         this.session = session;
 
         String username = session.getCurrentUser().getUsername();
-        String coins = session.getCurrentStatistics().getCoins();
+        int coins = session.getCurrentStatistics().getCoins();
 
         this.welcomeLabel = createLabel("Ready for your next\nshift, " + username + "?", 34);
         this.coinsLabel = createSmallLabel("$" + coins, 18);
