@@ -48,7 +48,13 @@ public class MainMenuController {
     }
 
     private void goToSettings() {
-        System.out.println("Settings clicked");
+        SettingsView settingsView = new SettingsView();
+        Scene settingsScene = new Scene(settingsView.createSettingsPage(), 1000, 700);
+
+        new SettingsController(stage, stage.getScene(), settingsView);
+
+        stage.setScene(settingsScene);
+        stage.setTitle("Echo Shift - Settings");
     }
 
     private void exitGame() {
