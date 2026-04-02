@@ -8,8 +8,10 @@ import java.util.Random;
  *
  * It checks each input character sent against the word.
  * It also calculates the wpm and accuracy for the session.
+ * It works closely with the TypingResult class.
  *
  * @author Yasmine Suojhayer
+ * @see TypingResult
  */
 public class TypingEngine {
 
@@ -68,9 +70,10 @@ public class TypingEngine {
     }
 
     /**
-     * This class checks the character typed by the user against the word they were givern.
-     * @param c
-     * @return
+     * This class checks the character typed by the user against the word they were given.
+     *
+     * @param c the character typed by the user
+     * @return A TypingResult object staring information about the result.
      */
     public TypingResult inputChar(char c) {
 
@@ -80,20 +83,21 @@ public class TypingEngine {
             return new TypingResult(false, false, true, 0);
         }
         if (typedWord.isEmpty()) {
-            startWordTimer(); // Starts only when user actually begins typing.
+            startWordTimer(); // Starts the timer only when user begins typing.
         }
 
+        // Checks the same pint in the two strings
         int index = typedWord.length();
         char expected = givenWord.charAt(index);
 
-        boolean correct = (lowerC == expected);
+        boolean correct = (lowerC == expected); // Sets the typed char to lowercase for the comparison
         totalCharactersTyped++;
 
+        // Handles if the character is correct
         if (correct) {
             typedWord += c;
 
-            if (typedWord.equals(givenWord)) {
-                // Word completed successfully
+            if (typedWord.equals(givenWord)) { // Tracks if the word is completed
                 wordsCompleted++;
                 endWordTimer(); // finalize typing time
                 TypingResult result = new TypingResult(true, true, false, 0);
@@ -104,16 +108,20 @@ public class TypingEngine {
             return new TypingResult(true, false, false, 0);
         }
 
-        // Incorrect letter → word fails
+        // If the letter is incorrect the word fails
         errorCount++;
         wordFailed = true;
         endWordTimer(); // finalize typing time
         TypingResult result = new TypingResult(false, false, true, 1);
-        loadNextWord(); // next word
+        loadNextWord(); // Loads the next word
         return result;
     }
 
-    /** WPM based on total characters typed and cumulative typing time */
+    /**
+     * This calculates the current WPM for the session.
+     *
+     * @return The user's current WPM.
+     */
     public double calculateWPM() {
         if (typingTime <= 0) return 0;
         double minutes = typingTime / 60.0;
@@ -121,23 +129,48 @@ public class TypingEngine {
         return wordsTyped / minutes;
     }
 
+    /**
+     * This calculates the user's accuracy based on the number of mistyped words.
+     *
+     * @return The accuracy of the user.
+     */
     public double calculateAccuracy() {
         if (totalCharactersTyped == 0) return 100.0;
         return ((double)(totalCharactersTyped - errorCount) / totalCharactersTyped) * 100;
     }
 
+    /**
+     * Gets the current word so it can be displayed.
+     *
+     * @return The current word being typed.
+     */
     public String getCurrentWord() {
         return givenWord;
     }
 
+    /**
+     * Returns the total number of characters typed this session.
+     *
+     * @return The number of characters typed.
+     */
     public int getChar(){
         return totalCharactersTyped;
     }
 
+    /**
+     * Returns the number of errors for the session.
+     *
+     * @return The number of errors.
+     */
     public int getErrorCount() {
         return errorCount;
     }
 
+    /**
+     * Returns the number of words completed this session.
+     *
+     * @return The number of words completed.
+     */
     public int getWordsCompleted() {
         return wordsCompleted;
     }
