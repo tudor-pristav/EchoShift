@@ -1,11 +1,25 @@
+// Glitch.java
 package echoshift.backend;
 
-public class Glitch extends Entity{
-    public Glitch() {
+/**
+ * Glitch effect applied by a Listener to any SystemDevice.
+ * Disables the device until reset or glitch timer expires.
+ */
+public class Glitch {
 
+    public Glitch(SystemDevice target, int duration) {
+        if (target != null && target.isFunctional()) {
+            target.applyGlitch(duration);
+        }
     }
 
-    public void applyToDevice(SystemDevice target){
-
+    /**
+     * Apply glitch to a SystemDevice target
+     * @param target the device to be glitched
+     */
+    public void applyToDevice(SystemDevice target, int duration) {
+        if (target != null && target.isFunctional()) {
+            target.applyGlitch(duration);
+        }
     }
 }

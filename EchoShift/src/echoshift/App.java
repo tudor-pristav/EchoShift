@@ -1,5 +1,7 @@
 package echoshift;
 
+import echoshift.UI.MainMenuView;
+import echoshift.UI.ShopView;
 import echoshift.controllers.PlayerLoginController;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -21,7 +23,5 @@ public class App extends Application {
 
     public static void main(String[] args) {
         launch();
-        //testing to see
     }
-    
 }

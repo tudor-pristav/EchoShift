@@ -34,8 +34,10 @@ public class ShopView {
     public Parent createShopScreen() {
         BorderPane root = new BorderPane();
         root.getStyleClass().add("shop-root");   // ← moved from inline
+        root.getStylesheets().add(
+                getClass().getResource("/echoshift/styles/shopStyle.css").toExternalForm()
+        );
 
-        // Background is kept in Java (or you can move it to CSS too if you prefer)
         BackgroundImage bg = new BackgroundImage(
                 new Image(getClass().getResource("/echoshift/images/bg2.png").toExternalForm()),
                 BackgroundRepeat.NO_REPEAT,
