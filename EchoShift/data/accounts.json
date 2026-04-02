@@ -13,9 +13,15 @@
       "role": "player"
     },
     {
-      "id": "player-1002",
+      "id": "player-1003",
       "username": "michael",
       "password": "password",
+      "role": "player"
+    },
+    {
+      "id": "player-1004",
+      "username": "Bobi",
+      "password": "4321",
       "role": "player"
     }
   ]
