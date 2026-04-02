@@ -15,7 +15,7 @@ public class createWordBank {
      * This method takes the difficulty of the night and create the needed array of words.
      *
      * @param nightDif The Night's difficulty setting.
-     * @return The array of words
+     * @return The array of words.
      * @throws IOException If an error occurs when opening the file.
      */
     public static String[] create(int nightDif) throws IOException {
