@@ -1,78 +1,104 @@
-.shop-root {
-    -fx-background-color: transparent;
-}
-
 .top-bar {
-    -fx-background-color: #1f1e3350;
+    -fx-background-color: rgba(31, 30, 51, 0.35);
+    -fx-border-color: rgba(255, 255, 255, 0.35);
+    -fx-border-width: 0 0 1 0;
 }
 
 .shop-title {
     -fx-text-fill: black;
+    -fx-font-size: 36px;
+    -fx-font-weight: normal;
 }
 
 .coin-label {
     -fx-text-fill: black;
-    -fx-background-color: #d6d6d6;
-    -fx-padding: 8 20;
+    -fx-background-color: #e6e6e6;
+    -fx-padding: 10 22 10 22;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.shop-grid {
+    -fx-background-color: transparent;
 }
 
 .shop-item {
-    -fx-background-color: #d6d6d6;
-    -fx-padding: 10;
+    -fx-background-color: #d9d9d9;
+    -fx-padding: 12;
+    -fx-spacing: 10;
     -fx-cursor: hand;
+    -fx-alignment: center;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
+}
+
+.shop-item:hover {
+    -fx-background-color: #e3e3e3;
 }
 
 .shop-item-image {
-    -fx-background-color: #1f1e33aa;
-    -fx-border-color: #555;
-    -fx-border-width: 2;
-    -fx-background-radius: 6;
+    -fx-background-color: #666579;
+    -fx-border-color: #555555;
+    -fx-border-width: 1.5;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
 }
 
 .image-placeholder {
-    -fx-text-fill: black;
+    -fx-text-fill: transparent;
 }
 
 .shop-item-name {
     -fx-text-fill: black;
+    -fx-font-size: 16px;
+    -fx-font-weight: normal;
 }
 
 .shop-item-desc {
-    -fx-text-fill: #666;
+    -fx-text-fill: #6b6b6b;
+    -fx-font-size: 14px;
 }
 
 .shop-button {
-    -fx-background-color: #d6d6d6;
+    -fx-background-color: #d9d9d9;
     -fx-text-fill: black;
-    -fx-padding: 10 25;
-    -fx-border-color: #555;
+    -fx-padding: 10 24 10 24;
+    -fx-border-color: #666666;
     -fx-border-width: 2;
+    -fx-background-radius: 0;
+    -fx-border-radius: 0;
     -fx-cursor: hand;
 }
 
+.shop-button:hover {
+    -fx-background-color: #e3e3e3;
+}
+
 .bottom-bar {
-    -fx-background-color: #1f1e3350;
+    -fx-background-color: rgba(31, 30, 51, 0.35);
+    -fx-border-color: rgba(255, 255, 255, 0.35);
+    -fx-border-width: 1 0 0 0;
 }
 
 .timer-label {
     -fx-text-fill: black;
+    -fx-font-size: 18px;
 }
 
-/* Toast styles */
 .toast-container {
-    /* positioning handled in Java */
 }
 
 .toast-label {
-    -fx-padding: 14 40;
-    -fx-background-radius: 50;
+    -fx-padding: 14 38 14 38;
+    -fx-background-radius: 999;
     -fx-font-weight: bold;
-    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.5), 10, 0, 3, 3);
+    -fx-font-size: 16px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.35), 12, 0.2, 0, 4);
 }
 
 .toast-success {
     -fx-background-color: #4ade80;
-    -fx-text-fill: #1f1e33;
+    -fx-text-fill: #142033;
 }
 
 .toast-error {
@@ -81,6 +107,30 @@
 }
 
 .shop-scroll-pane {
+    -fx-background: transparent;
     -fx-background-color: transparent;
-    -fx-background-insets: 0;
+    -fx-border-color: transparent;
+    -fx-padding: 0;
+}
+
+.shop-scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+.shop-scroll-pane .corner {
+    -fx-background-color: transparent;
+}
+
+.shop-scroll-pane .scroll-bar:vertical,
+.shop-scroll-pane .scroll-bar:horizontal {
+    -fx-background-color: transparent;
+}
+
+.shop-scroll-pane .track {
+    -fx-background-color: transparent;
+}
+
+.shop-scroll-pane .thumb {
+    -fx-background-color: rgba(255, 255, 255, 0.35);
+    -fx-background-radius: 999;
 }

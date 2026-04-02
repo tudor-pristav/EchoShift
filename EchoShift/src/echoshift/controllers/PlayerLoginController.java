@@ -24,7 +24,6 @@ public class PlayerLoginController {
 
         this.loginService = new LoginService();
         this.dataService = new UserDataRetrievalService();
-
         attachHandlers();
     }
 

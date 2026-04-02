@@ -31,92 +31,112 @@ public class ShopView {
      *
      * @return the root node for the shop screen
      */
+
     public Parent createShopScreen() {
+
+        BorderPane root = createRoot();
+        HBox topBar = createTopBar();
+        ScrollPane center = createShopGrid();
+        BorderPane bottom = createBottomBar();
+
+        createToast(); // initializes toastLabel + container
+
+        StackPane mainContainer = new StackPane(root, toastContainer);
+        attachCSS(mainContainer);
+
+        root.setTop(topBar);
+        root.setCenter(center);
+        root.setBottom(bottom);
+
+        return mainContainer;
+    }
+    private BorderPane createRoot() {
         BorderPane root = new BorderPane();
-        root.getStyleClass().add("shop-root");   // ← moved from inline
+        //root.getStyleClass().add("shop-root");
 
-        // Background is kept in Java (or you can move it to CSS too if you prefer)
-        BackgroundImage bg = new BackgroundImage(
-                new Image(getClass().getResource("/echoshift/images/bg2.png").toExternalForm()),
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundRepeat.NO_REPEAT,
-                BackgroundPosition.CENTER,
-                new BackgroundSize(100, 100, true, true, false, true)
-        );
-        root.setBackground(new Background(bg));
+        var bgUrl = getClass().getResource("/echoshift/images/bg2.png");
+        if (bgUrl != null) {
+            BackgroundImage bg = new BackgroundImage(
+                    new Image(bgUrl.toExternalForm()),
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundRepeat.NO_REPEAT,
+                    BackgroundPosition.CENTER,
+                    new BackgroundSize(100, 100, true, true, false, true)
+            );
+            root.setBackground(new Background(bg));
+        }
 
-        // Title
+        return root;
+    }
+    private void attachCSS(StackPane container) {
+        var css = getClass().getResource("/echoshift/styles/shopStyle.css");
+        if (css != null) {
+            container.getStylesheets().add(css.toExternalForm());
+        } else {
+            System.out.println("CSS not found");
+        }
+    }
+    private HBox createTopBar() {
         Label title = new Label("Shop");
         title.setFont(Font.font(FONT, 36));
         title.getStyleClass().add("shop-title");
 
-        // Coin label
         coinLabel = new Label("$XXXX");
         coinLabel.setFont(Font.font(FONT, 20));
         coinLabel.getStyleClass().add("coin-label");
 
-        // Top bar
         HBox topBar = new HBox(20, title, coinLabel);
         topBar.setAlignment(Pos.CENTER_LEFT);
         topBar.setPadding(new Insets(15, 30, 15, 30));
         topBar.getStyleClass().add("top-bar");
 
-        // Shop items grid
-        GridPane itemsGrid = new GridPane();
-        itemsGrid.setHgap(15);
-        itemsGrid.setVgap(15);
-        itemsGrid.setPadding(new Insets(30));
-        itemsGrid.setAlignment(Pos.TOP_CENTER);
+        return topBar;
+    }
+    private ScrollPane createShopGrid() {
 
-        // Adding shop items (example – you can load real items later)
+        GridPane grid = new GridPane();
+        grid.setHgap(15);
+        grid.setVgap(15);
+        grid.setPadding(new Insets(30));
+        grid.setAlignment(Pos.TOP_CENTER);
+        grid.getStyleClass().add("shop-grid");
+
         for (int i = 0; i < 8; i++) {
             String itemName = "Item " + (i + 1);
-            VBox itemBox = createShopItem(itemName, "Level required: 3");
+            VBox item = createShopItem(itemName, "Level required: 3");
 
-            itemBox.setOnMouseClicked(e -> showPurchaseToast(itemName));
-            itemBox.getStyleClass().add("shop-item");   // ← class instead of inline style
+            item.setOnMouseClicked(e -> showPurchaseToast(itemName));
+            item.getStyleClass().add("shop-item");
 
-            itemsGrid.add(itemBox, i % 4, i / 4);
+            grid.add(item, i % 4, i / 4);
         }
 
-        // ScrollPane
-        ScrollPane scrollPane = new ScrollPane(itemsGrid);
+        ScrollPane scrollPane = new ScrollPane(grid);
         scrollPane.setFitToWidth(true);
         scrollPane.setPannable(true);
         scrollPane.getStyleClass().add("shop-scroll-pane");
 
-        // Viewport transparency (still needed in code for .viewport lookup)
-        Platform.runLater(() -> {
-            var viewport = scrollPane.lookup(".viewport");
-            if (viewport != null) {
-                viewport.setStyle("-fx-background-color: #1f1e3370;");
-            }
-        });
+        return scrollPane;
+    }
+    private BorderPane createBottomBar() {
 
-        // Bottom Bar
         backButton = createButton("Back");
 
-        HBox bottomBar = new HBox(backButton);
-        bottomBar.setAlignment(Pos.CENTER_LEFT);
-        bottomBar.setPadding(new Insets(15, 30, 15, 30));
+        HBox left = new HBox(backButton);
+        left.setAlignment(Pos.CENTER_LEFT);
+        left.setPadding(new Insets(15, 30, 15, 30));
 
-        Label timerLabel = new Label("2:43");
-        timerLabel.setFont(Font.font(FONT, 18));
-        timerLabel.getStyleClass().add("timer-label");
 
-        StackPane timerPane = new StackPane(timerLabel);
-        timerPane.setPadding(new Insets(0, 30, 0, 0));
-        timerPane.setAlignment(Pos.CENTER_RIGHT);
+        BorderPane bottom = new BorderPane();
+        bottom.setLeft(left);
+        bottom.getStyleClass().add("bottom-bar");
 
-        BorderPane bottomContainer = new BorderPane();
-        bottomContainer.setLeft(bottomBar);
-        bottomContainer.setRight(timerPane);
-        bottomContainer.getStyleClass().add("bottom-bar");
-
-        // Toast notification
+        return bottom;
+    }
+    private void createToast() {
         toastLabel = new Label();
         toastLabel.setFont(Font.font(FONT, 16));
-        toastLabel.getStyleClass().add("toast-label");   // default success style
+        toastLabel.getStyleClass().add("toast-label");
 
         toastContainer = new StackPane(toastLabel);
         toastContainer.setAlignment(Pos.BOTTOM_CENTER);
@@ -124,16 +144,6 @@ public class ShopView {
         toastContainer.setOpacity(0.0);
         toastContainer.setMouseTransparent(true);
         toastContainer.getStyleClass().add("toast-container");
-
-        // Main container with toast overlay
-        StackPane mainContainer = new StackPane(root, toastContainer);
-
-        // Assemble
-        root.setTop(topBar);
-        root.setCenter(scrollPane);
-        root.setBottom(bottomContainer);
-
-        return mainContainer;
     }
 
     /**
@@ -149,7 +159,7 @@ public class ShopView {
         imagePane.getStyleClass().add("shop-item-image");
         imagePane.setPrefSize(110, 90);
 
-        Label placeholder = new Label("🖼");
+        Label placeholder = new Label("");
         placeholder.setFont(Font.font(40));
         placeholder.getStyleClass().add("image-placeholder");
         imagePane.getChildren().add(placeholder);

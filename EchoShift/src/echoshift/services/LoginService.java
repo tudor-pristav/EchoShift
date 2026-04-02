@@ -94,4 +94,8 @@ public class LoginService {
             throw new RuntimeException("Failed to load accounts from file", e);
         }
     }
+    public  List<UserAccount> returnAccounts(){
+        List<UserAccount> fullAccounts = loadAccounts();
+        return fullAccounts;
+    }
 }

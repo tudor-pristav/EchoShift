@@ -13,7 +13,49 @@
       "role": "player"
     },
     {
-      "id": "player-1002",
+      "id": "player-1003",
+      "username": "michael",
+      "password": "password",
+      "role": "player"
+    },
+    {
+      "id": "player-1004",
+      "username": "michael",
+      "password": "password",
+      "role": "player"
+    },
+    {
+      "id": "player-1005",
+      "username": "michael",
+      "password": "password",
+      "role": "player"
+    },
+    {
+      "id": "player-1006",
+      "username": "michael",
+      "password": "password",
+      "role": "player"
+    },
+    {
+      "id": "player-1007",
+      "username": "michael",
+      "password": "password",
+      "role": "player"
+    },
+    {
+      "id": "player-1008",
+      "username": "michael",
+      "password": "password",
+      "role": "player"
+    },
+    {
+      "id": "player-1009",
+      "username": "michael",
+      "password": "password",
+      "role": "player"
+    },
+    {
+      "id": "player-1010",
       "username": "michael",
       "password": "password",
       "role": "player"
