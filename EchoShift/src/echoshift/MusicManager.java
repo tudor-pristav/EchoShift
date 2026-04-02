@@ -112,10 +112,35 @@ public class MusicManager {
                 System.err.println("MP3 resource not found: " + filename);
                 return;
             }
+
+            // Stop and dispose previous mediaPlayer if exists
+            if (mediaPlayer != null) {
+                mediaPlayer.stop();
+                mediaPlayer.dispose();
+            }
+
             Media media = new Media(resource.toExternalForm());
             mediaPlayer = new MediaPlayer(media);
+
             mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // Loop indefinitely
-            mediaPlayer.play();
+
+            mediaPlayer.setOnError(() -> {
+                System.err.println("MediaPlayer error: " + mediaPlayer.getError());
+            });
+
+            mediaPlayer.setOnEndOfMedia(() -> {
+                System.out.println("Media ended, restarting...");
+                mediaPlayer.seek(javafx.util.Duration.ZERO);
+            });
+
+            mediaPlayer.setOnReady(() -> {
+                System.out.println("Media is ready. Duration: " + mediaPlayer.getMedia().getDuration().toSeconds() + " seconds");
+                mediaPlayer.play();
+            });
+
+            // Remove direct play() call here to wait for ready event
+            // mediaPlayer.play();
+
         } catch (Exception e) {
             System.err.println("Failed to play MP3: " + filename);
             e.printStackTrace();
