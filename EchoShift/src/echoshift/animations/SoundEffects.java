@@ -1,20 +1,28 @@
 package echoshift.animations;
 
 import javafx.scene.media.AudioClip;
-
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
-
 
 import java.net.URL;
 
 /**
- * Utility class for playing UI sound effects.
+ * Utility class for playing UI sound effects and background music.
  */
 public class SoundEffects {
 
     private static final String CLICK_SOUND_PATH = "/echoshift/sounds/click_004.mp3";
+    private static final String MUSIC_PATH = "/echoshift/sounds/background.mp3";
+
     private static final AudioClip CLICK_SOUND;
+    private static MediaPlayer mediaPlayer;
+    private static boolean initialized = false;
+
+    /**
+     * Master volume for all game audio.
+     * Range: 0.0 to 1.0
+     */
+    private static double masterVolume = 1.0;
 
     static {
         URL soundUrl = SoundEffects.class.getResource(CLICK_SOUND_PATH);
@@ -24,7 +32,7 @@ public class SoundEffects {
         }
 
         CLICK_SOUND = new AudioClip(soundUrl.toExternalForm());
-        CLICK_SOUND.setVolume(0.7);
+        CLICK_SOUND.setVolume(masterVolume);
     }
 
     /**
@@ -33,12 +41,6 @@ public class SoundEffects {
     public static void playClickSound() {
         CLICK_SOUND.play();
     }
-
-    private static final String MUSIC_PATH = "/echoshift/sounds/background.mp3";
-
-    private static MediaPlayer mediaPlayer;
-    private static boolean initialized = false;
-
 
     /**
      * Starts the background music if it is not already playing.
@@ -74,12 +76,27 @@ public class SoundEffects {
     }
 
     /**
-     * Sets the music volume from 0.0 to 1.0.
+     * Sets the master audio volume for both music and sound effects.
+     *
+     * @param volume volume between 0.0 and 1.0
      */
     public static void setVolume(double volume) {
+        masterVolume = Math.max(0.0, Math.min(1.0, volume));
+
+        CLICK_SOUND.setVolume(masterVolume);
+
         if (mediaPlayer != null) {
-            mediaPlayer.setVolume(volume);
+            mediaPlayer.setVolume(masterVolume);
         }
+    }
+
+    /**
+     * Returns the current master volume as a value between 0.0 and 1.0.
+     *
+     * @return current volume
+     */
+    public static double getVolume() {
+        return masterVolume;
     }
 
     /**
@@ -96,20 +113,9 @@ public class SoundEffects {
         Media media = new Media(musicUrl.toExternalForm());
         mediaPlayer = new MediaPlayer(media);
 
-        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE); // loops forever
-        mediaPlayer.setVolume(1);
+        mediaPlayer.setCycleCount(MediaPlayer.INDEFINITE);
+        mediaPlayer.setVolume(masterVolume);
 
         initialized = true;
-    }
-    /**
-     * Returns the current music volume as a value between 0.0 and 1.0.
-     *
-     * @return current music volume
-     */
-    public static double getVolume() {
-        if (mediaPlayer != null) {
-            return mediaPlayer.getVolume();
-        }
-        return 1.0;
     }
 }

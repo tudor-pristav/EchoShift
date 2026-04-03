@@ -3,7 +3,6 @@ package echoshift.controllers;
 import echoshift.UI.*;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-
 public class MainMenuController {
 
     private final Stage stage;
@@ -12,7 +11,6 @@ public class MainMenuController {
     public MainMenuController(Stage stage, MainMenuView view) {
         this.stage = stage;
         this.view = view;
-
         attachHandlers();
     }
 
@@ -44,7 +42,10 @@ public class MainMenuController {
     }
 
     private void goToAdminLogin() {
-        System.out.println("Admin Login clicked");
+        AdminLoginView adminLoginView = new AdminLoginView();
+        new AdminLoginController(stage,adminLoginView);
+        stage.setScene(new Scene(adminLoginView.createPlayerLoginPage(), 1280, 720));
+        stage.setTitle("Echo Shift - Admin Login");
     }
 
     private void goToSettings() {
