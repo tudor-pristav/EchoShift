@@ -11,15 +11,17 @@ import echoshift.services.UserDataRetrievalService;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+import echoshift.services.HighScoreManagementService;
+import javafx.scene.control.ButtonType;
 
 public class AdminPanelController {
     private final Stage stage;
     private final AdminPanelView view;
-
+    private final HighScoreManagementService highScoreManagementService;
     public AdminPanelController(Stage stage,AdminPanelView view) {
         this.stage = stage;
         this.view = view;
-
+        this.highScoreManagementService = new HighScoreManagementService();
         attachHandlers();
     }
     private void attachHandlers() {
@@ -32,13 +34,45 @@ public class AdminPanelController {
     }
 
     private void goToManageAccounts(){
+        ManageAccountsView manageAccountsView = new ManageAccountsView();
+        Scene manageAccountsScene = new Scene(manageAccountsView.createManageAccountsPage(), 1000, 700);
 
+        new ManageAccountsController(stage, stage.getScene(), manageAccountsView);
+
+        stage.setScene(manageAccountsScene);
+        stage.setTitle("Echo Shift - Manage Accounts");
+        stage.show();
     }
     private void goToCreateAccounts(){
 
     }
-    private void goToResetHighScores(){
 
+    private void goToResetHighScores() {
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Reset High Scores");
+        confirmAlert.setHeaderText(null);
+        confirmAlert.setContentText("Are you sure you want to reset all player high scores?");
+
+        confirmAlert.showAndWait().ifPresent(response -> {
+            if (response == ButtonType.OK) {
+                try {
+                    highScoreManagementService.resetAllHighScores();
+
+                    Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                    successAlert.setTitle("Success");
+                    successAlert.setHeaderText(null);
+                    successAlert.setContentText("All player high scores were reset successfully.");
+                    successAlert.showAndWait();
+
+                } catch (RuntimeException e) {
+                    Alert errorAlert = new Alert(Alert.AlertType.ERROR);
+                    errorAlert.setTitle("Error");
+                    errorAlert.setHeaderText(null);
+                    errorAlert.setContentText("Failed to reset high scores.");
+                    errorAlert.showAndWait();
+                }
+            }
+        });
     }
     private void goToSettings(){
         SettingsView settingsView = new SettingsView();

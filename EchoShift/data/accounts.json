@@ -7,42 +7,6 @@
       "role": "admin"
     },
     {
-      "id": "player-1002",
-      "username": "hugo",
-      "password": "6969",
-      "role": "player"
-    },
-    {
-      "id": "player-1003",
-      "username": "michael",
-      "password": "password",
-      "role": "player"
-    },
-    {
-      "id": "player-1004",
-      "username": "michael",
-      "password": "password",
-      "role": "player"
-    },
-    {
-      "id": "player-1005",
-      "username": "michael",
-      "password": "password",
-      "role": "player"
-    },
-    {
-      "id": "player-1006",
-      "username": "michael",
-      "password": "password",
-      "role": "player"
-    },
-    {
-      "id": "player-1007",
-      "username": "michael",
-      "password": "password",
-      "role": "player"
-    },
-    {
       "id": "player-1008",
       "username": "michael",
       "password": "password",
