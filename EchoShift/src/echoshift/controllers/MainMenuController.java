@@ -28,8 +28,12 @@ public class MainMenuController {
     private void goToLogin() {
         PlayerLoginView loginView = new PlayerLoginView();
         new PlayerLoginController(stage, loginView);
-        stage.setScene(new Scene(loginView.createPlayerLoginPage(), 1280, 720));
+        stage.setScene(new Scene(loginView.createPlayerLoginPage()));
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
         stage.setTitle("Echo Shift - Login");
+
     }
 
     private void goToInstructions() {
@@ -39,13 +43,21 @@ public class MainMenuController {
     private void goToHighScores() {
         HighScoreView highScoreView = new HighScoreView();
         new HighScoreController(stage, highScoreView);
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
     }
 
     private void goToAdminLogin() {
         AdminLoginView adminLoginView = new AdminLoginView();
         new AdminLoginController(stage,adminLoginView);
-        stage.setScene(new Scene(adminLoginView.createPlayerLoginPage(), 1280, 720));
+        stage.setMaximized(true);
+        stage.setScene(new Scene(adminLoginView.createPlayerLoginPage()));
+        stage.setMaximized(true);
         stage.setTitle("Echo Shift - Admin Login");
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+
     }
 
     private void goToSettings() {
@@ -56,6 +68,9 @@ public class MainMenuController {
 
         stage.setScene(settingsScene);
         stage.setTitle("Echo Shift - Settings");
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
     }
 
     private void exitGame() {

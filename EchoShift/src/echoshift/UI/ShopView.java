@@ -1,238 +1,334 @@
 package echoshift.UI;
 
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.application.Platform;
+import echoshift.animations.ButtonEffects;
+import echoshift.models.Session;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
-import javafx.util.Duration;
 
+/**
+ * Builds the Shop page for EchoShift.
+ * Style follows the same structure as PlayerHomeView:
+ * - top bar with coins on the right
+ * - centered title and shop panel
+ * - bottom bar with back button
+ */
 public class ShopView {
 
-    private static final String FONT = "Arial";
+    private final Button backButton;
 
-    // Top bar components
-    private Label coinLabel;
-    private Button backButton;
+    private final Button itemOneButton;
+    private final Button itemTwoButton;
+    private final Button itemThreeButton;
+    private final Button itemFourButton;
 
-    // Toast notification stuff
-    private Label toastLabel;
-    private StackPane toastContainer;
+    private final Label titleLabel;
+    private final Label coinsLabel;
+    private final Session session;
+    public ShopView(Session session) {
+        this.backButton = createButton("Back", 200, 42);
+        int coins = session.getCurrentStatistics().getCoins();
+        this.itemOneButton = createShopButton();
+        this.itemTwoButton = createShopButton();
+        this.itemThreeButton = createShopButton();
+        this.itemFourButton = createShopButton();
+        this.session = session;
+        this.titleLabel = createTitleLabel("Shop", 50);
+        this.coinsLabel = createCoinsLabel("$" + coins, 29);
+    }
 
     /**
-     * Builds and returns the full Shop screen.
+     * Builds and returns the full shop page.
      *
-     * @return the root node for the shop screen
+     * @return the root node for this screen
      */
+    public Parent createShopPage() {
+        BorderPane root = createRootLayout();
 
-    public Parent createShopScreen() {
+        root.getStylesheets().add(
+                getClass().getResource("/echoshift/styles/buttonStyle.css").toExternalForm()
+        );
+        root.getStylesheets().add(
+                getClass().getResource("/echoshift/styles/shopStyle.css").toExternalForm()
+        );
 
-        BorderPane root = createRoot();
-        HBox topBar = createTopBar();
-        ScrollPane center = createShopGrid();
-        BorderPane bottom = createBottomBar();
+        root.setTop(createTopSection());
+        root.setCenter(createCenterSection());
+        root.setBottom(createBottomSection());
 
-        createToast(); // initializes toastLabel + container
-
-        StackPane mainContainer = new StackPane(root, toastContainer);
-        attachCSS(mainContainer);
-
-        root.setTop(topBar);
-        root.setCenter(center);
-        root.setBottom(bottom);
-
-        return mainContainer;
-    }
-    private BorderPane createRoot() {
-        BorderPane root = new BorderPane();
-        //root.getStyleClass().add("shop-root");
-
-        var bgUrl = getClass().getResource("/echoshift/images/bg2.png");
-        if (bgUrl != null) {
-            BackgroundImage bg = new BackgroundImage(
-                    new Image(bgUrl.toExternalForm()),
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundPosition.CENTER,
-                    new BackgroundSize(100, 100, true, true, false, true)
-            );
-            root.setBackground(new Background(bg));
-        }
+        BorderPane.setMargin(root.getTop(), new Insets(0, 0, 0, 0));
+        BorderPane.setMargin(root.getCenter(), new Insets(20, 0, 20, 0));
+        BorderPane.setMargin(root.getBottom(), new Insets(0, 0, 0, 0));
 
         return root;
     }
-    private void attachCSS(StackPane container) {
-        var css = getClass().getResource("/echoshift/styles/shopStyle.css");
-        if (css != null) {
-            container.getStylesheets().add(css.toExternalForm());
-        } else {
-            System.out.println("CSS not found");
-        }
+
+    /**
+     * Creates the root layout with the shared background image.
+     *
+     * @return the root BorderPane
+     */
+    private BorderPane createRootLayout() {
+        BorderPane root = new BorderPane();
+
+        BackgroundImage bg = new BackgroundImage(
+                new Image(getClass().getResource("/echoshift/images/bg2.png").toExternalForm()),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100, 100, true, true, false, true)
+        );
+
+        root.setBackground(new Background(bg));
+        root.setPrefSize(1000, 700);
+        root.getStyleClass().add("shop-root");
+
+        return root;
     }
-    private HBox createTopBar() {
-        Label title = new Label("Shop");
-        title.setFont(Font.font(FONT, 36));
-        title.getStyleClass().add("shop-title");
 
-        coinLabel = new Label("$XXXX");
-        coinLabel.setFont(Font.font(FONT, 20));
-        coinLabel.getStyleClass().add("coin-label");
+    /**
+     * Creates the top section with the coins label aligned right.
+     *
+     * @return the top section
+     */
+    private HBox createTopSection() {
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
 
-        HBox topBar = new HBox(20, title, coinLabel);
-        topBar.setAlignment(Pos.CENTER_LEFT);
-        topBar.setPadding(new Insets(15, 30, 15, 30));
+        HBox topBar = new HBox(spacer, coinsLabel);
+        topBar.setAlignment(Pos.CENTER);
+        topBar.setPadding(new Insets(14, 18, 14, 18));
+        topBar.setMinHeight(60);
         topBar.getStyleClass().add("top-bar");
 
         return topBar;
     }
-    private ScrollPane createShopGrid() {
 
-        GridPane grid = new GridPane();
-        grid.setHgap(15);
-        grid.setVgap(15);
-        grid.setPadding(new Insets(30));
-        grid.setAlignment(Pos.TOP_CENTER);
-        grid.getStyleClass().add("shop-grid");
+    /**
+     * Creates the center section with title and item panel.
+     *
+     * @return the center section
+     */
+    private VBox createCenterSection() {
+        VBox centerBox = new VBox(25, titleLabel, createShopPanel());
+        centerBox.setAlignment(Pos.CENTER);
+        centerBox.setPadding(new Insets(35));
 
-        for (int i = 0; i < 8; i++) {
-            String itemName = "Item " + (i + 1);
-            VBox item = createShopItem(itemName, "Level required: 3");
-
-            item.setOnMouseClicked(e -> showPurchaseToast(itemName));
-            item.getStyleClass().add("shop-item");
-
-            grid.add(item, i % 4, i / 4);
-        }
-
-        ScrollPane scrollPane = new ScrollPane(grid);
-        scrollPane.setFitToWidth(true);
-        scrollPane.setPannable(true);
-        scrollPane.getStyleClass().add("shop-scroll-pane");
-
-        return scrollPane;
-    }
-    private BorderPane createBottomBar() {
-
-        backButton = createButton("Back");
-
-        HBox left = new HBox(backButton);
-        left.setAlignment(Pos.CENTER_LEFT);
-        left.setPadding(new Insets(15, 30, 15, 30));
-
-
-        BorderPane bottom = new BorderPane();
-        bottom.setLeft(left);
-        bottom.getStyleClass().add("bottom-bar");
-
-        return bottom;
-    }
-    private void createToast() {
-        toastLabel = new Label();
-        toastLabel.setFont(Font.font(FONT, 16));
-        toastLabel.getStyleClass().add("toast-label");
-
-        toastContainer = new StackPane(toastLabel);
-        toastContainer.setAlignment(Pos.BOTTOM_CENTER);
-        toastContainer.setPadding(new Insets(0, 0, 80, 0));
-        toastContainer.setOpacity(0.0);
-        toastContainer.setMouseTransparent(true);
-        toastContainer.getStyleClass().add("toast-container");
+        return centerBox;
     }
 
     /**
-     * Creates a single shop item box.
+     * Creates the bottom section with the back button aligned left.
+     *
+     * @return the bottom section
      */
-    private VBox createShopItem(String itemName, String description) {
-        VBox itemBox = new VBox(8);
-        itemBox.setAlignment(Pos.CENTER);
-        itemBox.setPrefSize(140, 160);
+    private BorderPane createBottomSection() {
+        BorderPane bottomBar = new BorderPane();
+        bottomBar.setPadding(new Insets(14, 18, 14, 18));
+        bottomBar.setMinHeight(60);
+        bottomBar.getStyleClass().add("bottom-bar");
 
-        // Image placeholder
-        StackPane imagePane = new StackPane();
-        imagePane.getStyleClass().add("shop-item-image");
-        imagePane.setPrefSize(110, 90);
+        bottomBar.setLeft(backButton);
+        BorderPane.setAlignment(backButton, Pos.CENTER_LEFT);
 
-        Label placeholder = new Label("");
-        placeholder.setFont(Font.font(40));
-        placeholder.getStyleClass().add("image-placeholder");
-        imagePane.getChildren().add(placeholder);
-
-        // Labels
-        Label nameLabel = new Label(itemName);
-        nameLabel.setFont(Font.font(FONT, 16));
-        nameLabel.getStyleClass().add("shop-item-name");
-
-        Label descLabel = new Label(description);
-        descLabel.setFont(Font.font(FONT, 14));
-        descLabel.getStyleClass().add("shop-item-desc");
-        descLabel.setAlignment(Pos.CENTER);
-        descLabel.setWrapText(true);
-
-        itemBox.getChildren().addAll(imagePane, nameLabel, descLabel);
-        return itemBox;
+        return bottomBar;
     }
 
     /**
-     * Creates a styled button using CSS class.
+     * Creates the main shop panel that contains all item cards.
+     *
+     * @return the styled panel
      */
-    private Button createButton(String text) {
-        Button btn = new Button(text);
-        btn.setFont(Font.font(FONT, 18));
-        btn.getStyleClass().add("shop-button");
-        btn.setPrefHeight(45);
-        return btn;
+    private StackPane createShopPanel() {
+        GridPane itemsGrid = new GridPane();
+        itemsGrid.setAlignment(Pos.CENTER);
+        itemsGrid.setHgap(28);
+        itemsGrid.setVgap(28);
+
+        itemsGrid.add(createShopCard(
+                "/echoshift/images/easier-words-icon.png",
+                "Easy Words",
+                itemOneButton
+        ), 0, 0);
+
+        itemsGrid.add(createShopCard(
+                "/echoshift/images/extra-life-icon.png",
+                "Extra Life",
+                itemTwoButton
+        ), 1, 0);
+
+        itemsGrid.add(createShopCard(
+                "/echoshift/images/instant-lure-icon.png",
+                "Instant Lure",
+                itemThreeButton
+        ), 0, 1);
+
+        itemsGrid.add(createShopCard(
+                "/echoshift/images/instant-repair-icon.png",
+                "Instant Repair",
+                itemFourButton
+        ), 1, 1);
+
+        StackPane panel = new StackPane(itemsGrid);
+        panel.getStyleClass().add("shop-panel");
+
+        return panel;
     }
 
-    // Toast methods remain almost identical (we just change the style classes)
-    public void showPurchaseToast(String itemName) {
-        if (toastLabel == null || toastContainer == null) return;
+    /**
+     * Creates a single shop card.
+     *
+     * @param imagePath path to the item image
+     * @param itemName name of the item
+     * @param button purchase button
+     * @return the card node
+     */
+    private VBox createShopCard(String imagePath, String itemName, Button button) {
+        ImageView imageView = createItemImage(imagePath);
 
-        toastLabel.getStyleClass().remove("toast-error");
-        toastLabel.getStyleClass().add("toast-success");
+        Label nameLabel = createCardTitle(itemName, 20);
 
-        toastLabel.setText(itemName + " purchased!");
-        toastContainer.setOpacity(1.0);
+        VBox card = new VBox(15, imageView, nameLabel, button);
+        card.setAlignment(Pos.CENTER);
+        card.getStyleClass().add("shop-card");
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2.5), e -> {
-            toastContainer.setOpacity(0.0);
-        }));
-        timeline.play();
+        return card;
     }
 
-    public void showErrorToast(String message) {
-        if (toastLabel == null || toastContainer == null) return;
-
-        toastLabel.getStyleClass().remove("toast-success");
-        toastLabel.getStyleClass().add("toast-error");
-
-        toastLabel.setText(message);
-        toastContainer.setOpacity(1.0);
-
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2.8), e -> {
-            toastContainer.setOpacity(0.0);
-            // Reset to success style after hiding
-            Platform.runLater(() -> {
-                toastLabel.getStyleClass().remove("toast-error");
-                toastLabel.getStyleClass().add("toast-success");
-            });
-        }));
-        timeline.play();
+    /**
+     * Creates an item image view.
+     *
+     * @param imagePath path of the image
+     * @return the image view
+     */
+    private ImageView createItemImage(String imagePath) {
+        ImageView imageView = new ImageView(
+                new Image(getClass().getResource(imagePath).toExternalForm())
+        );
+        imageView.setFitWidth(110);
+        imageView.setFitHeight(110);
+        imageView.setPreserveRatio(true);
+        return imageView;
     }
 
-    public void updateCoinLabel(String text) {
-        if (coinLabel != null) {
-            coinLabel.setText(text);
-        }
+    /**
+     * Creates the page title label.
+     *
+     * @param text title text
+     * @param size font size
+     * @return the title label
+     */
+    private Label createTitleLabel(String text, float size) {
+        Label label = new Label(text);
+        label.setFont(Font.font("Verdana", size));
+        label.getStyleClass().add("shop-title");
+        return label;
+    }
+
+    /**
+     * Creates the coins label.
+     *
+     * @param text label text
+     * @param size font size
+     * @return the coins label
+     */
+    private Label createCoinsLabel(String text, float size) {
+        Label label = new Label(text);
+        label.setFont(Font.font("Verdana", size));
+        label.getStyleClass().add("coins");
+        return label;
+    }
+
+    /**
+     * Creates a card title label.
+     *
+     * @param text label text
+     * @param size font size
+     * @return the card title label
+     */
+    private Label createCardTitle(String text, float size) {
+        Label label = new Label(text);
+        label.setFont(Font.font("Verdana", size));
+        label.getStyleClass().add("shop-item-title");
+        return label;
+    }
+
+    /**
+     * Creates a card description label.
+     *
+     * @param text label text
+     * @param size font size
+     * @return the description label
+     */
+    private Label createCardDescription(String text, float size) {
+        Label label = new Label(text);
+        label.setFont(Font.font("Verdana", size));
+        label.setWrapText(true);
+        label.getStyleClass().add("shop-item-description");
+        return label;
+    }
+
+    /**
+     * Creates a standard button with styling and animations.
+     *
+     * @param text button text
+     * @param width preferred width
+     * @param height preferred height
+     * @return the created button
+     */
+    private Button createButton(String text, double width, double height) {
+        Button button = new Button(text);
+        button.setPrefSize(width, height);
+        button.setFont(Font.font("Verdana", 16));
+        button.getStyleClass().add("button");
+
+        ButtonEffects.hoverAnimation(button);
+        ButtonEffects.clickAnimation(button);
+
+        return button;
+    }
+
+    /**
+     * Creates a shop purchase button.
+     *
+     * @return the buy button
+     */
+    private Button createShopButton() {
+        return createButton("Buy", 130, 40);
     }
 
     public Button getBackButton() {
         return backButton;
     }
+
+    public Button getItemOneButton() {
+        return itemOneButton;
+    }
+
+    public Button getItemTwoButton() {
+        return itemTwoButton;
+    }
+
+    public Button getItemThreeButton() {
+        return itemThreeButton;
+    }
+
+    public Button getItemFourButton() {
+        return itemFourButton;
+    }
+
+    public Label getCoinsLabel() {
+        return coinsLabel;
+    }
+
+    public void setCoinsText(String text) {
+        coinsLabel.setText(text);
+    }
+
 }

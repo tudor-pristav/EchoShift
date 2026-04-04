@@ -1,28 +1,16 @@
 {
   "accounts": [
     {
-      "id": "player-1001",
-      "username": "tudor",
+      "id": "T579DX4G4I",
+      "username": "test",
       "password": "1234",
+      "role": "player"
+    },
+    {
+      "id": "admin",
+      "username": "admin",
+      "password": "test",
       "role": "admin"
-    },
-    {
-      "id": "player-1008",
-      "username": "michael",
-      "password": "password",
-      "role": "player"
-    },
-    {
-      "id": "player-1009",
-      "username": "michael",
-      "password": "password",
-      "role": "player"
-    },
-    {
-      "id": "player-1010",
-      "username": "michael",
-      "password": "password",
-      "role": "player"
     }
   ]
 }
