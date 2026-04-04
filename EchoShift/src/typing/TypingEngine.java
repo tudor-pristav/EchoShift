@@ -96,7 +96,6 @@ public class TypingEngine {
         // Handles if the character is correct
         if (correct) {
             typedWord += c;
-
             if (typedWord.equals(givenWord)) { // Tracks if the word is completed
                 wordsCompleted++;
                 endWordTimer(); // finalize typing time
@@ -104,7 +103,6 @@ public class TypingEngine {
                 loadNextWord(); // next word
                 return result;
             }
-
             return new TypingResult(true, false, false, 0);
         }
 
