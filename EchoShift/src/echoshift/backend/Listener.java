@@ -39,7 +39,7 @@ public class Listener extends Entity {
             return false;
         }
 
-        int targetRoomId = isLured ? luredTargetRoomId : 0;
+        int targetRoomId = isLured ? luredTargetRoomId : 15;
         if (targetRoomId == currentRoomId) {
             return false;
         }

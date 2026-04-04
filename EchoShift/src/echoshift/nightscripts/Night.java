@@ -82,6 +82,9 @@ public class Night {
 //            listener.setDiff(currentDiff);
 //            if (listener.attemptMove()) {
 //                mapRenderer.updateListenerPosition(listener);
+//                if (listener.getCurrentRoomId() == 15) {
+//                    deductHealth();
+//                }
 //            }
 //        }
     }
@@ -97,7 +100,6 @@ public class Night {
         if (code == 1){
             System.out.println("You died at hour " + (currentHour+1));
         }
-        // TODO: Trigger win condition, score, next night, etc.
     }
 
     private void deductHealth() {

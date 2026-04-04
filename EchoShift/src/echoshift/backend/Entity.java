@@ -11,6 +11,8 @@ public class Entity {
     protected final GameMap gameMap;
     protected double currentDifficulty = 1.0;
     protected int currentRoomId;
+    private int luredTargetRoomId;
+    private boolean isLured = false;
 
     public Entity(GameMap gameMap, int startingRoomId, double initialDifficulty) {
         this.gameMap = Objects.requireNonNull(gameMap);
@@ -27,6 +29,7 @@ public class Entity {
      */
     public boolean attemptMove() {
         int chance = getMovementChance();
+
 
         if (Math.random() * 100 < chance) {
             int nextRoomId = getRandomNextRoom(currentRoomId);
@@ -48,7 +51,7 @@ public class Entity {
 
     protected int getRandomNextRoom(int current) {
         List<Integer> neighbors = gameMap.getConnections(current);
-        neighbors.removeIf(roomId -> roomId <= current);
+        if (!isLured) neighbors.removeIf(roomId -> roomId <= current);
         if (neighbors.isEmpty()) return 0;
         return neighbors.get((int) (Math.random() * neighbors.size()));
     }
@@ -59,5 +62,15 @@ public class Entity {
 
     public void setCurrentRoom(int roomId) {
         this.currentRoomId = roomId;
+    }
+
+    public void lureTo(int audioDeviceRoomId) {
+        this.luredTargetRoomId = audioDeviceRoomId;
+        this.isLured = true;
+    }
+
+    public void endLure() {
+        this.isLured = false;
+        this.luredTargetRoomId = -1;
     }
 }

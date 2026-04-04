@@ -20,6 +20,8 @@ public class MapRenderer {
     private final Pane overlay;
     private final StackPane mapPane;
 
+    private Entity entity;
+    private Listener listener;
     private Circle entityIndicator;
     private Circle listenerIndicator;
 
@@ -51,6 +53,7 @@ public class MapRenderer {
             int finalId = node.getID();
             circle.setOnMouseClicked(e -> {
                 System.out.println("Clicked node: " + finalId);
+
                 // Visual feedback for debugging
                 for (javafx.scene.Node n : overlay.getChildren()) {
                     if (n instanceof Circle c && c.getStroke() == Color.GREEN) {
@@ -58,6 +61,9 @@ public class MapRenderer {
                     }
                 }
                 circle.setStroke(Color.GREEN);
+
+                // lure test
+                entity.lureTo(finalId);
             });
 
             overlay.getChildren().add(circle);
@@ -65,6 +71,7 @@ public class MapRenderer {
     }
 
     public void addEntity(Entity entity) {
+        this.entity = entity;
         entityIndicator = createIndicator(Color.ORANGE);
         entityIndicator.setMouseTransparent(true);
         overlay.getChildren().add(entityIndicator);
@@ -72,6 +79,7 @@ public class MapRenderer {
     }
 
     public void addListener(Listener listener) {
+        this.listener = listener;
         listenerIndicator = createIndicator(Color.RED);
         listenerIndicator.setMouseTransparent(true);
         overlay.getChildren().add(listenerIndicator);
