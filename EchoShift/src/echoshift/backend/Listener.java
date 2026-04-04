@@ -15,7 +15,7 @@ public class Listener extends Entity {
      * @param gameMap the shared GameMap (new version)
      * @param startingRoomId Can be any room other than the office
      */
-    public Listener(GameMap gameMap, int startingRoomId, int difficulty) {
+    public Listener(GameMap gameMap, int startingRoomId, double difficulty) {
         super(gameMap, startingRoomId, difficulty);
         this.frozenRemaining = 0.0;
     }
@@ -45,10 +45,15 @@ public class Listener extends Entity {
         }
 
         int chance = getMovementChance();
-        if (Math.random() * 4 < chance) {
+        if (Math.random() * 100 < chance) {
             int nextRoomId = getNextRoomTowardTarget(targetRoomId);
-            if (!(nextRoomId == currentRoomId)) {
+            if (nextRoomId != currentRoomId && nextRoomId != -1) {
                 currentRoomId = nextRoomId;
+
+                // PRINT NEW LOCATION
+                System.out.println("Listener moved to room: " + currentRoomId
+                        + " (Difficulty: " + String.format("%.1f", currentDifficulty) + ")");
+
                 return true;
             }
         }
@@ -65,7 +70,7 @@ public class Listener extends Entity {
         if (path == null || path.size() < 2) {
             return -1;
         }
-        return path.get(1);   // next room after current
+        return path.get(1);
     }
 
     /**

@@ -7,12 +7,12 @@ package echoshift.backend;
 public abstract class SystemDevice{
     protected GameMap gameMap;
     protected int currentDifficulty;
-    protected int durability;
-    protected final int maxDurability;
+    protected double durability;
+    protected final double maxDurability;
     protected boolean isGlitched = false;
     protected int locationId;
 
-    protected SystemDevice(GameMap gameMap, int startingLocationId, int maxDurability) {
+    protected SystemDevice(GameMap gameMap, int startingLocationId, double maxDurability) {
         this.currentDifficulty = 1;
         this.maxDurability = Math.max(10, maxDurability);
         this.durability = this.maxDurability;
@@ -50,7 +50,7 @@ public abstract class SystemDevice{
         return durability > 0 && !isGlitched;
     }
 
-    public void applyGlitch(int duration) {
+    public void applyGlitch(double duration) {
         isGlitched = true;
     }
 

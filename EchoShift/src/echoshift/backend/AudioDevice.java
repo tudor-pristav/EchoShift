@@ -6,7 +6,7 @@ package echoshift.backend;
  */
 public class AudioDevice extends SystemDevice {
 
-    public AudioDevice(GameMap gameMap, int startingRoomID, int maxDurability) {
+    public AudioDevice(GameMap gameMap, int startingRoomID, double maxDurability) {
         super(gameMap, startingRoomID, maxDurability);
     }
 

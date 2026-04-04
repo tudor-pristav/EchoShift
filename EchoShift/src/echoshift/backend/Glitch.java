@@ -7,7 +7,7 @@ package echoshift.backend;
  */
 public class Glitch {
 
-    public Glitch(SystemDevice target, int duration) {
+    public Glitch(SystemDevice target, double duration) {
         if (target != null && target.isFunctional()) {
             target.applyGlitch(duration);
         }
@@ -17,7 +17,7 @@ public class Glitch {
      * Apply glitch to a SystemDevice target
      * @param target the device to be glitched
      */
-    public void applyToDevice(SystemDevice target, int duration) {
+    public void applyToDevice(SystemDevice target, double duration) {
         if (target != null && target.isFunctional()) {
             target.applyGlitch(duration);
         }
