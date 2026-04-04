@@ -93,7 +93,7 @@ public class Listener extends Entity {
         while (!queue.isEmpty()) {
             Integer current = queue.poll();
 
-            for (Integer neighbor : gameMap.getConnections(current)) {   // <-- key change
+            for (Integer neighbor : gameMap.getConnections(current)) {
                 if (!parent.containsKey(neighbor)) {
                     parent.put(neighbor, current);
                     queue.add(neighbor);

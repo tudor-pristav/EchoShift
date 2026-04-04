@@ -48,7 +48,8 @@ public class Entity {
 
     protected int getRandomNextRoom(int current) {
         List<Integer> neighbors = gameMap.getConnections(current);
-        if (neighbors.isEmpty()) return current;
+        neighbors.removeIf(roomId -> roomId <= current);
+        if (neighbors.isEmpty()) return 0;
         return neighbors.get((int) (Math.random() * neighbors.size()));
     }
 

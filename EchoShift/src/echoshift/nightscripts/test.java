@@ -22,7 +22,7 @@ public class test extends Application {
         mapRenderer.addListener(theListener);
 
         StackPane root = new StackPane(mapRenderer.getMapPane());
-        Scene scene = new Scene(root, 600, 580);
+        Scene scene = new Scene(root, 1000, 700);
 
         primaryStage.setTitle("Echo Shift - Night Test (Night 3)");
         primaryStage.setScene(scene);

@@ -53,11 +53,11 @@ public class MapRenderer {
                 System.out.println("Clicked node: " + finalId);
                 // Visual feedback for debugging
                 for (javafx.scene.Node n : overlay.getChildren()) {
-                    if (n instanceof Circle c && c.getStroke() == Color.RED) {
-                        c.setFill(Color.TRANSPARENT);
+                    if (n instanceof Circle c && c.getStroke() == Color.GREEN) {
+                        c.setStroke(Color.RED);
                     }
                 }
-                circle.setFill(Color.GREEN);
+                circle.setStroke(Color.GREEN);
             });
 
             overlay.getChildren().add(circle);
@@ -66,12 +66,14 @@ public class MapRenderer {
 
     public void addEntity(Entity entity) {
         entityIndicator = createIndicator(Color.ORANGE);
+        entityIndicator.setMouseTransparent(true);
         overlay.getChildren().add(entityIndicator);
         updateEntityPosition(entity);
     }
 
     public void addListener(Listener listener) {
         listenerIndicator = createIndicator(Color.RED);
+        listenerIndicator.setMouseTransparent(true);
         overlay.getChildren().add(listenerIndicator);
         updateListenerPosition(listener);
     }

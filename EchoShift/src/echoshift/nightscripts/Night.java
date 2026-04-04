@@ -14,6 +14,7 @@ public class Night {
 
     private AnimationTimer gameTimer;
 
+    private int playerHealth;
     private final Entity entity;
     private final Listener listener;
     private final MapRenderer mapRenderer;
@@ -23,6 +24,7 @@ public class Night {
         this.entity = entity;
         this.listener = listener;
         this.mapRenderer = mapRenderer;
+        this.playerHealth = 3;
 
         this.difficulty = new HourDiff(0, nightNum);
     }
@@ -69,6 +71,9 @@ public class Night {
             entity.setDiff(currentDiff);
             if (entity.attemptMove()) {
                 mapRenderer.updateEntityPosition(entity);
+                if (entity.getCurrentRoomId() == 15) {
+                    deductHealth();
+                }
             }
         }
 
@@ -80,13 +85,26 @@ public class Night {
 //            }
 //        }
     }
-
     public void stopNight() {
+        stopNight(0);
+    }
+
+    public void stopNight(int code) {
         if (gameTimer != null) {
             gameTimer.stop();
         }
         System.out.println("Night " + nightNum + " has ended!");
+        if (code == 1){
+            System.out.println("You died at hour " + (currentHour+1));
+        }
         // TODO: Trigger win condition, score, next night, etc.
+    }
+
+    private void deductHealth() {
+        playerHealth -= 1;
+        if (playerHealth <= 0) {
+            stopNight(1);
+        }
     }
 
     public double getCurrentDifficulty() {
