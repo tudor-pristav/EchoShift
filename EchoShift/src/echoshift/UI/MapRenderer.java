@@ -23,6 +23,8 @@ public class MapRenderer {
     private Circle entityIndicator;
     private Circle listenerIndicator;
 
+    private java.util.function.Consumer<Integer> nodeClickHandler;
+
     public MapRenderer(GameMap gameMap) {
         Image mapImage = new Image(Objects.requireNonNull(
                 getClass().getResourceAsStream("/echoshift/images/map.png")));
@@ -52,11 +54,17 @@ public class MapRenderer {
             circle.setOnMouseClicked(e -> {
                 System.out.println("Clicked node: " + finalId);
                 // Visual feedback for debugging
+                if (nodeClickHandler != null) {
+                    nodeClickHandler.accept(finalId);
+                }
+
+                // Debug highlight
                 for (javafx.scene.Node n : overlay.getChildren()) {
                     if (n instanceof Circle c && c.getStroke() == Color.RED) {
                         c.setFill(Color.TRANSPARENT);
                     }
                 }
+
                 circle.setFill(Color.GREEN);
             });
 
@@ -113,5 +121,8 @@ public class MapRenderer {
         if (listenerIndicator != null) overlay.getChildren().remove(listenerIndicator);
         entityIndicator = null;
         listenerIndicator = null;
+    }
+    public void setNodeClickHandler(java.util.function.Consumer<Integer> handler) {
+        this.nodeClickHandler = handler;
     }
 }
