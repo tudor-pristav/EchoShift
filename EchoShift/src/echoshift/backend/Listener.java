@@ -122,10 +122,6 @@ public class Listener extends Entity {
         frozenRemaining = Math.max(frozenRemaining, duration);
     }
 
-    public int getCurrentRoomId() {
-        return currentRoomId;
-    }
-
     public void setCurrentRoom(int roomId) {
         this.currentRoomId = roomId;
     }

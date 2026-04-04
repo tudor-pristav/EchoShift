@@ -56,7 +56,6 @@ public class MapRenderer {
             circle.setOnMouseClicked(e -> {
                 System.out.println("Clicked node: " + finalId);
 
-                // Visual feedback for debugging
                 if (nodeClickHandler != null) {
                     nodeClickHandler.accept(finalId);
                 }
@@ -68,9 +67,6 @@ public class MapRenderer {
                     }
                 }
                 circle.setStroke(Color.GREEN);
-
-                // lure test
-                entity.lureTo(finalId);
             });
 
             overlay.getChildren().add(circle);

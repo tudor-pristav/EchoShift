@@ -36,6 +36,7 @@ public class test extends Application {
 
     @Override
     public void start(Stage stage) {
+        GameMap gameMap = new GameMap();
 
         // Example word list
         String[] words = {"echo","shadow","signal","night","lure"};
@@ -45,8 +46,8 @@ public class test extends Application {
         GameMap map = new GameMap();
         renderer = new MapRenderer(map);
 
-        entity = new Entity(map, 5, 1.0);
-        Listener listener = new Listener(map, 4, 3.0);
+        entity = new Entity(map, 0, 1.0);
+        Listener listener = new Listener(map, 0, 3.0);
 
         renderer.addEntity(entity);
         renderer.addListener(listener);
@@ -73,6 +74,13 @@ public class test extends Application {
 
         // Typing input
         scene.setOnKeyTyped(e -> handleTyping(e.getCharacter()));
+
+        // Start night
+        Night currentNight = new Night(3, entity, listener, renderer);
+        currentNight.start();
+
+        stage.setOnCloseRequest(e -> currentNight.stopNight());
+
     }
 
     private void handleTyping(String character) {
@@ -108,6 +116,7 @@ public class test extends Application {
     private void placeLure(int node) {
         System.out.println("Lure Placed at node " + node);
         entity.setCurrentRoom(node);
+        renderer.updateEntityPosition(entity);
     }
 
     private void performScan() {
