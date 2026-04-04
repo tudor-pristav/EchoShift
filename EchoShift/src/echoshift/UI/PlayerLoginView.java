@@ -41,10 +41,16 @@ public class PlayerLoginView {
     public Parent createPlayerLoginPage() {
         BorderPane root = createRootLayout();
 
-        //linking with the styles CSS sheet
         root.getStylesheets().add(
                 getClass().getResource("/echoshift/styles/buttonStyle.css").toExternalForm()
         );
+
+        // TOP BAR
+        HBox topBar = new HBox();
+        topBar.setPrefHeight(60);
+        topBar.setMinHeight(60);
+        topBar.setStyle("-fx-background-color: rgba(31, 30, 51, 0.35);");
+        root.setTop(topBar);
 
         Label pageTitle = createFieldLabel("Player Login", 35);
         VBox loginCard = createLoginCard();
@@ -57,12 +63,17 @@ public class PlayerLoginView {
 
         root.setCenter(centerWrapper);
 
+        // BOTTOM BAR
         BorderPane bottomBar = new BorderPane();
-        bottomBar.setPadding(new Insets(0, 18, 18, 18));
+        bottomBar.setPrefHeight(60);
+        bottomBar.setMinHeight(60);
+        bottomBar.setPadding(new Insets(10, 18, 10, 18));
+        bottomBar.setStyle("-fx-background-color: rgba(31, 30, 51, 0.35);");
+
         bottomBar.setLeft(menuButton);
+        BorderPane.setAlignment(menuButton, Pos.CENTER_LEFT);
 
         root.setBottom(bottomBar);
-        //test
 
         return root;
     }

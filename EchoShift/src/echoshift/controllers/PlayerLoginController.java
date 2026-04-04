@@ -1,5 +1,6 @@
 package echoshift.controllers;
 
+import echoshift.UI.MainMenuView;
 import echoshift.UI.PlayerLoginView;
 import echoshift.models.Session;
 import echoshift.models.UserAccount;
@@ -72,8 +73,9 @@ public class PlayerLoginController {
     }
 
     private void goToMenu() {
-        // replace with your real menu navigation later
-        showInfo("Return to main menu here.");
+        MainMenuView mainMenuView = new MainMenuView();
+        MainMenuController mainMenuController = new MainMenuController(stage,mainMenuView);
+        stage.setScene(new Scene(mainMenuView.createMainMenu(), 1280, 720));
     }
 
     private void showError(String message) {

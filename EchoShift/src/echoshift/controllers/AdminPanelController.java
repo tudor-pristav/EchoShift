@@ -44,7 +44,10 @@ public class AdminPanelController {
         stage.show();
     }
     private void goToCreateAccounts(){
-
+        CreateAccountView createAccountView = new CreateAccountView();
+        Scene scene = new Scene(createAccountView.createCreateAccountPage(), 1000, 700);
+        stage.setScene(scene);
+        new CreateAccountController(stage, createAccountView);
     }
 
     private void goToResetHighScores() {

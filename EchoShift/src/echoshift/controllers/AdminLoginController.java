@@ -1,8 +1,6 @@
 package echoshift.controllers;
 
-import echoshift.UI.AdminLoginView;
-import echoshift.UI.AdminPanelView;
-import echoshift.UI.PlayerLoginView;
+import echoshift.UI.*;
 import echoshift.models.Session;
 import echoshift.models.UserAccount;
 import echoshift.models.UserStatistics;
@@ -11,7 +9,6 @@ import echoshift.services.UserDataRetrievalService;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
-import echoshift.UI.PlayerHomeView;
 
 public class AdminLoginController {
     private final Stage stage;
@@ -74,8 +71,9 @@ public class AdminLoginController {
     }
 
     private void goToMenu() {
-        // replace with your real menu navigation later
-        showInfo("Return to main menu here.");
+        MainMenuView mainMenu = new MainMenuView();
+        MainMenuController mainMenuController = new MainMenuController(stage,mainMenu);
+        stage.setScene(new Scene(mainMenu.createMainMenu(), 1280, 720));
     }
 
     private void showError(String message) {

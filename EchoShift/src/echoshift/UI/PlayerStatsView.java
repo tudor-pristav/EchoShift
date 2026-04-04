@@ -183,7 +183,7 @@ public class PlayerStatsView {
             int highScore,
             int highestLevel,
             int wordsTyped,
-            String coins
+            int coins
     ) {
         peakWpmLabel.setText("Top words per minute: " + formatDouble(peakWpm));
         averageWpmLabel.setText("Average words per minute: " + formatDouble(averageWpm));

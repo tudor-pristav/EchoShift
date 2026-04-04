@@ -59,7 +59,7 @@ public class ShopController {
         UserAccount account = session.getCurrentUser();
 
         // Update coin label
-        view.updateCoinLabel("$" + account.getCoinBalance());
+       // view.updateCoinLabel("$" + account.getCoinBalance());
     }
 
     /**
