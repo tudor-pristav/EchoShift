@@ -1,0 +1,28 @@
+{
+  "accounts": [
+    {
+      "id": "player-1001",
+      "username": "tudor",
+      "password": "1234",
+      "role": "player"
+    },
+    {
+      "id": "player-1002",
+      "username": "hugo",
+      "password": "6969",
+      "role": "player"
+    },
+    {
+      "id": "player-1003",
+      "username": "michael",
+      "password": "password",
+      "role": "player"
+    },
+    {
+      "id": "player-1004",
+      "username": "Bobi",
+      "password": "4321",
+      "role": "player"
+    }
+  ]
+}
