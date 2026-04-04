@@ -6,7 +6,7 @@ package echoshift.backend;
  */
 public class ScanningDevice extends SystemDevice {
 
-    public ScanningDevice(GameMap gameMap, int startingRoomID, int maxDurability) {
+    public ScanningDevice(GameMap gameMap, int startingRoomID, double maxDurability) {
         super(gameMap, startingRoomID, maxDurability);   // default location = office
     }
 

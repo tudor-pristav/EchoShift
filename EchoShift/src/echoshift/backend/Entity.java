@@ -4,58 +4,59 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Base class for all game enemies (regular enemy and Listener).
- * Difficulty (set by NightDifficulty schedule) controls movement chance.
+ * Base class for all enemies.
  */
 public class Entity {
-    protected final GameMap gameMap;
-    protected int currentDifficulty;
-    private int currentRoomId;
 
-    public Entity(GameMap gameMap, int startingRoomId, int difficulty) {
-        this.currentDifficulty = difficulty;
-        this.gameMap = Objects.requireNonNull(gameMap, "GameMap cannot be null");
+    protected final GameMap gameMap;
+    protected double currentDifficulty = 1.0;
+    protected int currentRoomId;
+
+    public Entity(GameMap gameMap, int startingRoomId, double initialDifficulty) {
+        this.gameMap = Objects.requireNonNull(gameMap);
         this.currentRoomId = startingRoomId;
+        setDiff(initialDifficulty);
     }
 
-    public void setDiff(int diff) {
-        if (diff < 1) diff = 1;
-        this.currentDifficulty = diff;
+    public void setDiff(double diff) {
+        this.currentDifficulty = Math.max(1.0, diff);
     }
 
     /**
-     * Entity takes the difficulty to calculate the probability of moving
-     * @return Movement Successful
+     * Attempt to move and print new location when successful.
      */
     public boolean attemptMove() {
         int chance = getMovementChance();
-        if (Math.random() * 4 < chance) {
+
+        if (Math.random() * 100 < chance) {
             int nextRoomId = getRandomNextRoom(currentRoomId);
-            if (!(nextRoomId == currentRoomId)) {
+            if (nextRoomId != currentRoomId) {
                 currentRoomId = nextRoomId;
+
+                System.out.println("Entity moved to room: " + currentRoomId
+                        + " (Difficulty: " + String.format("%.1f", currentDifficulty) + ")");
+
                 return true;
             }
         }
         return false;
     }
 
-    /**
-     * Randomly choose a connected room as the candidate to move to
-     * @param currentRoomId The ID of the current room
-     * @return The ID of the chosen candidate room
-     */
-    private int getRandomNextRoom(int currentRoomId) {
-        List<Integer> possibleRooms = gameMap.getConnections(currentRoomId);
-        if (!possibleRooms.isEmpty()) {
-            return possibleRooms.get((int)(Math.random() * possibleRooms.size()) + 1);
-        }
+    protected int getMovementChance() {
+        return (int) Math.min(95, 5 + currentDifficulty * 8);
+    }
+
+    protected int getRandomNextRoom(int current) {
+        List<Integer> neighbors = gameMap.getConnections(current);
+        if (neighbors.isEmpty()) return current;
+        return neighbors.get((int) (Math.random() * neighbors.size()));
+    }
+
+    public int getCurrentRoomId() {
         return currentRoomId;
     }
 
-    /**
-     * Returns probability in percentage
-     */
-    public int getMovementChance() {
-        return currentDifficulty;
+    public void setCurrentRoom(int roomId) {
+        this.currentRoomId = roomId;
     }
 }
