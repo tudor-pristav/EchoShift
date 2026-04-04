@@ -3,9 +3,11 @@ package echoshift.UI;
 
 import echoshift.backend.GameMap;
 import echoshift.backend.GameMapNode;
+import javafx.geometry.Pos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -25,11 +27,9 @@ public class MapRenderer {
         background.setPreserveRatio(true);
 
         overlay = new Pane();
-        overlay.minWidth(558);
-        overlay.minHeight(543);
-        overlay.prefWidth(558);
-        overlay.prefHeight(543);
         mapPane = new StackPane(background, overlay);
+        mapPane.setMaxSize(558,543);
+        mapPane.setAlignment(Pos.CENTER);
 
         renderStaticNodes(gameMap);
     }

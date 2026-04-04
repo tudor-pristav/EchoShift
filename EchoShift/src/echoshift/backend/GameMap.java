@@ -32,30 +32,30 @@ public class GameMap {
 
     // Private helper method to manually place nodes
     private void initializeNodes() {
-        // it took me a nearly an hours :xdd:
-        addNode(0, "office", 575, 580);
-        addNode(1,  "top_top",  542, 110);
+        // it took me a nearly an hour :xdd:
+        addNode(15, "office", 353, 500);
+        addNode(0,  "top_top",  320, 30);
 
-        addNode(2, "top_left", 382, 191);
-        addNode(3, "top_right", 542, 191);
+        addNode(2, "top_left", 160, 111);
+        addNode(1, "top_right", 320, 111);
 
-        addNode(6,  "center_left_top",    382, 280);
-        addNode(10,  "center_left_bottom",  382, 344);
+        addNode(6,  "center_left_top",    160, 200);
+        addNode(9,  "center_left_bottom",  160, 266);
 
-        addNode(7,  "center_mid", 491, 280);
+        addNode(5,  "center_mid", 269, 200);
 
-        addNode(4,  "center_right_top",  642, 220);
-        addNode(8,  "center_right_bottom",  642, 322);
+        addNode(3,  "center_right_top",  420, 140);
+        addNode(7,  "center_right_bottom",  420, 244);
 
-        addNode(5,  "right_mid",  741, 248);
-        addNode(11,  "right_bottom",  742, 360);
+        addNode(4,  "right_mid",  519, 168);
+        addNode(10,  "right_bottom",  520, 280);
 
-        addNode(9,  "left_mid", 296, 343);
-        addNode(13, "left_bottom",  297, 441);
+        addNode(8,  "left_mid", 74, 263);
+        addNode(11, "left_bottom",  75, 361);
 
-        addNode(12, "bottom_left",  414, 421);
-        addNode(14, "bottom_mid", 484, 494);
-        addNode(15, "department_of_defense", 642, 481);
+        addNode(12, "bottom_left",  192, 341);
+        addNode(13, "bottom_mid", 262, 414);
+        addNode(14, "department_of_defense", 420, 401);
     }
 
     private void addNode(int id, String name, double x, double y) {
@@ -68,42 +68,43 @@ public class GameMap {
     private void initializeConnections() {
         try {
             // This took me another half an hour :xdd:
+            // 0
+            connect(0, 1);
             // 1
-            connect(1,3);
+            connect(1, 2);
+            connect(1, 3);
+            connect(1, 5);
             // 2
-            connect(2,3);
-            connect(2,6);
-            connect(2,13);
+            connect(2, 6);
+            connect(2, 11);
             // 3
-            connect(3,7);
-            connect(3,4);
+            connect(3, 4);
+            connect(3, 7);
             // 4
-            connect(4,5);
-            connect(4,8);
+            connect(4, 10);
             // 5
-            connect(5,11);
+            connect(5, 6);
             // 6
-            connect(6,7);
-            connect(6,10);
+            connect(6, 9);
             // 7
+            connect(7, 9);
+            connect(7, 10);
             // 8
-            connect(8,10);
-            connect(8,11);
+            connect(8, 9);
+            connect(8, 11);
             // 9
-            connect(9,10);
-            connect(9,13);
+            connect(9, 12);
             // 10
-            connect(10,12);
+            connect(10, 14);
             // 11
-            connect(11,15);
-            //12
-            connect(12,13);
-            connect(12,14);
-            //13
-            //14
-            connect(14,0);
-            //15
-            connect(15,0);
+            connect(11, 12);
+            // 12
+            connect(12, 13);
+            // 13
+            connect(13, 15);
+            // 14
+            connect(14, 15);
+
         } catch (GraphException e) {
             System.err.println("Map connection error: " + e.getMessage());
         }
