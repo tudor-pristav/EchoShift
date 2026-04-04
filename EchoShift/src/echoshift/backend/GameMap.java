@@ -33,7 +33,7 @@ public class GameMap {
     // Private helper method to manually place nodes
     private void initializeNodes() {
         // it took me a nearly an hours :xdd:
-        addNode(0, "office",         575, 580);
+        addNode(0, "office", 575, 580);
         addNode(1,  "top_top",  542, 110);
 
         addNode(2, "top_left", 382, 191);
@@ -42,20 +42,20 @@ public class GameMap {
         addNode(6,  "center_left_top",    382, 280);
         addNode(10,  "center_left_bottom",  382, 344);
 
-        addNode(7,  "center_mid",     491, 280);
+        addNode(7,  "center_mid", 491, 280);
 
-        addNode(4,  "center_right_top",   642, 220);
-        addNode(8,  "center_right_bottom",    642, 322);
+        addNode(4,  "center_right_top",  642, 220);
+        addNode(8,  "center_right_bottom",  642, 322);
 
-        addNode(5,  "right_mid",      741, 248);
-        addNode(11,  "right_bottom",    742, 360);
+        addNode(5,  "right_mid",  741, 248);
+        addNode(11,  "right_bottom",  742, 360);
 
-        addNode(9,  "left_mid",    296, 343);
-        addNode(13, "left_bottom",    297, 441);
+        addNode(9,  "left_mid", 296, 343);
+        addNode(13, "left_bottom",  297, 441);
 
-        addNode(12, "bottom_left",    414, 421);
-        addNode(14, "bottom_mid",     484, 494);
-        addNode(15, "department_of_defense",  642, 481);
+        addNode(12, "bottom_left",  414, 421);
+        addNode(14, "bottom_mid", 484, 494);
+        addNode(15, "department_of_defense", 642, 481);
     }
 
     private void addNode(int id, String name, double x, double y) {
@@ -155,19 +155,5 @@ public class GameMap {
     public GameMapNode getNode(int id) {
         if (id == -1) return null;
         return new GameMapNode(id, nodeNames[id], nodeX[id], nodeY[id], nodeLabels[id]);
-    }
-
-    /**
-     * A GameMapNode record to pass data easier
-     * @param id Node ID
-     * @param name Name of the node for easier debug
-     * @param x The x coordinate of the node placement on the window
-     * @param y The y coordinate of the node placement on the window
-     * @param label Any label string to be shown to the right of the node
-     */
-    public record GameMapNode(int id, String name, double x, double y, String label) {
-        public int getID() {
-            return id;
-        }
     }
 }

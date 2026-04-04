@@ -2,6 +2,7 @@
 package echoshift.UI;
 
 import echoshift.backend.GameMap;
+import echoshift.backend.GameMapNode;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
@@ -35,11 +36,11 @@ public class MapRenderer {
 
     private void renderStaticNodes(GameMap gameMap) {
         for (int nodeID=0; nodeID<16; nodeID++) {
-            GameMap.GameMapNode node = gameMap.getNode(nodeID);
+            GameMapNode node = gameMap.getNode(nodeID);
             if (node == null) continue;
 
             // Drawing circles
-            Circle circle = new Circle(node.x(), node.y(), 18);
+            Circle circle = new Circle(node.getNodeX(), node.getNodeY(), 18);
             circle.setFill(Color.TRANSPARENT);
             circle.setStroke(Color.RED);
             circle.setStrokeWidth(4);
@@ -64,10 +65,10 @@ public class MapRenderer {
 
     // Called every frame when Listener (enemy) moves
     public void moveEnemyIndicator(int nodeID, javafx.scene.Node indicator) {
-        GameMap.GameMapNode node = new GameMap().getNode(nodeID);
+        GameMapNode node = new GameMap().getNode(nodeID);
         if (node != null) {
-            indicator.setTranslateX(node.x());
-            indicator.setTranslateY(node.y());
+            indicator.setTranslateX(node.getNodeX());
+            indicator.setTranslateY(node.getNodeY());
         }
     }
 }
