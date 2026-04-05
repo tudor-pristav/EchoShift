@@ -1,7 +1,6 @@
 package echoshift.nightscripts;
 
 import echoshift.backend.Entity;
-import echoshift.backend.Listener;
 import echoshift.UI.MapRenderer;
 import javafx.animation.AnimationTimer;
 
@@ -16,13 +15,14 @@ public class Night {
 
     private int playerHealth;
     private final Entity entity;
-    private final Listener listener;
     private final MapRenderer mapRenderer;
 
-    public Night(int nightNum, Entity entity, Listener listener, MapRenderer mapRenderer) {
+    private Runnable healthDecreaseCallback;
+    private Runnable healthIncreaseCallback;
+
+    public Night(int nightNum, Entity entity, MapRenderer mapRenderer) {
         this.nightNum = nightNum;
         this.entity = entity;
-        this.listener = listener;
         this.mapRenderer = mapRenderer;
         this.playerHealth = 3;
 
@@ -39,22 +39,21 @@ public class Night {
             public void handle(long now) {
                 long elapsedMs = System.currentTimeMillis() - startTime;
 
-                // Update hour every 45 seconds
-                int newHour = (int) (elapsedMs / 45000L);
+                // Update hour every 60 seconds
+                int newHour = (int) (elapsedMs / 60000L);
                 if (newHour > currentHour && newHour <= 5) {
                     currentHour = newHour;
                     difficulty.setHourDiff(currentHour, nightNum);
                     System.out.println("Hour is now " + currentHour + " | Difficulty = " + difficulty.getDifficulty());
                 }
 
-                // Move every 1 second for now
-                if (elapsedMs - lastUpdate >= 1000) {
+                if (elapsedMs - lastUpdate >= (10-difficulty.getDifficulty())*1000) {
                     lastUpdate = elapsedMs;
                     updateEnemies();
                 }
 
                 // Night ends after 225 seconds (5 hours)
-                if (elapsedMs >= 225000) {
+                if (elapsedMs >= 360000) {
                     stopNight();
                 }
             }
@@ -72,22 +71,12 @@ public class Night {
             if (entity.attemptMove()) {
                 mapRenderer.updateEntityPosition(entity);
                 if (entity.getCurrentRoomId() == 15) {
-                    deductHealth();
+                    decreaseHealth();
                 }
             }
         }
-
-        // Update Listener
-//        if (listener != null) {
-//            listener.setDiff(currentDiff);
-//            if (listener.attemptMove()) {
-//                mapRenderer.updateListenerPosition(listener);
-//                if (listener.getCurrentRoomId() == 15) {
-//                    deductHealth();
-//                }
-//            }
-//        }
     }
+
     public void stopNight() {
         stopNight(0);
     }
@@ -102,14 +91,43 @@ public class Night {
         }
     }
 
-    private void deductHealth() {
+    public void setOnHealthDecrease(Runnable callback) {
+        this.healthDecreaseCallback = callback;
+    }
+
+    public void setOnHealthIncrease(Runnable callback) {
+        this.healthIncreaseCallback = callback;
+    }
+
+    private void decreaseHealth() {
         playerHealth -= 1;
+        if (healthDecreaseCallback != null) {
+            healthDecreaseCallback.run();
+        }
         if (playerHealth <= 0) {
             stopNight(1);
         }
     }
 
+    private void addHealth() {
+        playerHealth += 1;
+        if (healthIncreaseCallback != null) {
+            healthIncreaseCallback.run();
+        }
+    }
+
+    public int getHealth() {
+        return playerHealth;
+    }
+
+    public void instantLure(){
+        entity.setCurrentRoom(0);
+        mapRenderer.updateEntityPosition(entity);
+    }
+
     public double getCurrentDifficulty() {
         return difficulty.getDifficulty();
     }
+
+
 }

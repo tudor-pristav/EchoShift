@@ -8,9 +8,9 @@ package graph;
 public class GraphEdge {
 	
 	//The instance variables for the class.//
-	private GraphNode firstEndpoint;
-	private GraphNode secondEndpoint;
-	private char nodeType;
+	private final GraphNode firstEndpoint;
+	private final GraphNode secondEndpoint;
+	private final char nodeType;
 	private String nodeLabel;
 	
 	/**

@@ -3,10 +3,10 @@ package echoshift.backend;
 
 public class GameMapNode {
     private final int id;
-    private String nodeName;
-    private double nodeX;
-    private double nodeY;
-    private String nodeLabel;
+    private final String nodeName;
+    private final double nodeX;
+    private final double nodeY;
+    private final String nodeLabel;
 
     /**
      * A GameMapNode record to pass data easier

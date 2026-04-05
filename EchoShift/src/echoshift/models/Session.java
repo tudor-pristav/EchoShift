@@ -1,8 +1,8 @@
 package echoshift.models;
 
 public class Session {
-    private UserAccount currentUser;
-    private UserStatistics currentStatistics;
+    private final UserAccount currentUser;
+    private final UserStatistics currentStatistics;
 
     public Session(UserAccount user, UserStatistics stats) {
         this.currentUser = user;

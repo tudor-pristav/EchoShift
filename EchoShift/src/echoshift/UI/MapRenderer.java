@@ -3,7 +3,6 @@ package echoshift.UI;
 import echoshift.backend.GameMap;
 import echoshift.backend.GameMapNode;
 import echoshift.backend.Entity;
-import echoshift.backend.Listener;
 
 import javafx.geometry.Pos;
 import javafx.scene.image.Image;
@@ -12,7 +11,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
-
 import java.util.Objects;
 
 public class MapRenderer {
@@ -20,10 +18,7 @@ public class MapRenderer {
     private final Pane overlay;
     private final StackPane mapPane;
 
-    private Entity entity;
-    private Listener listener;
-    private Circle entityIndicator;
-    private Circle listenerIndicator;
+    private ImageView entityIndicator = new ImageView(new Image("/echoshift/images/entity-tracker.gif", 150, 150, true, true));
 
     private java.util.function.Consumer<Integer> nodeClickHandler;
 
@@ -74,47 +69,28 @@ public class MapRenderer {
     }
 
     public void addEntity(Entity entity) {
-        this.entity = entity;
-        entityIndicator = createIndicator(Color.ORANGE);
+        entityIndicator.setOpacity(0.0);
         entityIndicator.setMouseTransparent(true);
         overlay.getChildren().add(entityIndicator);
         updateEntityPosition(entity);
-    }
-
-    public void addListener(Listener listener) {
-        this.listener = listener;
-        listenerIndicator = createIndicator(Color.RED);
-        listenerIndicator.setMouseTransparent(true);
-        overlay.getChildren().add(listenerIndicator);
-        updateListenerPosition(listener);
-    }
-
-    private Circle createIndicator(Color color) {
-        Circle c = new Circle(12);
-        c.setFill(color);
-        c.setStroke(Color.BLACK);
-        c.setStrokeWidth(3);
-        return c;
     }
 
     public void updateEntityPosition(Entity entity) {
         if (entityIndicator != null) {
             GameMapNode node = new GameMap().getNode(entity.getCurrentRoomId());
             if (node != null) {
-                entityIndicator.setTranslateX(node.getNodeX());
-                entityIndicator.setTranslateY(node.getNodeY());
+                entityIndicator.setTranslateX(node.getNodeX()-77);
+                entityIndicator.setTranslateY(node.getNodeY()-77);
             }
         }
     }
 
-    public void updateListenerPosition(Listener listener) {
-        if (listenerIndicator != null) {
-            GameMapNode node = new GameMap().getNode(listener.getCurrentRoomId());
-            if (node != null) {
-                listenerIndicator.setTranslateX(node.getNodeX());
-                listenerIndicator.setTranslateY(node.getNodeY());
-            }
-        }
+    public void scan() {
+        entityIndicator.setOpacity(1.0);
+    }
+
+    public void endScan() {
+        entityIndicator.setOpacity(0.0);
     }
 
     public StackPane getMapPane() {
@@ -123,9 +99,7 @@ public class MapRenderer {
 
     public void clearEnemies() {
         if (entityIndicator != null) overlay.getChildren().remove(entityIndicator);
-        if (listenerIndicator != null) overlay.getChildren().remove(listenerIndicator);
         entityIndicator = null;
-        listenerIndicator = null;
     }
     public void setNodeClickHandler(java.util.function.Consumer<Integer> handler) {
         this.nodeClickHandler = handler;

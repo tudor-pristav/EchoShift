@@ -1,4 +1,4 @@
-package src.echoshift;
+package echoshift;
 
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;

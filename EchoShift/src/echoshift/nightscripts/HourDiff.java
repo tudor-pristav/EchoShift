@@ -19,7 +19,7 @@ public class HourDiff {
      * @param night Represents the night the player is currently playing on.
      */
     public HourDiff(int hour, int night){
-        difficulty = Math.pow(2.5, hour) * 0.6 * (night + 1);
+        difficulty = ((Math.log(hour + 1) / Math.log(2)) / (Math.log(Math.E))) * 0.25 * night + 3;
     }
 
     /**
@@ -28,7 +28,7 @@ public class HourDiff {
      * @param night Represents the current night the player is currently playing on.
      */
     public void setHourDiff(int hour, int night){
-        difficulty = Math.pow(2.5, hour) * 0.6 * (night + 1);
+        difficulty = ((Math.log(hour + 1) / Math.log(2)) / (Math.log(Math.E))) * 0.25 * night + 3;
     }
 
     /**

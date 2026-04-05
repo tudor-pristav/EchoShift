@@ -10,9 +10,9 @@ import java.util.Iterator;
 public class UndirectedGraph implements GraphADT {
 	
 	//The instance variables for the class.//
-	private GraphNode vertices[];
-	private ArrayList<GraphEdge> edges[];
-	private int numberOfNodes;
+	private final GraphNode[] vertices;
+	private final ArrayList[] edges;
+	private final int numberOfNodes;
 	
 	/**
 	 * This is the constructor of the class it will create the adjacency list holding the graph information.
@@ -41,12 +41,12 @@ public class UndirectedGraph implements GraphADT {
 			throw new GraphException("One or both of the nodes are not in the graph.");
 		} else {
 			Iterator<GraphEdge> iter = edges[u.getName()].iterator();
-			if (iter.hasNext() == false) {
+			if (!iter.hasNext()) {
 				edges[u.getName()].add(new GraphEdge(u, v, edgeType));
 				edges[v.getName()].add(new GraphEdge(v, u, edgeType));
 			} else {
 				GraphEdge edge = iter.next();
-				while ((iter.hasNext() == true) && (edge.secondEndpoint().getName() != v.getName())) {
+				while ((iter.hasNext()) && (edge.secondEndpoint().getName() != v.getName())) {
 					edge = iter.next();
 				}
 				if ((edge == null) || (!iter.hasNext())) {
@@ -58,38 +58,7 @@ public class UndirectedGraph implements GraphADT {
 			}		
 		}
 	}
-	
-	/**
-	 * This method inserts a GraphEdge with a label to its correct position in the adjacency list.
-	 * @param u The first GraphNode endpoint of the edge.
-	 * @param v The second GraphNode endpoint of the edge.
-	 * @param edgeType The character used to specify the type of edge.
-	 * @param label The String label of the edge.
-	 * @throws GraphException If one or more of the nodes are not in the graph or the edge already exists an exception is thrown.
-	 */
-	public void insertEdge(GraphNode u, GraphNode v, char edgeType, String label) throws GraphException {
-		if ((u.getName() >= numberOfNodes) || (v.getName() >= numberOfNodes)) {
-			throw new GraphException("One or both nodes are not in the graph.");
-		} else {
-			Iterator<GraphEdge> iter = edges[u.getName()].iterator();
-			if (iter.hasNext() == false) {
-				edges[u.getName()].add(new GraphEdge(u, v, edgeType, label));
-				edges[v.getName()].add(new GraphEdge(v, u, edgeType, label));
-			} else {
-				GraphEdge edge = iter.next();
-				while ((iter.hasNext() == true) && (edge.secondEndpoint().getName() != v.getName())) {
-					edge = iter.next();
-				}
-				if ((edge == null) || (!iter.hasNext())) {
-					edges[u.getName()].add(new GraphEdge(u, v, edgeType, label));
-					edges[v.getName()].add(new GraphEdge(v, u, edgeType, label));
-				} else {
-					throw new GraphException("This edge is already in the list.");
-				}	
-			}		
-		}
-	}
-	
+
 	/**
 	 * This method returns the node with the specified name.
 	 * @param name The name of the node to be returned.

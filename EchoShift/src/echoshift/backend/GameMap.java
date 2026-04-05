@@ -157,4 +157,8 @@ public class GameMap {
         if (id == -1) return null;
         return new GameMapNode(id, nodeNames[id], nodeX[id], nodeY[id], nodeLabels[id]);
     }
+
+    public GraphADT getGraph() {
+        return graph;
+    }
 }

@@ -1,5 +1,6 @@
 package typing;
 
+import java.io.IOException;
 import java.util.Random;
 
 /**
@@ -15,7 +16,7 @@ import java.util.Random;
  */
 public class TypingEngine {
 
-    private final String[] wordList; // The array of words
+    private String[] wordList; // The array of words
 
     private String givenWord; // The word the user needs to type
     private String typedWord; // The word typed by the user
@@ -56,6 +57,7 @@ public class TypingEngine {
      * This method gets the start time for the word.
      */
     private void startWordTimer() {
+
         wordStartTime = System.currentTimeMillis() / 1000.0;
     }
 
@@ -86,7 +88,7 @@ public class TypingEngine {
             startWordTimer(); // Starts the timer only when user begins typing.
         }
 
-        // Checks the same pint in the two strings
+        // Checks the same position in the two strings
         int index = typedWord.length();
         char expected = givenWord.charAt(index);
 
@@ -113,6 +115,16 @@ public class TypingEngine {
         TypingResult result = new TypingResult(false, false, true, 1);
         loadNextWord(); // Loads the next word
         return result;
+    }
+
+    /**
+     * This class allows the difficulty of the word bank to be changed.
+     *
+     * @param difficulty This is the difficulty of the word bank chosen.
+     * @throws IOException An exception is thrown if the input file is not found.
+     */
+    public void changeWordBank(int difficulty) throws IOException {
+        wordList = createWordBank.create(difficulty);
     }
 
     /**

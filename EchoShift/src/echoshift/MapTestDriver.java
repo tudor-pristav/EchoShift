@@ -11,13 +11,10 @@ import javafx.stage.Stage;
 
 public class MapTestDriver extends Application {
 
-    private GameMap gameMap;
-    private MapRenderer renderer;
-
     @Override
     public void start(Stage primaryStage) {
-        gameMap = new GameMap();
-        renderer = new MapRenderer(gameMap);
+        GameMap gameMap = new GameMap();
+        MapRenderer renderer = new MapRenderer(gameMap);
 
         // Root layout
         BorderPane root = new BorderPane();

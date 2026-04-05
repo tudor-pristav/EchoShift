@@ -7,7 +7,7 @@ package graph;
 public class GraphNode {
 	
 	//The instance variables for the class.//
-	private int nodeName;
+	private final int nodeName;
 	private boolean nodeMark;
 	
 	/**

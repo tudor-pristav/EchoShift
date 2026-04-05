@@ -7,10 +7,10 @@ package typing;
  */
 public class TypingResult {
 
-    private boolean correct; // Tracks if the last character is correct.
-    private boolean wordCompleted; // Tracks the number of words completed
-    private boolean wordFailed; // Tracks if the word has failed
-    private int errorDelta; // Tracks the errors made
+    private final boolean correct; // Tracks if the last character is correct.
+    private final boolean wordCompleted; // Tracks the number of words completed
+    private final boolean wordFailed; // Tracks if the word has failed
+    private final int errorDelta; // Tracks the errors made
 
     /**
      * This is the constructor for the TypingResult class.

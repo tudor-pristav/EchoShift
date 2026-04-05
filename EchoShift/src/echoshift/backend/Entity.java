@@ -13,6 +13,7 @@ public class Entity {
     protected int currentRoomId;
     private int luredTargetRoomId;
     private boolean isLured = false;
+    private boolean isVisible = false;
 
     public Entity(GameMap gameMap, int startingRoomId, double initialDifficulty) {
         this.gameMap = Objects.requireNonNull(gameMap);
@@ -37,7 +38,7 @@ public class Entity {
                 currentRoomId = nextRoomId;
 
                 System.out.println("Entity moved to room: " + currentRoomId
-                        + " (Difficulty: " + String.format("%.1f", currentDifficulty) + ")");
+                        + " (Difficulty: " + String.format("%.1f", currentDifficulty) + ", Time: "+ (10-currentDifficulty)+")");
 
                 return true;
             }
