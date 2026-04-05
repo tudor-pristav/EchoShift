@@ -13,7 +13,6 @@ import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -24,20 +23,32 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import javafx.scene.layout.Region;
+import javafx.scene.layout.Priority;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ExtremelyBigTest extends Application {
+/**
+ * This class handles the main gameplay for the Echo Shift project.
+ *
+ * @author Ho Long Adrian Lee
+ * @author Bob Zhang
+ * @author Yasmine Suojhayer
+ */
+public class MainGameplay extends Application {
     private Stage stage;
-    private GameMap gameMap;
-    private TypingEngine engine;
+
+    private GameMap gameMap; // Object that stores the map layout and the location of the entity.
+    private TypingEngine engine; // Object that handles the loading of new words to type, checks accuracy, and records overall stats.
+    private Night currentNight; // Represents the current night object, containing the time elapsed and health of the player.
     private BorderPane root;
 
     private final Label wordLabel = new Label();
     private final Label statusLabel = new Label("Scanning...");
     private final Label typedLabel = new Label("Typed: ");
+
 
     private boolean waitingForNextWord = false;
     private boolean placingLure = false;
@@ -47,7 +58,7 @@ public class ExtremelyBigTest extends Application {
     private Entity entity;
     private MapRenderer renderer;
 
-    private final ArrayList<ImageView> heartArray = new ArrayList<ImageView>();
+    private final ArrayList<ImageView> heartArray = new ArrayList<>();
     private final Image entityImage = new Image("/echoshift/images/entity-tracker.gif", 50, 50, false, false);
     private final Image heart = new Image("/echoshift/images/live.png", 50, 50, false, false);
     private final Image instantHealth = new Image("/echoshift/images/instant-health.png", 50, 50, false, false);
@@ -55,15 +66,24 @@ public class ExtremelyBigTest extends Application {
     private final Image easyWord = new Image("/echoshift/images/easier-words-icon.png", 50, 50, false, false);
 
     private Label scoreLabel;
+    private Label hour;
 
+    /**
+     * Method the triggers the start of the night, and maintains buttons, stats, ann in game actions.
+     *
+     * @param stage The stage on which the night will be displayed.
+     * @throws IOException If the method is unable to receive input from the player, the method will
+     * throw an IOException.
+     */
     @Override
     public void start(Stage stage) throws IOException {
         this.stage = stage;
         gameMap = new GameMap();
 
         // Example word list
-        engine = new TypingEngine(createWordBank.create(1));
-
+        engine = new TypingEngine(createWordBank.create(3));
+        // Start night
+        loadNight();
         // Live indicator
         HBox liveBox = new HBox();
         liveBox.setSpacing(10);
@@ -82,8 +102,6 @@ public class ExtremelyBigTest extends Application {
 
         renderer.addEntity(entity);
 
-        scoreLabel = new Label("Score: " + score);
-
         // Typing UI
         HBox typingBox = handleTyping();
 
@@ -91,12 +109,13 @@ public class ExtremelyBigTest extends Application {
         VBox powerUpBar = new VBox();
         powerUpBar.setAlignment(Pos.CENTER_LEFT);
         VBox instantHealthVBox = createPowerUpBox(instantHealth);
-        VBox easierWordsVBox = createPowerUpBox(lure);
-        VBox instantLureVBox = createPowerUpBox(easyWord);
-        powerUpBar.getChildren().addAll(scoreLabel, instantHealthVBox, easierWordsVBox, instantLureVBox);
+        VBox easierWordsVBox = createPowerUpBox(easyWord);
+        VBox instantLureVBox = createPowerUpBox(lure);
+        powerUpBar.getChildren().addAll(instantHealthVBox, instantLureVBox, easierWordsVBox);
+        powerUpBar.setSpacing(20);
 
+        scoreLabel = new Label("Score: " + score);
         scoreLabel.setStyle("""
-                -fx-alignment: TOP_RIGHT;
                 -fx-background-color: #FFFFFF70;
                 -fx-font-size: 18;
                 -fx-cursor: hand;
@@ -105,13 +124,36 @@ public class ExtremelyBigTest extends Application {
                 -fx-text-alignment: center;
                 """);
 
+        hour = new Label(currentNight.getCurrentHour() + "AM");
+
+        hour.setStyle("""
+                -fx-background-color: #FFFFFF70;
+                -fx-font-size: 18;
+                -fx-cursor: hand;
+                -fx-border-color: white;
+                -fx-border-width: 1;
+                -fx-text-alignment: CENTER;
+                -fx-alighnment: RIGHT;
+                """);
+
+        currentNight.setOnHourChange(() -> Platform.runLater(() -> hour.setText(currentNight.getCurrentHour() + "AM")));
+
+        VBox rightCorner = new VBox(scoreLabel, hour);
+        Region spacer = new Region();
+        HBox.setHgrow(spacer, Priority.ALWAYS);
+
+        HBox topBar = new HBox(10, liveBox, spacer, rightCorner);
+        topBar.setAlignment(Pos.CENTER_LEFT);
+
+
         // Assemble root
         root = new BorderPane();
         root.setBackground(Background.fill(Color.valueOf("#1f1e33")));
-        root.setTop(liveBox);
+        root.setTop(topBar);
         root.setCenter(renderer.getMapPane());
         root.setRight(powerUpBar);
         root.setBottom(typingBox);
+
 
         // Setup stage
         Scene scene = new Scene(root, 1000, 700);
@@ -133,19 +175,32 @@ public class ExtremelyBigTest extends Application {
         // Typing input
         scene.setOnKeyTyped(e -> handleTyping(e.getCharacter()));
 
-        // Start night
-        loadNight();
+
+
+        instantHealthVBox.setOnMouseClicked(_ -> this.currentNight.addHealth());
+        easierWordsVBox.setOnMouseClicked(_ -> {
+            try {
+                engine.changeWordBank(1);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+        instantLureVBox.setOnMouseClicked(_ -> currentNight.instantLure());
     }
 
+
+    /**
+     * Method that generates buttons for powerups using a given image.
+     *
+     * @param image Image that represents the current powerup that will display on screen.
+     * @return A VBox object that will be displayed on the button.
+     */
     private VBox createPowerUpBox(Image image) {
         ImageView powerUpImage = new ImageView(image);
-        Button powerUpButton = new Button();
-        powerUpButton.setGraphic(powerUpImage);
+
         Label powerUpLabel = new Label("1");
-        VBox powerUpVBox = new VBox(powerUpButton, powerUpLabel);
-        powerUpButton.setStyle("""
-                -fx-background-color: #FFFFFF70;
-                """);
+        VBox powerUpVBox = new VBox(powerUpImage, powerUpLabel);
+
         powerUpVBox.setAlignment(Pos.CENTER);
         powerUpVBox.setStyle("""
                 -fx-background-color: #FFFFFF70;
@@ -158,6 +213,11 @@ public class ExtremelyBigTest extends Application {
         return powerUpVBox;
     }
 
+    /**
+     * Method that generates backgrounds that will be overlaid by typing functionalities.
+     *
+     * @return An HBox object that will represent the typing interface for the user.
+     */
     private HBox handleTyping() {
         HBox typingBox = new HBox(40, wordLabel, typedLabel, statusLabel);
         wordLabel.setAlignment(Pos.CENTER_LEFT);
@@ -184,8 +244,12 @@ public class ExtremelyBigTest extends Application {
         return typingBox;
     }
 
+    /**
+     * Method that creates a new night object with set parameters, and handles game ending events.
+     */
     private void loadNight() {
-        Night currentNight = new Night(3, entity, renderer);
+        //Remember to change the first parameter to a variable that matches the current night
+        currentNight = new Night(5, entity, renderer);
         currentNight.setOnHealthDecrease(() -> {
             int health = currentNight.getHealth();
             updateHearts(health);
@@ -204,6 +268,12 @@ public class ExtremelyBigTest extends Application {
         stage.setOnCloseRequest(_ -> currentNight.stopNight());
     }
 
+    /**
+     * Method handles the typing aspect of the game, including getting new words to type, checking
+     * the accuracy of the word, adjusting the score, and events that take place after completing a word.
+     *
+     * @param character Represents the word that will be loaded onto the game for the player to type.
+     */
     private void handleTyping(String character) {
         statusLabel.setText("");
         if (waitingForNextWord) return;
@@ -225,9 +295,7 @@ public class ExtremelyBigTest extends Application {
             } else {
                 score = 0;
             }
-            Platform.runLater(() -> {
-               scoreLabel.setText("Score: " + score);
-            });
+            Platform.runLater(() -> scoreLabel.setText("Score: " + score));
             startPause();
         }
 
@@ -241,13 +309,16 @@ public class ExtremelyBigTest extends Application {
                 statusLabel.setText("Scan performed!");
             }
             updateScore(engine);
-            Platform.runLater(() -> {
-                scoreLabel.setText("Score: " + score);
-            });
+            Platform.runLater(() -> scoreLabel.setText("Score: " + score));
             startPause();
         }
     }
 
+    /**
+     *  The method will check if the entity is next to the selected node, and will set the entity's position
+     *  to that node if the entity is in a node adjacent to the current node.
+     *  @param node The node that the entity will be lured to, if the entity is in a node adjacent to this one.
+     */
     private void placeLure(int node) {
         List<Integer> adjacent = gameMap.getConnections(entity.getCurrentRoomId());
         for (Integer i : adjacent) {
@@ -259,6 +330,9 @@ public class ExtremelyBigTest extends Application {
         }
     }
 
+    /**
+     *  Method will reveal the entity's position for 2 seconds on the map when called.
+     */
     private void performScan() {
         renderer.scan();
         PauseTransition scan = new PauseTransition(Duration.seconds(2)); // adjust duration
@@ -267,6 +341,9 @@ public class ExtremelyBigTest extends Application {
         System.out.println("Scan performed!");
     }
 
+    /**
+     *  Method temporarily stops the typing functionalities in order to display a new word on screen and reset the typing user interface.
+     */
     private void startPause() {
         waitingForNextWord = true;
 
@@ -279,24 +356,43 @@ public class ExtremelyBigTest extends Application {
         pause.play();
     }
 
+    /**
+     * Method displays the number of hearts the player will see on screen, with each heart representing a life.
+     *
+     * @param health The number of lives the player has remaining.
+     */
     private void updateHearts(int health) {
         for (int i = 0; i < heartArray.size(); i++) {
             heartArray.get(i).setVisible(i < health);
         }
     }
 
+    /**
+     *Method temporarily changes the background colour to reflect the event of damage or healing the player receives.
+     *
+     * @param color Represents the colour that will be temporarily displayed on the background.
+     */
     private void flashBackground(Color color) {
         root.setBackground(Background.fill(color));
         // Revert after 500 ms
         PauseTransition flashTransition = new PauseTransition(Duration.millis(500));
-        flashTransition.setOnFinished(e -> root.setBackground(Background.fill(Color.valueOf("#1f1e33"))));
+        flashTransition.setOnFinished(_ -> root.setBackground(Background.fill(Color.valueOf("#1f1e33"))));
         flashTransition.play();
     }
 
+    /**
+     * Updates the score for the current word.
+     *
+     * @param result Represents the word encapsulated by the TypingEngine object
+     * that was typed by the player.
+     */
     private void updateScore(TypingEngine result) {
         this.score = (result.getChar()*100) - (result.getErrorCount()*300);
     }
 
+    /**
+     * Displays the current word for the user to type.
+     */
     private void updateWordDisplay() {
         wordLabel.setText("Type word: " + engine.getCurrentWord());
     }

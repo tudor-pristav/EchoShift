@@ -1,4 +1,3 @@
-// GameMap.java
 package echoshift.backend;
 
 import graph.GraphADT;
@@ -8,18 +7,26 @@ import graph.UndirectedGraph;
 import graph.GraphException;
 import java.util.*;
 
+/**
+ * This class initializes the game map as an undirected graph for the Echo shift game.
+ *
+ * @author Ho Long Adrian Lee
+ */
 public class GameMap {
 
     private final GraphADT graph;
     private final String[] nodeNames;
-    private final double[] nodeX;            // x coordinates
-    private final double[] nodeY;            // y coordinates
-    private final String[] nodeLabels;       // optional labels
+    private final double[] nodeX; // x coordinates for node rendering.
+    private final double[] nodeY; // y coordinates for node rendering.
+    private final String[] nodeLabels; // Optional labels for nodes
 
-    private static final int NUM_NODES = 16;
+    private static final int NUM_NODES = 16; // The echo shift game map always has 16 nodes.
 
+    /**
+     * This is the constructor for the GameMap class it initializes the undirected graph representing the map.
+     */
     public GameMap() {
-        graph = new UndirectedGraph(NUM_NODES);
+        graph = new UndirectedGraph(NUM_NODES); // Create an undirected graph with 16 nodes
 
         nodeNames = new String[NUM_NODES];
         nodeX = new double[NUM_NODES];
@@ -30,7 +37,9 @@ public class GameMap {
         initializeConnections();
     }
 
-    // Private helper method to manually place nodes
+    /**
+     * This method is used to set the coordinates of the node.
+     */
     private void initializeNodes() {
         // it took me a nearly an hour :xdd:
         addNode(15, "office", 353, 500);
@@ -58,13 +67,23 @@ public class GameMap {
         addNode(14, "department_of_defense", 420, 401);
     }
 
+    /**
+     * This method is used to add information to a node on the graph.
+     *
+     * @param id The int ID of the node.
+     * @param name The name of the array used to Identify while debugging.
+     * @param x The x coordinate of the node.
+     * @param y The y coordinate of the node.
+     */
     private void addNode(int id, String name, double x, double y) {
         nodeNames[id] = name;
         nodeX[id] = x;
         nodeY[id] = y;
     }
 
-    // Manually connect the nodes according to map
+    /**
+     * Adds the Hallways and vents as edges between the nodes.
+     */
     private void initializeConnections() {
         try {
             // This took me another half an hour :xdd:
@@ -112,9 +131,10 @@ public class GameMap {
 
     /**
      * Connect two nodes as undirectional graph
+     *
      * @param id1 The ID of the first node
      * @param id2 The ID of the second node
-     * @throws GraphException Fails
+     * @throws GraphException Fails if one of the nodes is not in the graph.
      */
     private void connect(int id1, int id2) throws GraphException {
         GraphNode n1 = graph.getNode(id1);
@@ -122,10 +142,9 @@ public class GameMap {
         graph.insertEdge(n1, n2, 'p');   // 'p' = path
     }
 
-    // API for other classes
-
     /**
      * Gives a List of connecting nodes
+     *
      * @param id The ID of the node desired
      * @return A List of node ID in Integer
      */
@@ -158,7 +177,4 @@ public class GameMap {
         return new GameMapNode(id, nodeNames[id], nodeX[id], nodeY[id], nodeLabels[id]);
     }
 
-    public GraphADT getGraph() {
-        return graph;
-    }
 }

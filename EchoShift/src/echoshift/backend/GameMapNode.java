@@ -9,7 +9,7 @@ public class GameMapNode {
     private final String nodeLabel;
 
     /**
-     * A GameMapNode record to pass data easier
+     * A GameMapNode class to pass data easier
      * @param id Node ID
      * @param name Name of the node for easier debug
      * @param x The x coordinate of the node placement on the window

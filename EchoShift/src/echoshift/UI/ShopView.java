@@ -14,6 +14,8 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
 
+import java.util.Objects;
+
 public class ShopView {
 
     private static final String FONT = "Arial";
@@ -35,11 +37,11 @@ public class ShopView {
         BorderPane root = new BorderPane();
         root.getStyleClass().add("shop-root");   // ← moved from inline
         root.getStylesheets().add(
-                getClass().getResource("/echoshift/styles/shopStyle.css").toExternalForm()
+                Objects.requireNonNull(getClass().getResource("/echoshift/styles/shopStyle.css")).toExternalForm()
         );
 
         BackgroundImage bg = new BackgroundImage(
-                new Image(getClass().getResource("/echoshift/images/bg2.png").toExternalForm()),
+                new Image(Objects.requireNonNull(getClass().getResource("/echoshift/images/bg2.png")).toExternalForm()),
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundRepeat.NO_REPEAT,
                 BackgroundPosition.CENTER,
@@ -75,7 +77,7 @@ public class ShopView {
             String itemName = "Item " + (i + 1);
             VBox itemBox = createShopItem(itemName, "Level required: 3");
 
-            itemBox.setOnMouseClicked(e -> showPurchaseToast(itemName));
+            itemBox.setOnMouseClicked(_ -> showPurchaseToast(itemName));
             itemBox.getStyleClass().add("shop-item");   // ← class instead of inline style
 
             itemsGrid.add(itemBox, i % 4, i / 4);
@@ -140,6 +142,8 @@ public class ShopView {
 
     /**
      * Creates a single shop item box.
+     * @param itemName A string for the name of the item to be shown on the UI
+     * @param description A string for the description to be shown on the UI
      */
     private VBox createShopItem(String itemName, String description) {
         VBox itemBox = new VBox(8);
@@ -173,6 +177,7 @@ public class ShopView {
 
     /**
      * Creates a styled button using CSS class.
+     * @param text The text on the button
      */
     private Button createButton(String text) {
         Button btn = new Button(text);
@@ -182,7 +187,12 @@ public class ShopView {
         return btn;
     }
 
-    // Toast methods remain almost identical (we just change the style classes)
+    /**
+     * Set the toast notification to completely opaque to show purchase status,
+     * Then set it to completely transparent to hide it after 2.5 seconds.
+     * Shares the same toast label with error toast.
+     * @param itemName The name of the purchased item
+     */
     public void showPurchaseToast(String itemName) {
         if (toastLabel == null || toastContainer == null) return;
 
@@ -192,12 +202,15 @@ public class ShopView {
         toastLabel.setText(itemName + " purchased!");
         toastContainer.setOpacity(1.0);
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2.5), e -> {
-            toastContainer.setOpacity(0.0);
-        }));
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2.5), _ -> toastContainer.setOpacity(0.0)));
         timeline.play();
     }
 
+    /**
+     * Shows purchase error on a toast notification
+     * Shares the same toast label as purchase toast.
+     * @param message The error message
+     */
     public void showErrorToast(String message) {
         if (toastLabel == null || toastContainer == null) return;
 
@@ -207,7 +220,7 @@ public class ShopView {
         toastLabel.setText(message);
         toastContainer.setOpacity(1.0);
 
-        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2.8), e -> {
+        Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(2.8), _ -> {
             toastContainer.setOpacity(0.0);
             // Reset to success style after hiding
             Platform.runLater(() -> {
