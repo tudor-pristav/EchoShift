@@ -91,7 +91,6 @@ public class PlayerHomeView {
         );
 
         root.setBackground(new Background(bg));
-        root.setPrefSize(1000, 600);
         return root;
     }
 
@@ -140,7 +139,7 @@ public class PlayerHomeView {
     private VBox createRightSection() {
         VBox rightSpacer = new VBox();
         rightSpacer.setAlignment(Pos.CENTER_RIGHT);
-        rightSpacer.setMinWidth(220);
+        rightSpacer.setPrefWidth(220);
         return rightSpacer;
     }
 
@@ -173,5 +172,36 @@ public class PlayerHomeView {
         ButtonEffects.clickAnimation(button);
 
         return button;
+    }
+    public Button getNewGameButton() {
+        return newGameButton;
+    }
+
+    public Button getSelectLevelButton() {
+        return selectLevelButton;
+    }
+
+    public Button getInstructionsButton() {
+        return instructionsButton;
+    }
+
+    public Button getStatsButton() {
+        return statsButton;
+    }
+
+    public Button getSettingsButton() {
+        return settingsButton;
+    }
+
+    public Button getLogoutButton() {
+        return logoutButton;
+    }
+
+    public Button getShopButton() {
+        return shopButton;
+    }
+
+    public Button getExitButton() {
+        return exitButton;
     }
 }

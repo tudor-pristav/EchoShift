@@ -1,139 +1,265 @@
 package echoshift.UI;
 
+import echoshift.animations.ButtonEffects;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
+/**
+ * Builds the Player Stats screen.
+ * Responsible only for frontend layout and UI elements.
+ *
+ * @author Tudor Pristav
+ * @version 1.0.0
+ */
 public class PlayerStatsView {
 
-    public Parent createPlayerStats() {
-        BorderPane root = new BorderPane();
-        root.setStyle("-fx-background-color: #d9d9d9;");
+    private final Button backButton;
+    private final Button deleteAccountButton;
 
-        // This adds a blank bar to the top of the game for spacing.
-        Pane topBar = new Pane();
-        topBar.setPadding(new Insets(15, 20, 10, 20));
-        topBar.setPrefHeight(80);
-        topBar.setStyle("-fx-background-color: #f4f4f4;");
-        root.setTop(topBar);
+    private final Label titleLabel;
+    private final Label peakWpmLabel;
+    private final Label averageWpmLabel;
+    private final Label accuracyLabel;
+    private final Label errorCountLabel;
+    private final Label totalTimePlayedLabel;
+    private final Label highScoreLabel;
+    private final Label highestLevelLabel;
+    private final Label wordsTypedLabel;
+    private final Label coinsLabel;
 
-        // Center content
-        VBox centerBox = new VBox(18);
-        centerBox.setAlignment(Pos.CENTER);
+    /**
+     * Creates reusable controls for the player stats page.
+     */
+    public PlayerStatsView() {
+        this.backButton = createButton("Back", 220, 42);
+        this.deleteAccountButton = createButton("Delete Account", 220, 42);
 
+        this.titleLabel = createTitleLabel("Player Stats", 42);
 
-        VBox menuBox = new VBox(18);
-        menuBox.setAlignment(Pos.CENTER);
-        menuBox.setStyle("""
-                -fx-background-color: white;
-                """);
-        menuBox.setMaxWidth(650);
-        menuBox.setPadding(new Insets(20,20,20,20));
+        this.peakWpmLabel = createStatLabel("Top words per minute: 0");
+        this.averageWpmLabel = createStatLabel("Average words per minute: 0");
+        this.accuracyLabel = createStatLabel("Accuracy: 0%");
+        this.errorCountLabel = createStatLabel("Error count: 0");
+        this.totalTimePlayedLabel = createStatLabel("Total time played: 0");
+        this.highScoreLabel = createStatLabel("High score: 0");
+        this.highestLevelLabel = createStatLabel("Highest level reached: 1");
+        this.wordsTypedLabel = createStatLabel("Words typed: 0");
+        this.coinsLabel = createStatLabel("Coins: 0");
+    }
 
-        centerBox.getChildren().add(menuBox);
+    /**
+     * Builds and returns the full player stats screen.
+     *
+     * @return the root node for this screen
+     */
+    public Parent createPlayerStatsPage() {
+        BorderPane root = createRootLayout();
 
-        Label title = new Label("Player Stats");
-        title.setFont(Font.font("Arial", 40));
-        title.setStyle("-fx-text-fill: black;");
-
-        // TODO: add in actual player stats scoreValue.setText(String.valueOf(player.getHighScore()));
-        GridPane statsGrid = new GridPane();
-        statsGrid.setHgap(40);
-        statsGrid.setVgap(12);
-        statsGrid.setAlignment(Pos.CENTER);
-        statsGrid.setStyle("""
-                -fx-font-size: 28px;
-                """);
-
-        Label highestWPMLabel = new Label("Highest Words Per Minute");
-        Label gamesValue = new Label("24");
-
-        Label averageWPMLabel = new Label("Average Words Per Minute");
-        Label scoreValue = new Label("15800");
-
-        Label highestScoreLabel = new Label("Highest Score");
-        Label winValue = new Label("72%");
-
-        Label wordsTypedLabel = new Label("Words Typed");
-        Label hoursValue = new Label("54");
-
-        Label errorCountLabel = new Label("Error Count");
-        Label errorCount = new Label("4");
-
-        Label accuracyLabel = new Label("Accuracy");
-        Label accuracy = new Label("93%");
-
-        statsGrid.add(highestWPMLabel, 0, 0);
-        statsGrid.add(gamesValue, 1, 0);
-
-        statsGrid.add(averageWPMLabel, 0, 1);
-        statsGrid.add(scoreValue, 1, 1);
-
-        statsGrid.add(highestScoreLabel, 0, 2);
-        statsGrid.add(winValue, 1, 2);
-
-        statsGrid.add(wordsTypedLabel, 0, 3);
-        statsGrid.add(hoursValue, 1, 3);
-
-        statsGrid.add(errorCountLabel, 0, 4);
-        statsGrid.add(errorCount, 1, 4);
-
-        statsGrid.add(accuracyLabel, 0, 5);
-        statsGrid.add(accuracy, 1, 5);
-
-        menuBox.getChildren().addAll(
-                title,
-                statsGrid
+        root.getStylesheets().add(
+                getClass().getResource("/echoshift/styles/buttonStyle.css").toExternalForm()
         );
 
-        root.setCenter(centerBox);
-
-        BorderPane bottomBar = new BorderPane();
-        bottomBar.setPadding(new Insets(10, 20, 15, 20));
-        bottomBar.setPrefHeight(80);
-        bottomBar.setStyle("-fx-background-color: #f4f4f4;");
-
-        Button exitButton = createMenuButton("Exit", 110, 45);
-        exitButton.setOnAction(e -> System.exit(0));
-        bottomBar.setRight(exitButton);
-
-        Button backButton = createMenuButton("Back", 180, 50);
-        // TODO: replace with actual scene switching later
-        backButton.setOnAction(e -> System.out.println("Back clicked"));
-        bottomBar.setLeft(backButton);
-
-        root.setBottom(bottomBar);
+        root.setTop(createTopBar());
+        root.setCenter(createCenterContent());
+        root.setBottom(createBottomBar());
 
         return root;
     }
 
     /**
-     * This method creates the buttons for the page.
-     * This ensures all buttons follow a consistent style.
+     * Creates the main root layout with background image.
      *
-     * @param text The label for the button
-     * @param width The width of the button
-     * @param height The height of the button
-     * @return a button object with the specified label, width, and height
+     * @return the root BorderPane
      */
-    private Button createMenuButton(String text, double width, double height) {
+    private BorderPane createRootLayout() {
+        BorderPane root = new BorderPane();
+
+        BackgroundImage bg = new BackgroundImage(
+                new Image(getClass().getResource("/echoshift/images/bg2.png").toExternalForm()),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100, 100, true, true, false, true)
+        );
+
+        root.setBackground(new Background(bg));
+        return root;
+    }
+
+    /**
+     * Creates the transparent top bar.
+     *
+     * @return the top bar
+     */
+    private HBox createTopBar() {
+        HBox topBar = new HBox();
+        topBar.setPrefHeight(60);
+        topBar.setMinHeight(60);
+        topBar.getStyleClass().add("top-bar");
+        return topBar;
+    }
+
+    /**
+     * Creates the center content with title and stats panel.
+     *
+     * @return the center content wrapper
+     */
+    private StackPane createCenterContent() {
+        VBox statsList = new VBox(
+                18,
+                peakWpmLabel,
+                averageWpmLabel,
+                accuracyLabel,
+                errorCountLabel,
+                totalTimePlayedLabel,
+                highScoreLabel,
+                highestLevelLabel,
+                wordsTypedLabel,
+                coinsLabel
+        );
+        statsList.setAlignment(Pos.TOP_LEFT);
+
+        VBox panel = new VBox(statsList);
+        panel.setAlignment(Pos.CENTER_LEFT);
+        panel.setMaxWidth(600);
+        panel.setPadding(new Insets(38));
+        panel.getStyleClass().add("container");
+
+        VBox centerContent = new VBox(20, titleLabel, panel);
+        centerContent.setAlignment(Pos.CENTER);
+
+        StackPane centerWrapper = new StackPane(centerContent);
+        centerWrapper.setPadding(new Insets(40));
+
+        return centerWrapper;
+    }
+
+    /**
+     * Creates the transparent bottom bar with navigation buttons.
+     *
+     * @return the bottom bar
+     */
+    private BorderPane createBottomBar() {
+        BorderPane bottomBar = new BorderPane();
+        bottomBar.setPrefHeight(60);
+        bottomBar.setMinHeight(60);
+        bottomBar.setPadding(new Insets(10, 18, 10, 18));
+        bottomBar.getStyleClass().add("bottom-bar");
+
+        bottomBar.setLeft(backButton);
+        bottomBar.setRight(deleteAccountButton);
+
+        BorderPane.setAlignment(backButton, Pos.CENTER_LEFT);
+        BorderPane.setAlignment(deleteAccountButton, Pos.CENTER_RIGHT);
+
+        return bottomBar;
+    }
+
+    /**
+     * Updates the page title with the selected username.
+     *
+     * @param username the player's username
+     */
+    public void setPlayerName(String username) {
+        titleLabel.setText(username + "'s Stats and Settings");
+    }
+
+    /**
+     * Updates the displayed stats.
+     */
+    public void setStats(
+            double peakWpm,
+            double averageWpm,
+            double accuracy,
+            int errorCount,
+            double totalTimePlayed,
+            int highScore,
+            int highestLevel,
+            int wordsTyped,
+            int coins
+    ) {
+        peakWpmLabel.setText("Top words per minute: " + formatDouble(peakWpm));
+        averageWpmLabel.setText("Average words per minute: " + formatDouble(averageWpm));
+        accuracyLabel.setText("Accuracy: " + formatDouble(accuracy) + "%");
+        errorCountLabel.setText("Error count: " + errorCount);
+        totalTimePlayedLabel.setText("Total time played: " + formatDouble(totalTimePlayed));
+        highScoreLabel.setText("High score: " + highScore);
+        highestLevelLabel.setText("Highest level reached: " + highestLevel);
+        wordsTypedLabel.setText("Words typed: " + wordsTyped);
+        coinsLabel.setText("Coins: " + coins);
+    }
+
+    /**
+     * Creates a title label.
+     *
+     * @param text the label text
+     * @param size the font size
+     * @return the styled title label
+     */
+    private Label createTitleLabel(String text, double size) {
+        Label label = new Label(text);
+        label.setFont(Font.font("Verdana", FontWeight.NORMAL, size));
+        label.setStyle("-fx-text-fill: black;");
+        label.setWrapText(true);
+        return label;
+    }
+
+    /**
+     * Creates a stat label.
+     *
+     * @param text the label text
+     * @return the styled stat label
+     */
+    private Label createStatLabel(String text) {
+        Label label = new Label(text);
+        label.setFont(Font.font("Verdana", 22));
+        label.setStyle("-fx-text-fill: black;");
+        label.setWrapText(true);
+        return label;
+    }
+
+    /**
+     * Creates a button styled through CSS.
+     *
+     * @param text the button text
+     * @param width preferred width
+     * @param height preferred height
+     * @return the styled button
+     */
+    private Button createButton(String text, double width, double height) {
         Button button = new Button(text);
         button.setPrefSize(width, height);
-        button.setFont(Font.font("Arial", 22));
-        button.setStyle("""
-                -fx-background-color: white;
-                -fx-text-fill: black;
-                -fx-border-color: #bdbdbd;
-                -fx-border-width: 1;
-                -fx-background-radius: 0;
-                -fx-border-radius: 0;
-                -fx-cursor: hand;
-                """);
+        button.setFont(Font.font("Verdana", 16));
+        button.getStyleClass().add("button");
+
+        ButtonEffects.hoverAnimation(button);
+        ButtonEffects.clickAnimation(button);
+
         return button;
     }
-}
 
+    /**
+     * Formats doubles so they do not look ugly on screen.
+     *
+     * @param value the value to format
+     * @return formatted text
+     */
+    private String formatDouble(double value) {
+        return String.format("%.2f", value);
+    }
+
+    public Button getBackButton() {
+        return backButton;
+    }
+
+    public Button getDeleteAccountButton() {
+        return deleteAccountButton;
+    }
+}

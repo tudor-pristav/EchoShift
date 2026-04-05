@@ -1,3 +1,4 @@
+// GameMap.java
 package echoshift.backend;
 
 import graph.GraphADT;
@@ -21,7 +22,7 @@ public class GameMap {
     private final String[] nodeLabels; // Optional labels for nodes
     private final GameMapNode[] nodes;
 
-    private static final int NUM_NODES = 16;
+    private static final int NUM_NODES = 16; // The echo shift game map always has 16 nodes.
 
     /**
      * This is the constructor for the GameMap class it initializes the undirected graph representing the map.
