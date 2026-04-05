@@ -40,10 +40,11 @@ public class HighScoreController {
     private void initializePage() {
         List<HighScoreEntry> highScoreEntries = buildHighScoreEntries();
 
-        Scene scene = new Scene(view.createHighScoresPage(highScoreEntries), 1000, 700);
-        stage.setScene(scene);
+        stage.getScene().setRoot( view.createHighScoresPage(highScoreEntries));
         stage.setTitle("Echo Shift - High Scores");
-        stage.show();
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
     }
 
     /**
@@ -75,10 +76,12 @@ public class HighScoreController {
     private void attachEvents() {
         view.getBackButton().setOnAction(e -> {
             MainMenuView mainMenuView = new MainMenuView();
-            Scene scene = new Scene(mainMenuView.createMainMenu(), 1000, 700);
-            stage.setScene(scene);
+            stage.getScene().setRoot( mainMenuView.createMainMenu());
             stage.setTitle("Echo Shift");
-            stage.show();
+            stage.setFullScreenExitHint("");
+            stage.setFullScreenExitKeyCombination(null);
+            stage.setMaximized(true);
+
 
             MainMenuController cont = new MainMenuController(stage,mainMenuView);
         });

@@ -4,6 +4,7 @@ import echoshift.UI.ManageAccountsView;
 import echoshift.UI.PlayerStatsView;
 import echoshift.models.UserAccount;
 import echoshift.services.LoginService;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -21,23 +22,23 @@ import java.util.List;
 public class ManageAccountsController {
 
     private final Stage stage;
-    private final Scene previousScene;
+    private final Parent previousRoot;
     private final ManageAccountsView view;
     private final LoginService loginService;
-
+    private final Parent currentRoot;
     /**
      * Creates the controller and initializes the page.
      *
      * @param stage the main application stage
-     * @param previousScene the previous scene to return to
+     * @param previousRoot the previous scene to return to
      * @param view the manage accounts view
      */
-    public ManageAccountsController(Stage stage, Scene previousScene, ManageAccountsView view) {
+    public ManageAccountsController(Stage stage, Parent previousRoot, ManageAccountsView view) {
         this.stage = stage;
-        this.previousScene = previousScene;
+        this.previousRoot = previousRoot;
         this.view = view;
         this.loginService = new LoginService();
-
+        this.currentRoot = stage.getScene().getRoot();
         loadPlayers();
         attachHandlers();
     }
@@ -67,27 +68,26 @@ public class ManageAccountsController {
      */
     private void handlePlayerSelected(UserAccount account) {
         PlayerStatsView playerStatsView = new PlayerStatsView();
-        Scene statsScene = new Scene(playerStatsView.createPlayerStatsPage(), 1000, 800);
-
+        stage.getScene().setRoot(playerStatsView.createPlayerStatsPage());
+        stage.setTitle("Echo Shift - Player Statistics");
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
         new PlayerStatsController(
                 stage,
-                stage.getScene(),   // ManageAccounts scene
-                previousScene,      // AdminPanel scene
+                currentRoot,   // ManageAccounts scene
+                previousRoot,      // AdminPanel scene
                 playerStatsView,
                 account.getId(),
                 account.getUsername()
         );
-
-        stage.setScene(statsScene);
-        stage.setTitle("Echo Shift - Player Stats");
-        stage.show();
     }
 
     /**
      * Returns to the previous scene.
      */
     private void goBack() {
-        stage.setScene(previousScene);
+        stage.getScene().setRoot(previousRoot);
         stage.setTitle("Echo Shift - Admin Panel");
         stage.show();
     }

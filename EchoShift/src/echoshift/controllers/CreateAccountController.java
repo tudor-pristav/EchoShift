@@ -74,9 +74,11 @@ public class CreateAccountController {
      */
     private void goBackToAdminPanel() {
         AdminPanelView adminPanelView = new AdminPanelView();
-        Scene adminScene = new Scene(adminPanelView.createMainMenu(), 1000, 700);
-
-        stage.setScene(adminScene);
+        stage.getScene().setRoot(adminPanelView.createMainMenu());
+        stage.setTitle("Echo Shift - Admin Panel");
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
         new AdminPanelController(stage, adminPanelView);
     }
 

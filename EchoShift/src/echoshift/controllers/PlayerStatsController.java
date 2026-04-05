@@ -5,6 +5,7 @@ import echoshift.UI.PlayerStatsView;
 import echoshift.models.UserStatistics;
 import echoshift.services.AccountManagementService;
 import echoshift.services.UserDataRetrievalService;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
@@ -15,8 +16,8 @@ import javafx.stage.Stage;
 public class PlayerStatsController {
 
     private final Stage stage;
-    private final Scene manageAccountsScene;   // where "Back" goes
-    private final Scene adminPanelScene;       // where ManageAccounts "Back" goes
+    private final  Parent manageAccountsRoot;   // where "Back" goes
+    private final Parent adminPanelRoot;       // where ManageAccounts "Back" goes
     private final PlayerStatsView view;
     private final String playerId;
     private final String username;
@@ -26,15 +27,15 @@ public class PlayerStatsController {
 
     public PlayerStatsController(
             Stage stage,
-            Scene manageAccountsScene,
-            Scene adminPanelScene,
+            Parent manageAccountsRoot,
+            Parent adminPanelRoot,
             PlayerStatsView view,
             String playerId,
             String username
     ) {
         this.stage = stage;
-        this.manageAccountsScene = manageAccountsScene;
-        this.adminPanelScene = adminPanelScene;
+        this.manageAccountsRoot = manageAccountsRoot;
+        this.adminPanelRoot = adminPanelRoot;
         this.view = view;
         this.playerId = playerId;
         this.username = username;
@@ -77,7 +78,7 @@ public class PlayerStatsController {
      * Back → returns to Manage Accounts (no reload)
      */
     private void goBack() {
-        stage.setScene(manageAccountsScene);
+        stage.getScene().setRoot(manageAccountsRoot);
         stage.setTitle("Echo Shift - Manage Accounts");
         stage.show();
     }
@@ -87,20 +88,17 @@ public class PlayerStatsController {
      */
     private void reloadManageAccountsPage() {
         ManageAccountsView manageAccountsView = new ManageAccountsView();
-        Scene newManageAccountsScene = new Scene(
-                manageAccountsView.createManageAccountsPage(),
-                1000,
-                700
-        );
+        stage.getScene().setRoot(manageAccountsView.createManageAccountsPage());
+        stage.setTitle("Echo Shift - Manage Accounts");
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
 
         new ManageAccountsController(
                 stage,
-                adminPanelScene,   //
+                adminPanelRoot,
                 manageAccountsView
         );
-
-        stage.setScene(newManageAccountsScene);
-        stage.setTitle("Echo Shift - Manage Accounts");
         stage.show();
     }
 

@@ -40,7 +40,7 @@ public class UserDataSaveService {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String path = pathConstructor(playerId);
 
-        // 🔥 wrap it
+        //  wrap it
         PlayerStatisticsFile wrapper = new PlayerStatisticsFile(statistics);
 
         try (FileWriter writer = new FileWriter(path)) {

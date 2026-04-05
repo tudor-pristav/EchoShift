@@ -31,6 +31,11 @@ public class ShopView {
     private final Label titleLabel;
     private final Label coinsLabel;
     private final Session session;
+
+    private final Label itemOneCountLabel;
+    private final Label itemTwoCountLabel;
+    private final Label itemThreeCountLabel;
+
     public ShopView(Session session) {
         this.backButton = createButton("Back", 200, 42);
         int coins = session.getCurrentStatistics().getCoins();
@@ -41,6 +46,10 @@ public class ShopView {
         this.session = session;
         this.titleLabel = createTitleLabel("Shop", 50);
         this.coinsLabel = createCoinsLabel("$" + coins, 29);
+
+        this.itemOneCountLabel = createOwnedLabel();
+        this.itemTwoCountLabel = createOwnedLabel();
+        this.itemThreeCountLabel = createOwnedLabel();
     }
 
     /**
@@ -153,27 +162,24 @@ public class ShopView {
 
         itemsGrid.add(createShopCard(
                 "/echoshift/images/easier-words-icon.png",
-                "Easy Words",
+                "Easy Words: $25",
+                itemOneCountLabel,
                 itemOneButton
         ), 0, 0);
 
         itemsGrid.add(createShopCard(
                 "/echoshift/images/extra-life-icon.png",
-                "Extra Life",
+                "Extra Life: $40",
+                itemTwoCountLabel,
                 itemTwoButton
         ), 1, 0);
 
         itemsGrid.add(createShopCard(
                 "/echoshift/images/instant-lure-icon.png",
-                "Instant Lure",
+                "Instant Lure: $35",
+                itemThreeCountLabel,
                 itemThreeButton
-        ), 0, 1);
-
-        itemsGrid.add(createShopCard(
-                "/echoshift/images/instant-repair-icon.png",
-                "Instant Repair",
-                itemFourButton
-        ), 1, 1);
+        ), 2, 0);
 
         StackPane panel = new StackPane(itemsGrid);
         panel.getStyleClass().add("shop-panel");
@@ -189,12 +195,13 @@ public class ShopView {
      * @param button purchase button
      * @return the card node
      */
-    private VBox createShopCard(String imagePath, String itemName, Button button) {
+    private VBox createShopCard(String imagePath, String itemName,Label ownedLabel, Button button) {
         ImageView imageView = createItemImage(imagePath);
 
         Label nameLabel = createCardTitle(itemName, 20);
 
-        VBox card = new VBox(15, imageView, nameLabel, button);
+
+        VBox card = new VBox(15, imageView, nameLabel, button, ownedLabel);
         card.setAlignment(Pos.CENTER);
         card.getStyleClass().add("shop-card");
 
@@ -293,6 +300,11 @@ public class ShopView {
 
         return button;
     }
+    private Label createOwnedLabel() {
+        Label label = new Label("Owned: 0");
+        label.getStyleClass().add("owned");
+        return label;
+    }
 
     /**
      * Creates a shop purchase button.
@@ -330,5 +342,18 @@ public class ShopView {
     public void setCoinsText(String text) {
         coinsLabel.setText(text);
     }
+
+    public void setItemOneCountText(String text) {
+        itemOneCountLabel.setText(text);
+    }
+
+    public void setItemTwoCountText(String text) {
+        itemTwoCountLabel.setText(text);
+    }
+
+    public void setItemThreeCountText(String text) {
+        itemThreeCountLabel.setText(text);
+    }
+
 
 }

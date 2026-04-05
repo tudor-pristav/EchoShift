@@ -64,17 +64,25 @@ public class PlayerLoginController {
         // create next page
         PlayerHomeView homeView = new PlayerHomeView(session);
 
+        stage.getScene().setRoot(homeView.createPlayerHomePage());
+        stage.setTitle("Echo Shift - Player Home");
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
         // attach controller
         new PlayerHomeController(stage, homeView, session);
 
         // switch scene
-        stage.setScene(new Scene(homeView.createPlayerHomePage(), 1280, 720));
     }
 
     private void goToMenu() {
         MainMenuView mainMenuView = new MainMenuView();
         MainMenuController mainMenuController = new MainMenuController(stage,mainMenuView);
-        stage.setScene(new Scene(mainMenuView.createMainMenu(), 1280, 720));
+        stage.getScene().setRoot(mainMenuView.createMainMenu());
+        stage.setTitle("Echo Shift");
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
     }
 
     private void showError(String message) {

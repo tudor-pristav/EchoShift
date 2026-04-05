@@ -1,16 +1,28 @@
 {
   "accounts": [
     {
-      "id": "T579DX4G4I",
-      "username": "test",
-      "password": "1234",
-      "role": "player"
-    },
-    {
       "id": "admin",
       "username": "admin",
       "password": "test",
       "role": "admin"
+    },
+    {
+      "id": "C3IBUILF3C",
+      "username": "test",
+      "password": "test",
+      "role": "player"
+    },
+    {
+      "id": "FO5AOPZBL4",
+      "username": "test1",
+      "password": "test",
+      "role": "player"
+    },
+    {
+      "id": "EGBJLHK97X",
+      "username": "bob",
+      "password": "bob123",
+      "role": "player"
     }
   ]
 }

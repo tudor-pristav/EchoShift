@@ -62,18 +62,24 @@ public class AdminLoginController {
 
         // create next page
        AdminPanelView panelView = new AdminPanelView();
-
-        // attach controller
-        new AdminPanelController(stage, panelView);
-
         // switch scene
-        stage.setScene(new Scene(panelView.createMainMenu(), 1280, 720));
+
+        stage.getScene().setRoot(panelView.createMainMenu());
+        new AdminPanelController(stage, panelView);
+        stage.setTitle("Echo Shift - Admin Panel");
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
     }
 
     private void goToMenu() {
         MainMenuView mainMenu = new MainMenuView();
         MainMenuController mainMenuController = new MainMenuController(stage,mainMenu);
-        stage.setScene(new Scene(mainMenu.createMainMenu(), 1280, 720));
+        stage.getScene().setRoot(mainMenu.createMainMenu());
+        stage.setTitle("Echo Shift");
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
     }
 
     private void showError(String message) {

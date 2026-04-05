@@ -2,6 +2,7 @@ package echoshift.controllers;
 
 import echoshift.UI.SettingsView;
 import echoshift.animations.SoundEffects;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -12,19 +13,19 @@ import javafx.stage.Stage;
 public class SettingsController {
 
     private final Stage stage;
-    private final Scene previousScene;
+    private final Parent previousRoot;
     private final SettingsView view;
 
     /**
      * Creates the settings controller and wires up all event handlers.
      *
      * @param stage the main application stage
-     * @param previousScene the scene to return to when pressing back
+     * @param previousRoot the scene to return to when pressing back
      * @param view the settings view
      */
-    public SettingsController(Stage stage, Scene previousScene, SettingsView view) {
+    public SettingsController(Stage stage, Parent previousRoot, SettingsView view) {
         this.stage = stage;
-        this.previousScene = previousScene;
+        this.previousRoot = previousRoot;
         this.view = view;
 
         initializeValues();
@@ -43,7 +44,7 @@ public class SettingsController {
      * Registers all event handlers for the settings page.
      */
     private void registerHandlers() {
-        view.getBackButton().setOnAction(e -> stage.setScene(previousScene));
+        view.getBackButton().setOnAction(e ->  stage.getScene().setRoot(previousRoot));
 
         view.getVolumeSlider().valueProperty().addListener((obs, oldVal, newVal) -> {
             double volume = newVal.doubleValue() / 100.0;
