@@ -32,15 +32,11 @@ public class UserDataSaveService {
      * @param statistics the statistics to save
      * @throws IOException if the file cannot be written
      */
-    /**
-     * Saves the given statistics object to the player's JSON file
-     * using the correct wrapper structure.
-     */
     public void saveStatistics(String playerId, UserStatistics statistics) throws IOException {
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         String path = pathConstructor(playerId);
 
-        // 🔥 wrap it
+        // wrap it
         PlayerStatisticsFile wrapper = new PlayerStatisticsFile(statistics);
 
         try (FileWriter writer = new FileWriter(path)) {

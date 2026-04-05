@@ -4,6 +4,9 @@ import echoshift.UI.MapRenderer;
 import echoshift.backend.Entity;
 import echoshift.backend.GameMap;
 
+import echoshift.models.UserStatistics;
+import echoshift.services.UserDataRetrievalService;
+import echoshift.services.UserDataSaveService;
 import typing.TypingEngine;
 import typing.TypingResult;
 import typing.createWordBank;
@@ -68,6 +71,8 @@ public class MainGameplay extends Application {
     private Label scoreLabel;
     private Label hour;
 
+    private UserStatistics stats;
+
     /**
      * Method the triggers the start of the night, and maintains buttons, stats, ann in game actions.
      *
@@ -114,6 +119,7 @@ public class MainGameplay extends Application {
         powerUpBar.getChildren().addAll(instantHealthVBox, instantLureVBox, easierWordsVBox);
         powerUpBar.setSpacing(20);
 
+        //Score display
         scoreLabel = new Label("Score: " + score);
         scoreLabel.setStyle("""
                 -fx-background-color: #FFFFFF70;
@@ -123,9 +129,8 @@ public class MainGameplay extends Application {
                 -fx-border-width: 1;
                 -fx-text-alignment: center;
                 """);
-
+        //Hour display
         hour = new Label(currentNight.getCurrentHour() + "AM");
-
         hour.setStyle("""
                 -fx-background-color: #FFFFFF70;
                 -fx-font-size: 18;
@@ -138,6 +143,7 @@ public class MainGameplay extends Application {
 
         currentNight.setOnHourChange(() -> Platform.runLater(() -> hour.setText(currentNight.getCurrentHour() + "AM")));
 
+        //Display both time and score in the top right.
         VBox rightCorner = new VBox(scoreLabel, hour);
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -176,7 +182,7 @@ public class MainGameplay extends Application {
         scene.setOnKeyTyped(e -> handleTyping(e.getCharacter()));
 
 
-
+        //Setup powerup buttons and their functionality
         instantHealthVBox.setOnMouseClicked(_ -> this.currentNight.addHealth());
         easierWordsVBox.setOnMouseClicked(_ -> {
             try {
@@ -198,9 +204,11 @@ public class MainGameplay extends Application {
     private VBox createPowerUpBox(Image image) {
         ImageView powerUpImage = new ImageView(image);
 
+        //Number of a specific powerup a user has on hand.
         Label powerUpLabel = new Label("1");
         VBox powerUpVBox = new VBox(powerUpImage, powerUpLabel);
 
+        //Format powerup buttons.
         powerUpVBox.setAlignment(Pos.CENTER);
         powerUpVBox.setStyle("""
                 -fx-background-color: #FFFFFF70;
@@ -219,6 +227,7 @@ public class MainGameplay extends Application {
      * @return An HBox object that will represent the typing interface for the user.
      */
     private HBox handleTyping() {
+        //Format the HBox to be returned that handles the interface for typing.
         HBox typingBox = new HBox(40, wordLabel, typedLabel, statusLabel);
         wordLabel.setAlignment(Pos.CENTER_LEFT);
         wordLabel.setStyle("""
@@ -250,6 +259,28 @@ public class MainGameplay extends Application {
     private void loadNight() {
         //Remember to change the first parameter to a variable that matches the current night
         currentNight = new Night(5, entity, renderer);
+
+        // TODO: Fix stat saves.
+        currentNight.setOnNightEnd(() -> {
+            stats = new UserStatistics();
+            stats.setGamesPlayed();
+            stats.setAverageWPM(engine.calculateWPM());
+            stats.setPeakWPM(engine.calculateWPM());
+            stats.setAccuracy(engine.calculateAccuracy());
+            stats.setErrorCount(engine.getErrorCount());
+            stats.setTotalTimePlayed(currentNight.getCurrentHour());
+            stats.setHighScore(score);
+            stats.setHighestLevel(currentNight.getNightNum());
+            UserDataSaveService save = new UserDataSaveService();
+
+            try {
+                save.saveStatistics("0", stats);
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
+
+        //Both visual and in game statistics adjustments when a player's health changes.
         currentNight.setOnHealthDecrease(() -> {
             int health = currentNight.getHealth();
             updateHearts(health);
@@ -265,6 +296,7 @@ public class MainGameplay extends Application {
         });
         currentNight.start();
 
+        //Properly ends the night to avoid errors.
         stage.setOnCloseRequest(_ -> currentNight.stopNight());
     }
 
@@ -278,16 +310,19 @@ public class MainGameplay extends Application {
         statusLabel.setText("");
         if (waitingForNextWord) return;
 
+        //Prepare the next correct character that should be typed by the player.
         char c = character.charAt(0);
         TypingResult result = engine.inputChar(c);
 
         typedLabel.setText(typedLabel.getText() + c);
 
+        //Check if each character is input correctly and display each check's result.
         if (result.isCorrect())
             statusLabel.setText("Correct");
         else
             statusLabel.setText("Incorrect");
 
+        //Adjust night score on the mistyping of a word.
         if (result.isWordFailed()) {
             statusLabel.setText("WORD FAILED");
             if (score > 300){
@@ -296,9 +331,11 @@ public class MainGameplay extends Application {
                 score = 0;
             }
             Platform.runLater(() -> scoreLabel.setText("Score: " + score));
+            //Reload a new word to be typed.
             startPause();
         }
 
+        //Adjust night score on the completion of a word.
         if (result.isWordCompleted()) {
             if (placingLure) {
                 placeLure(selectedNode);
@@ -310,6 +347,7 @@ public class MainGameplay extends Application {
             }
             updateScore(engine);
             Platform.runLater(() -> scoreLabel.setText("Score: " + score));
+            //Reload new word to be typed.
             startPause();
         }
     }
@@ -320,8 +358,11 @@ public class MainGameplay extends Application {
      *  @param node The node that the entity will be lured to, if the entity is in a node adjacent to this one.
      */
     private void placeLure(int node) {
+        //Retrieve all nodes adjacent to the node the entity is currently at.
         List<Integer> adjacent = gameMap.getConnections(entity.getCurrentRoomId());
         for (Integer i : adjacent) {
+            //Check if any of the nodes adjacent to the entity are the ones that the user wishes to lure to.
+            //If an adjacent node meets this criteria, the entity is move to this node.
             if (i == node) {
                 System.out.println("Lure Placed at node " + node);
                 entity.setCurrentRoom(node);
@@ -335,9 +376,10 @@ public class MainGameplay extends Application {
      */
     private void performScan() {
         renderer.scan();
-        PauseTransition scan = new PauseTransition(Duration.seconds(2)); // adjust duration
+        PauseTransition scan = new PauseTransition(Duration.seconds(2));
         scan.setOnFinished(_ -> renderer.endScan());
         scan.play();
+
         System.out.println("Scan performed!");
     }
 
@@ -346,8 +388,8 @@ public class MainGameplay extends Application {
      */
     private void startPause() {
         waitingForNextWord = true;
-
         PauseTransition pause = new PauseTransition(Duration.seconds(1));
+        //Refresh the interface with a new word to be type, and clear the typing box.
         pause.setOnFinished(_ -> {
             typedLabel.setText("Typed: ");
             updateWordDisplay();
@@ -374,7 +416,7 @@ public class MainGameplay extends Application {
      */
     private void flashBackground(Color color) {
         root.setBackground(Background.fill(color));
-        // Revert after 500 ms
+        // Revert background to normal after 500 ms.
         PauseTransition flashTransition = new PauseTransition(Duration.millis(500));
         flashTransition.setOnFinished(_ -> root.setBackground(Background.fill(Color.valueOf("#1f1e33"))));
         flashTransition.play();

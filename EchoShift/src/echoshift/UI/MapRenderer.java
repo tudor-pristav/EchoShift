@@ -31,17 +31,18 @@ public class MapRenderer {
      * @param gameMap The graph logically representing the game map.
      */
     public MapRenderer(GameMap gameMap) {
+        //Load the map visually onto the scene
         Image mapImage = new Image(Objects.requireNonNull(
                 getClass().getResourceAsStream("/echoshift/images/map.png")));
-
         ImageView background = new ImageView(mapImage);
         background.setPreserveRatio(true);
 
+        //Ensure the layout of the map remains consistent on the scene
         overlay = new Pane();
         mapPane = new StackPane(background, overlay);
         mapPane.setMaxSize(558, 543);
         mapPane.setAlignment(Pos.CENTER);
-
+        //Display each node/room visually.
         renderStaticNodes(gameMap);
     }
 
@@ -54,21 +55,26 @@ public class MapRenderer {
         for (int nodeID = 0; nodeID < 16; nodeID++) {
             GameMapNode node = gameMap.getNode(nodeID);
             if (node == null) continue;
-
+            //Format each node so that the are in the correct position and are displayed consistently
             Circle circle = new Circle(node.getNodeX(), node.getNodeY(), 18);
             circle.setFill(Color.TRANSPARENT);
             circle.setStroke(Color.RED);
             circle.setStrokeWidth(4);
 
             int finalId = node.getID();
+
+            //When a node is clicked, turn the node green and select the clicked node.
             circle.setOnMouseClicked(e -> {
+                //TODO Remove print statement
                 System.out.println("Clicked node: " + finalId);
+
 
                 if (nodeClickHandler != null) {
                     nodeClickHandler.accept(finalId);
                 }
 
                 // Debug highlight
+                //TODO Remove debug overlay on nodes
                 for (javafx.scene.Node n : overlay.getChildren()) {
                     if (n instanceof Circle c && c.getStroke() == Color.GREEN) {
                         c.setStroke(Color.RED);

@@ -22,6 +22,7 @@ public class Night {
     private final Entity entity;
     private final MapRenderer mapRenderer;
 
+    private Runnable nightEndCallback;
     private Runnable healthDecreaseCallback;
     private Runnable healthIncreaseCallback;
 
@@ -71,7 +72,7 @@ public class Night {
                         onHourChange.run();
                     }
                 }
-
+                //Set a minimum timer on the rate at which the entity will move, depending on the difficulty.
                 if (elapsedMs - lastUpdate >= (10-difficulty.getDifficulty())*1000) {
                     lastUpdate = elapsedMs;
                     updateEnemies();
@@ -94,7 +95,7 @@ public class Night {
     private void updateEnemies() {
         double currentDiff = difficulty.getDifficulty();
 
-        // Update Entity
+        // Update Entity position and check if entity position causes events.
         if (entity != null) {
             entity.setDiff(currentDiff);
             if (entity.attemptMove()) {
@@ -121,6 +122,10 @@ public class Night {
         return currentHour;
     }
 
+    public int getNightNum(){
+        return nightNum;
+    }
+
     /**
      * This stops the Night with a specific error code.
      *
@@ -130,11 +135,20 @@ public class Night {
         if (gameTimer != null) {
             gameTimer.stop();
         }
+
+        //TODO Remove printing tests,replace with visual message/popup
         System.out.println("Night " + nightNum + " has ended!");
         if (code == 1){
             System.out.println("You died at hour " + (currentHour+1));
         }
+        nightEndCallback.run();
     }
+
+    /**
+     *Method updates the player's personal statistics after the night has ended.
+     * @param callback Contains player's personal statistics.
+     */
+    public void setOnNightEnd(Runnable callback) { this.nightEndCallback = callback; }
 
     /**
      * This changes the visuals for the health bar when the player loses a life.
@@ -162,6 +176,7 @@ public class Night {
         if (healthDecreaseCallback != null) {
             healthDecreaseCallback.run();
         }
+        //If player health reaches 0 or below 0, the game ends.
         if (playerHealth <= 0) {
             stopNight(1);
         }
