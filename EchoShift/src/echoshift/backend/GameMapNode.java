@@ -39,4 +39,8 @@ public class GameMapNode {
     public String getNodeLabel() {
         return nodeLabel;
     }
+
+    public String getName() {
+        return nodeName;
+    }
 }
