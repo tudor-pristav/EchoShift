@@ -1,0 +1,147 @@
+package echoshift.controllers;
+
+import echoshift.UI.ManageAccountsView;
+import echoshift.UI.PlayerStatsView;
+import echoshift.models.UserStatistics;
+import echoshift.services.AccountManagementService;
+import echoshift.services.UserDataRetrievalService;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
+import javafx.stage.Stage;
+
+/**
+ * Controller for the Player Stats screen.
+ */
+public class PlayerStatsController {
+
+    private final Stage stage;
+    private final Scene manageAccountsScene;   // where "Back" goes
+    private final Scene adminPanelScene;       // where ManageAccounts "Back" goes
+    private final PlayerStatsView view;
+    private final String playerId;
+    private final String username;
+
+    private final AccountManagementService accountManagementService;
+    private final UserDataRetrievalService dataRetrievalService;
+
+    public PlayerStatsController(
+            Stage stage,
+            Scene manageAccountsScene,
+            Scene adminPanelScene,
+            PlayerStatsView view,
+            String playerId,
+            String username
+    ) {
+        this.stage = stage;
+        this.manageAccountsScene = manageAccountsScene;
+        this.adminPanelScene = adminPanelScene;
+        this.view = view;
+        this.playerId = playerId;
+        this.username = username;
+
+        this.dataRetrievalService = new UserDataRetrievalService();
+        this.accountManagementService = new AccountManagementService();
+
+        loadPlayerData();
+        attachHandlers();
+    }
+
+    private void loadPlayerData() {
+        try {
+            UserStatistics stats = dataRetrievalService.retrieveStatistics(playerId);
+
+            view.setPlayerName(username);
+            view.setStats(
+                    stats.getPeakWPM(),
+                    stats.getAverageWPM(),
+                    stats.getAccuracy(),
+                    stats.getErrorCount(),
+                    stats.getTotalTimePlayed(),
+                    stats.getHighScore(),
+                    stats.getHighestLevel(),
+                    stats.getWordsTyped(),
+                    stats.getCoins()
+            );
+
+        } catch (RuntimeException e) {
+            showError("Could not load statistics for player: " + username);
+        }
+    }
+
+    private void attachHandlers() {
+        view.getBackButton().setOnAction(e -> goBack());
+        view.getDeleteAccountButton().setOnAction(e -> handleDeleteAccount());
+    }
+
+    /**
+     * Back → returns to Manage Accounts (no reload)
+     */
+    private void goBack() {
+        stage.setScene(manageAccountsScene);
+        stage.setTitle("Echo Shift - Manage Accounts");
+        stage.show();
+    }
+
+    /**
+     * Reload Manage Accounts AFTER deletion
+     */
+    private void reloadManageAccountsPage() {
+        ManageAccountsView manageAccountsView = new ManageAccountsView();
+        Scene newManageAccountsScene = new Scene(
+                manageAccountsView.createManageAccountsPage(),
+                1000,
+                700
+        );
+
+        new ManageAccountsController(
+                stage,
+                adminPanelScene,   //
+                manageAccountsView
+        );
+
+        stage.setScene(newManageAccountsScene);
+        stage.setTitle("Echo Shift - Manage Accounts");
+        stage.show();
+    }
+
+    private void handleDeleteAccount() {
+        Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmAlert.setTitle("Delete Account");
+        confirmAlert.setHeaderText(null);
+        confirmAlert.setContentText("Are you sure you want to delete the account for " + username + "?");
+
+        confirmAlert.showAndWait().ifPresent(response -> {
+            if (response == javafx.scene.control.ButtonType.OK) {
+                try {
+                    boolean deleted = accountManagementService.deleteAccount(playerId);
+
+                    if (deleted) {
+                        Alert successAlert = new Alert(Alert.AlertType.INFORMATION);
+                        successAlert.setTitle("Success");
+                        successAlert.setHeaderText(null);
+                        successAlert.setContentText("Account deleted successfully.");
+                        successAlert.showAndWait();
+
+                        reloadManageAccountsPage(); //
+
+                    } else {
+                        showError("Account not found. Nothing was deleted.");
+                    }
+
+                } catch (IllegalArgumentException e) {
+                    showError(e.getMessage());
+                } catch (RuntimeException e) {
+                    showError("Failed to delete account for " + username);
+                }
+            }
+        });
+    }
+
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+}

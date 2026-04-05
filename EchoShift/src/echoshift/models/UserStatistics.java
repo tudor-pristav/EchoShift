@@ -75,4 +75,13 @@ public class UserStatistics {
     public int getCoins() {
         return coins;
     }
+
+    /**
+     * Sets the player's coins.
+     *
+     * @param coins the new coin amount
+     */
+    public void setCoins(int coins) {
+        this.coins = coins;
+    }
 }

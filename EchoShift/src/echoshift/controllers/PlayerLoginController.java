@@ -1,5 +1,6 @@
 package echoshift.controllers;
 
+import echoshift.UI.MainMenuView;
 import echoshift.UI.PlayerLoginView;
 import echoshift.models.Session;
 import echoshift.models.UserAccount;
@@ -24,7 +25,6 @@ public class PlayerLoginController {
 
         this.loginService = new LoginService();
         this.dataService = new UserDataRetrievalService();
-
         attachHandlers();
     }
 
@@ -55,7 +55,6 @@ public class PlayerLoginController {
 
         //  Create session
         Session session = new Session(account, stats);
-
         //  Navigate
         goToPlayerHome(session);
     }
@@ -66,15 +65,16 @@ public class PlayerLoginController {
         PlayerHomeView homeView = new PlayerHomeView(session);
 
         // attach controller
-        // new PlayerHomeController(stage, homeView, session);
+        new PlayerHomeController(stage, homeView, session);
 
         // switch scene
         stage.setScene(new Scene(homeView.createPlayerHomePage(), 1280, 720));
     }
 
     private void goToMenu() {
-        // replace with your real menu navigation later
-        showInfo("Return to main menu here.");
+        MainMenuView mainMenuView = new MainMenuView();
+        MainMenuController mainMenuController = new MainMenuController(stage,mainMenuView);
+        stage.setScene(new Scene(mainMenuView.createMainMenu(), 1280, 720));
     }
 
     private void showError(String message) {
