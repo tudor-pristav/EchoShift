@@ -15,6 +15,7 @@ import echoshift.animations.ButtonEffects;
 /**
  * Builds the Player Login screen for Echo Shift.
  * This class is responsible only for creating the layout and UI elements.
+ * @author Tudor Mihai Pristav
  */
 public class PlayerLoginView {
 

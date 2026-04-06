@@ -4,90 +4,86 @@ import echoshift.UI.ManageAccountsView;
 import echoshift.UI.PlayerStatsView;
 import echoshift.models.UserAccount;
 import echoshift.services.LoginService;
-import javafx.scene.Scene;
+import javafx.scene.Parent;
 import javafx.stage.Stage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Controller for the Manage Accounts screen.
- * Loads all player accounts, displays their names,
- * and handles navigation/actions for account selection.
+ * Handles loading players, selection, and navigation.
  *
- * @author Tudor Pristav
- * @version 1.0.0
+ * @author Tudor Mihai Pristav
  */
 public class ManageAccountsController {
 
     private final Stage stage;
-    private final Scene previousScene;
+    private final Parent previousRoot;
     private final ManageAccountsView view;
     private final LoginService loginService;
+    private final Parent currentRoot;
 
     /**
      * Creates the controller and initializes the page.
      *
-     * @param stage the main application stage
-     * @param previousScene the previous scene to return to
+     * @param stage the main stage
+     * @param previousRoot the previous scene root
      * @param view the manage accounts view
      */
-    public ManageAccountsController(Stage stage, Scene previousScene, ManageAccountsView view) {
+    public ManageAccountsController(Stage stage, Parent previousRoot, ManageAccountsView view) {
         this.stage = stage;
-        this.previousScene = previousScene;
+        this.previousRoot = previousRoot;
         this.view = view;
         this.loginService = new LoginService();
+        this.currentRoot = stage.getScene().getRoot();
 
         loadPlayers();
         attachHandlers();
     }
 
     /**
-     * Loads all accounts, keeps only player accounts,
-     * and sends them to the view.
+     * Loads all player accounts and displays them in the view.
      */
     private void loadPlayers() {
         List<UserAccount> allAccounts = loginService.returnAccounts();
         view.setPlayerList(allAccounts, this::handlePlayerSelected);
     }
 
-
     /**
-     * Attaches static button handlers.
+     * Attaches button handlers.
      */
     private void attachHandlers() {
         view.getBackButton().setOnAction(e -> goBack());
     }
 
     /**
-     * Handles selecting a player from the list
-     * and opens that player's stats page.
+     * Opens the selected player's statistics page.
      *
-     * @param account the selected player account
+     * @param account the selected account
      */
     private void handlePlayerSelected(UserAccount account) {
         PlayerStatsView playerStatsView = new PlayerStatsView();
-        Scene statsScene = new Scene(playerStatsView.createPlayerStatsPage(), 1000, 800);
+        stage.getScene().setRoot(playerStatsView.createPlayerStatsPage());
+        stage.setTitle("Echo Shift - Player Statistics");
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
 
         new PlayerStatsController(
                 stage,
-                stage.getScene(),   // ManageAccounts scene
-                previousScene,      // AdminPanel scene
+                currentRoot,
+                previousRoot,
                 playerStatsView,
                 account.getId(),
                 account.getUsername()
         );
-
-        stage.setScene(statsScene);
-        stage.setTitle("Echo Shift - Player Stats");
-        stage.show();
     }
 
     /**
-     * Returns to the previous scene.
+     * Returns to the previous screen.
      */
     private void goBack() {
-        stage.setScene(previousScene);
+        stage.getScene().setRoot(previousRoot);
         stage.setTitle("Echo Shift - Admin Panel");
         stage.show();
     }

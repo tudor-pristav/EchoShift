@@ -12,7 +12,7 @@ import echoshift.models.UserAccount;
 
 /**
  * Service responsible for handling user authentication.
- *
+ * @author Tudor Mihai Pristav
  * <p>This class provides functionality to:
  * <ul>
  *     <li>Load user accounts from a local JSON file</li>

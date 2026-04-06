@@ -15,6 +15,7 @@ import javafx.scene.text.Font;
 /**
  * Builds the Create Account screen for Echo Shift.
  * This class is responsible only for creating the layout and UI elements.
+ * @author Tudor Mihai Pristav
  */
 public class CreateAccountView {
 

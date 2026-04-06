@@ -2,6 +2,7 @@ package echoshift.models;
 
 /**
  * Represents all gameplay statistics and currency for a player.
+ * @author Tudor Mihai Pristav
  */
 public class UserStatistics {
 
@@ -108,7 +109,7 @@ public class UserStatistics {
      * @param curLevel The level the user has recently beaten.
      */
     public void setHighestLevel(int curLevel) {
-        if (curLevel == highestLevel) {
+        if (curLevel == highestLevel && curLevel < 3) {
             highestLevel += 1;
         }
     }
@@ -126,7 +127,7 @@ public class UserStatistics {
      * @param coins the new coin amount
      */
     public void setCoins(int coins) {
-        this.coins = coins;
+        this.coins += coins;
     }
 
     /**

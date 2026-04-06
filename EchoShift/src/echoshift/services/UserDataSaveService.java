@@ -10,6 +10,7 @@ import java.io.IOException;
 
 /**
  * Service responsible for saving player statistics to JSON files.
+ * @author Tudor Mihai Pristav
  */
 public class UserDataSaveService {
 

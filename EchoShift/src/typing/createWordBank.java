@@ -1,6 +1,9 @@
 package typing;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -18,17 +21,26 @@ public class createWordBank {
      * @return The array of words.
      * @throws IOException If an error occurs when opening the file.
      */
-    public static String[] create(int nightDif) throws IOException {
+    public static String[] create(int nightDif) {
         String fileName;
+
         if (nightDif == 1){
-            fileName = "EchoShift/easy.txt";
+            fileName = "/echoshift/text/easy.txt";
         } else if (nightDif == 2) {
-            fileName = "EchoShift/medium.txt";
+            fileName = "/echoshift/text/medium.txt";
         } else {
-            fileName = "EchoShift/hard.txt";
+            fileName = "/echoshift/text/hard.txt";
         }
-        try{
-            return Files.lines(Path.of(fileName)).toArray(String[]::new);
+
+        try (InputStream input = createWordBank.class.getResourceAsStream(fileName)) {
+
+            if (input == null) {
+                throw new RuntimeException("File not found: " + fileName);
+            }
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(input));
+            return reader.lines().toArray(String[]::new);
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

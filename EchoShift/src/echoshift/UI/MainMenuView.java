@@ -13,6 +13,7 @@ import javafx.scene.text.Font;
 /**
  * Builds the Main Menu screen for Echo Shift.
  * This class is responsible only for the frontend layout and UI elements.
+ * @author Tudor Mihai Pristav
  */
 public class MainMenuView {
 

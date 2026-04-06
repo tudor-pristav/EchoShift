@@ -4,14 +4,17 @@ import echoshift.UI.MapRenderer;
 import echoshift.backend.Entity;
 import echoshift.backend.GameMap;
 
+import echoshift.models.Session;
 import echoshift.models.UserStatistics;
-import echoshift.services.UserDataRetrievalService;
+import echoshift.services.PowerupSaveService;
 import echoshift.services.UserDataSaveService;
+import javafx.animation.PauseTransition;
+import javafx.scene.control.Alert;
+import javafx.util.Duration;
 import typing.TypingEngine;
 import typing.TypingResult;
 import typing.createWordBank;
 
-import javafx.animation.PauseTransition;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.geometry.Pos;
@@ -25,7 +28,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.util.Duration;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.Priority;
 
@@ -39,19 +41,19 @@ import java.util.List;
  * @author Ho Long Adrian Lee
  * @author Bob Zhang
  * @author Yasmine Suojhayer
+ * @author Tudor Mihai Pristav
  */
 public class MainGameplay extends Application {
     private Stage stage;
 
-    private GameMap gameMap; // Object that stores the map layout and the location of the entity.
-    private TypingEngine engine; // Object that handles the loading of new words to type, checks accuracy, and records overall stats.
-    private Night currentNight; // Represents the current night object, containing the time elapsed and health of the player.
+    private GameMap gameMap;
+    private TypingEngine engine;
+    private Night currentNight;
     private BorderPane root;
 
     private final Label wordLabel = new Label();
     private final Label statusLabel = new Label("Scanning...");
     private final Label typedLabel = new Label("Typed: ");
-
 
     private boolean waitingForNextWord = false;
     private boolean placingLure = false;
@@ -71,55 +73,70 @@ public class MainGameplay extends Application {
     private Label scoreLabel;
     private Label hour;
 
+    private Label instantHealthCountLabel;
+    private Label easierWordsCountLabel;
+    private Label instantLureCountLabel;
+
+    private VBox instantHealthVBox;
+    private VBox easierWordsVBox;
+    private VBox instantLureVBox;
+
     private UserStatistics stats;
+
+    private int nightNumber;
+
+    private final Session session;
 
     /**
      * Method the triggers the start of the night, and maintains buttons, stats, ann in game actions.
      *
-     * @param stage The stage on which the night will be displayed.
-     * @throws IOException If the method is unable to receive input from the player, the method will
+     * @param nightNumber The stage on which the night will be displayed.
+     *
      * throw an IOException.
      */
+    public MainGameplay(int nightNumber, Session session) {
+        this.nightNumber = nightNumber;
+        this.session = session;
+    }
+
     @Override
     public void start(Stage stage) throws IOException {
         this.stage = stage;
         gameMap = new GameMap();
 
-        // Example word list
-        engine = new TypingEngine(createWordBank.create(3));
-        // Start night
-        loadNight();
-        // Live indicator
+        engine = new TypingEngine(createWordBank.create(nightNumber));
+
         HBox liveBox = new HBox();
         liveBox.setSpacing(10);
-        for (int i=0; i<3; i++) {
+        for (int i = 0; i < 3; i++) {
             ImageView liveImage = new ImageView();
             liveImage.setImage(heart);
             heartArray.add(liveImage);
             liveBox.getChildren().add(liveImage);
         }
 
-        // Map and renderer
         GameMap map = new GameMap();
         renderer = new MapRenderer(map);
 
         entity = new Entity(map, 0, 1.0);
 
+        loadNight(nightNumber);
         renderer.addEntity(entity);
 
-        // Typing UI
         HBox typingBox = handleTyping();
 
-        // Power-up buttons
         VBox powerUpBar = new VBox();
         powerUpBar.setAlignment(Pos.CENTER_LEFT);
-        VBox instantHealthVBox = createPowerUpBox(instantHealth);
-        VBox easierWordsVBox = createPowerUpBox(easyWord);
-        VBox instantLureVBox = createPowerUpBox(lure);
+        instantHealthCountLabel = new Label();
+        easierWordsCountLabel = new Label();
+        instantLureCountLabel = new Label();
+
+        instantHealthVBox = createPowerUpBox(instantHealth, instantHealthCountLabel, session.getPowerUps().getExtraLife());
+        easierWordsVBox = createPowerUpBox(easyWord, easierWordsCountLabel, session.getPowerUps().getEasyWords());
+        instantLureVBox = createPowerUpBox(lure, instantLureCountLabel, session.getPowerUps().getInstantLure());
         powerUpBar.getChildren().addAll(instantHealthVBox, instantLureVBox, easierWordsVBox);
         powerUpBar.setSpacing(20);
 
-        //Score display
         scoreLabel = new Label("Score: " + score);
         scoreLabel.setStyle("""
                 -fx-background-color: #FFFFFF70;
@@ -129,7 +146,7 @@ public class MainGameplay extends Application {
                 -fx-border-width: 1;
                 -fx-text-alignment: center;
                 """);
-        //Hour display
+
         hour = new Label(currentNight.getCurrentHour() + "AM");
         hour.setStyle("""
                 -fx-background-color: #FFFFFF70;
@@ -143,7 +160,6 @@ public class MainGameplay extends Application {
 
         currentNight.setOnHourChange(() -> Platform.runLater(() -> hour.setText(currentNight.getCurrentHour() + "AM")));
 
-        //Display both time and score in the top right.
         VBox rightCorner = new VBox(scoreLabel, hour);
         Region spacer = new Region();
         HBox.setHgrow(spacer, Priority.ALWAYS);
@@ -151,8 +167,6 @@ public class MainGameplay extends Application {
         HBox topBar = new HBox(10, liveBox, spacer, rightCorner);
         topBar.setAlignment(Pos.CENTER_LEFT);
 
-
-        // Assemble root
         root = new BorderPane();
         root.setBackground(Background.fill(Color.valueOf("#1f1e33")));
         root.setTop(topBar);
@@ -160,40 +174,74 @@ public class MainGameplay extends Application {
         root.setRight(powerUpBar);
         root.setBottom(typingBox);
 
-
-        // Setup stage
         Scene scene = new Scene(root, 1000, 700);
         stage.setScene(scene);
         stage.setTitle("EchoShift Integration Test");
-        stage.setMinWidth(800);
-        stage.setMinHeight(700);
+        stage.setMaximized(true);
         stage.show();
 
         updateWordDisplay();
+        refreshPowerupDisplay();
 
-        // Node click handler for lure placement
         renderer.setNodeClickHandler(nodeID -> {
             System.out.println("Player selected node " + nodeID);
             placingLure = true;
             selectedNode = nodeID;
         });
 
-        // Typing input
         scene.setOnKeyTyped(e -> handleTyping(e.getCharacter()));
 
-
-        //Setup powerup buttons and their functionality
-        instantHealthVBox.setOnMouseClicked(_ -> this.currentNight.addHealth());
+        instantHealthVBox.setOnMouseClicked(_ -> addHealth());
         easierWordsVBox.setOnMouseClicked(_ -> {
             try {
-                engine.changeWordBank(1);
+               easyWords();
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
         });
-        instantLureVBox.setOnMouseClicked(_ -> currentNight.instantLure());
+        instantLureVBox.setOnMouseClicked(_ -> instantLure());
+    }
+    private void instantLure(){
+        if (session.getPowerUps().getExtraLife() <= 0) {
+            showAlert("Powerup", "You ran out of this Power-Up!");
+        } else {
+            currentNight.instantLure();
+            session.getPowerUps().setInstantLure(session.getPowerUps().getInstantLure() - 1);
+            refreshPowerupDisplay();
+        }
+    }
+    private void addHealth() {
+        if (session.getPowerUps().getExtraLife() <= 0) {
+            showAlert("Powerup", "You ran out of this Power-Up!");
+        } else {
+            this.currentNight.addHealth();
+            session.getPowerUps().setExtraLife(session.getPowerUps().getExtraLife() - 1);
+            refreshPowerupDisplay();
+        }
+    }
+    private void easyWords() throws IOException {
+        if (session.getPowerUps().getEasyWords() <= 0) {
+            showAlert("Powerup", "You ran out of this Power-Up!");
+        } else {
+            engine.changeWordBank(1);
+            session.getPowerUps().setEasyWords(session.getPowerUps().getEasyWords() - 1);
+            refreshPowerupDisplay();
+        }
     }
 
+    private void refreshPowerupDisplay() {
+        instantHealthCountLabel.setText(String.valueOf(session.getPowerUps().getExtraLife()));
+        easierWordsCountLabel.setText(String.valueOf(session.getPowerUps().getEasyWords()));
+        instantLureCountLabel.setText(String.valueOf(session.getPowerUps().getInstantLure()));
+    }
+
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
 
     /**
      * Method that generates buttons for powerups using a given image.
@@ -201,14 +249,12 @@ public class MainGameplay extends Application {
      * @param image Image that represents the current powerup that will display on screen.
      * @return A VBox object that will be displayed on the button.
      */
-    private VBox createPowerUpBox(Image image) {
+    private VBox createPowerUpBox(Image image, Label powerUpLabel, int no) {
         ImageView powerUpImage = new ImageView(image);
 
-        //Number of a specific powerup a user has on hand.
-        Label powerUpLabel = new Label("1");
+        powerUpLabel.setText(String.valueOf(no));
         VBox powerUpVBox = new VBox(powerUpImage, powerUpLabel);
 
-        //Format powerup buttons.
         powerUpVBox.setAlignment(Pos.CENTER);
         powerUpVBox.setStyle("""
                 -fx-background-color: #FFFFFF70;
@@ -256,14 +302,15 @@ public class MainGameplay extends Application {
     /**
      * Method that creates a new night object with set parameters, and handles game ending events.
      */
-    private void loadNight() {
+    private void loadNight(int nightNumber) {
         //Remember to change the first parameter to a variable that matches the current night
-        currentNight = new Night(5, entity, renderer);
+        currentNight = new Night(nightNumber, entity, renderer);
 
         // TODO: Fix stat saves.
         currentNight.setOnNightEnd(() -> {
-            stats = new UserStatistics();
+            stats = session.getCurrentStatistics();
             stats.setGamesPlayed();
+
             stats.setAverageWPM(engine.calculateWPM());
             stats.setPeakWPM(engine.calculateWPM());
             stats.setAccuracy(engine.calculateAccuracy());
@@ -271,10 +318,22 @@ public class MainGameplay extends Application {
             stats.setTotalTimePlayed(currentNight.getCurrentHour());
             stats.setHighScore(score);
             stats.setHighestLevel(currentNight.getNightNum());
+            stats.setCoins(score/1000);
             UserDataSaveService save = new UserDataSaveService();
 
+            PowerupSaveService powerupSaveService = new PowerupSaveService();
+
             try {
-                save.saveStatistics("0", stats);
+                powerupSaveService.savePowerups(
+                        session.getCurrentUser().getId(),
+                        session.getPowerUps()
+                );
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+
+            try {
+                save.saveStatistics(session.getCurrentUser().getId(), stats);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

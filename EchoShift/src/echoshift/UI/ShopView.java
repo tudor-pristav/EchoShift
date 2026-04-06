@@ -13,11 +13,10 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
 /**
- * Builds the Shop page for EchoShift.
- * Style follows the same structure as PlayerHomeView:
- * - top bar with coins on the right
- * - centered title and shop panel
- * - bottom bar with back button
+ * View for the Shop screen.
+ * Displays items, coins, and purchase options.
+ *
+ * @author Tudor Mihai Pristav
  */
 public class ShopView {
 
@@ -31,6 +30,16 @@ public class ShopView {
     private final Label titleLabel;
     private final Label coinsLabel;
     private final Session session;
+
+    private final Label itemOneCountLabel;
+    private final Label itemTwoCountLabel;
+    private final Label itemThreeCountLabel;
+
+    /**
+     * Initializes the shop view.
+     *
+     * @param session current user session
+     */
     public ShopView(Session session) {
         this.backButton = createButton("Back", 200, 42);
         int coins = session.getCurrentStatistics().getCoins();
@@ -41,12 +50,16 @@ public class ShopView {
         this.session = session;
         this.titleLabel = createTitleLabel("Shop", 50);
         this.coinsLabel = createCoinsLabel("$" + coins, 29);
+
+        this.itemOneCountLabel = createOwnedLabel();
+        this.itemTwoCountLabel = createOwnedLabel();
+        this.itemThreeCountLabel = createOwnedLabel();
     }
 
     /**
-     * Builds and returns the full shop page.
+     * Builds and returns the shop page.
      *
-     * @return the root node for this screen
+     * @return root node
      */
     public Parent createShopPage() {
         BorderPane root = createRootLayout();
@@ -62,17 +75,13 @@ public class ShopView {
         root.setCenter(createCenterSection());
         root.setBottom(createBottomSection());
 
-        BorderPane.setMargin(root.getTop(), new Insets(0, 0, 0, 0));
         BorderPane.setMargin(root.getCenter(), new Insets(20, 0, 20, 0));
-        BorderPane.setMargin(root.getBottom(), new Insets(0, 0, 0, 0));
 
         return root;
     }
 
     /**
-     * Creates the root layout with the shared background image.
-     *
-     * @return the root BorderPane
+     * Creates the root layout with background.
      */
     private BorderPane createRootLayout() {
         BorderPane root = new BorderPane();
@@ -93,9 +102,7 @@ public class ShopView {
     }
 
     /**
-     * Creates the top section with the coins label aligned right.
-     *
-     * @return the top section
+     * Creates the top bar with coins display.
      */
     private HBox createTopSection() {
         Region spacer = new Region();
@@ -111,22 +118,17 @@ public class ShopView {
     }
 
     /**
-     * Creates the center section with title and item panel.
-     *
-     * @return the center section
+     * Creates the center section with title and items.
      */
     private VBox createCenterSection() {
         VBox centerBox = new VBox(25, titleLabel, createShopPanel());
         centerBox.setAlignment(Pos.CENTER);
         centerBox.setPadding(new Insets(35));
-
         return centerBox;
     }
 
     /**
-     * Creates the bottom section with the back button aligned left.
-     *
-     * @return the bottom section
+     * Creates the bottom bar with back button.
      */
     private BorderPane createBottomSection() {
         BorderPane bottomBar = new BorderPane();
@@ -141,9 +143,7 @@ public class ShopView {
     }
 
     /**
-     * Creates the main shop panel that contains all item cards.
-     *
-     * @return the styled panel
+     * Creates the shop items panel.
      */
     private StackPane createShopPanel() {
         GridPane itemsGrid = new GridPane();
@@ -153,27 +153,24 @@ public class ShopView {
 
         itemsGrid.add(createShopCard(
                 "/echoshift/images/easier-words-icon.png",
-                "Easy Words",
+                "Easy Words: $25",
+                itemOneCountLabel,
                 itemOneButton
         ), 0, 0);
 
         itemsGrid.add(createShopCard(
                 "/echoshift/images/extra-life-icon.png",
-                "Extra Life",
+                "Extra Life: $40",
+                itemTwoCountLabel,
                 itemTwoButton
         ), 1, 0);
 
         itemsGrid.add(createShopCard(
                 "/echoshift/images/instant-lure-icon.png",
-                "Instant Lure",
+                "Instant Lure: $35",
+                itemThreeCountLabel,
                 itemThreeButton
-        ), 0, 1);
-
-        itemsGrid.add(createShopCard(
-                "/echoshift/images/instant-repair-icon.png",
-                "Instant Repair",
-                itemFourButton
-        ), 1, 1);
+        ), 2, 0);
 
         StackPane panel = new StackPane(itemsGrid);
         panel.getStyleClass().add("shop-panel");
@@ -182,19 +179,13 @@ public class ShopView {
     }
 
     /**
-     * Creates a single shop card.
-     *
-     * @param imagePath path to the item image
-     * @param itemName name of the item
-     * @param button purchase button
-     * @return the card node
+     * Creates a shop item card.
      */
-    private VBox createShopCard(String imagePath, String itemName, Button button) {
+    private VBox createShopCard(String imagePath, String itemName, Label ownedLabel, Button button) {
         ImageView imageView = createItemImage(imagePath);
+        Label nameLabel = createCardTitle(itemName, 10);
 
-        Label nameLabel = createCardTitle(itemName, 20);
-
-        VBox card = new VBox(15, imageView, nameLabel, button);
+        VBox card = new VBox(15, imageView, nameLabel, button, ownedLabel);
         card.setAlignment(Pos.CENTER);
         card.getStyleClass().add("shop-card");
 
@@ -202,10 +193,7 @@ public class ShopView {
     }
 
     /**
-     * Creates an item image view.
-     *
-     * @param imagePath path of the image
-     * @return the image view
+     * Creates an item image.
      */
     private ImageView createItemImage(String imagePath) {
         ImageView imageView = new ImageView(
@@ -218,11 +206,7 @@ public class ShopView {
     }
 
     /**
-     * Creates the page title label.
-     *
-     * @param text title text
-     * @param size font size
-     * @return the title label
+     * Creates a title label.
      */
     private Label createTitleLabel(String text, float size) {
         Label label = new Label(text);
@@ -232,11 +216,7 @@ public class ShopView {
     }
 
     /**
-     * Creates the coins label.
-     *
-     * @param text label text
-     * @param size font size
-     * @return the coins label
+     * Creates a coins label.
      */
     private Label createCoinsLabel(String text, float size) {
         Label label = new Label(text);
@@ -247,10 +227,6 @@ public class ShopView {
 
     /**
      * Creates a card title label.
-     *
-     * @param text label text
-     * @param size font size
-     * @return the card title label
      */
     private Label createCardTitle(String text, float size) {
         Label label = new Label(text);
@@ -260,27 +236,7 @@ public class ShopView {
     }
 
     /**
-     * Creates a card description label.
-     *
-     * @param text label text
-     * @param size font size
-     * @return the description label
-     */
-    private Label createCardDescription(String text, float size) {
-        Label label = new Label(text);
-        label.setFont(Font.font("Verdana", size));
-        label.setWrapText(true);
-        label.getStyleClass().add("shop-item-description");
-        return label;
-    }
-
-    /**
-     * Creates a standard button with styling and animations.
-     *
-     * @param text button text
-     * @param width preferred width
-     * @param height preferred height
-     * @return the created button
+     * Creates a styled button.
      */
     private Button createButton(String text, double width, double height) {
         Button button = new Button(text);
@@ -295,40 +251,76 @@ public class ShopView {
     }
 
     /**
-     * Creates a shop purchase button.
-     *
-     * @return the buy button
+     * Creates an owned count label.
+     */
+    private Label createOwnedLabel() {
+        Label label = new Label("Owned: 0");
+        label.getStyleClass().add("owned");
+        return label;
+    }
+
+    /**
+     * Creates a purchase button.
      */
     private Button createShopButton() {
         return createButton("Buy", 130, 40);
     }
 
+    /** @return back button */
     public Button getBackButton() {
         return backButton;
     }
 
+    /** @return item one button */
     public Button getItemOneButton() {
         return itemOneButton;
     }
 
+    /** @return item two button */
     public Button getItemTwoButton() {
         return itemTwoButton;
     }
 
+    /** @return item three button */
     public Button getItemThreeButton() {
         return itemThreeButton;
     }
 
+    /** @return item four button */
     public Button getItemFourButton() {
         return itemFourButton;
     }
 
+    /** @return coins label */
     public Label getCoinsLabel() {
         return coinsLabel;
     }
 
+    /**
+     * Updates coins display.
+     */
     public void setCoinsText(String text) {
         coinsLabel.setText(text);
     }
 
+    /**
+     * Updates item one count.
+     */
+    public void setItemOneCountText(String text) {
+        itemOneCountLabel.setText(text);
+    }
+
+    /**
+     * Updates item two count.
+     */
+    public void setItemTwoCountText(String text) {
+        itemTwoCountLabel.setText(text);
+    }
+
+    /**
+     * Updates item three count.
+     */
+    public void setItemThreeCountText(String text) {
+        itemThreeCountLabel.setText(text);
+    }
 }

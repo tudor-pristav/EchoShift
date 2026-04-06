@@ -2,10 +2,11 @@ package echoshift.controllers;
 
 import echoshift.UI.PlayerHomeView;
 import echoshift.UI.ShopView;
+import echoshift.models.PowerupType;
 import echoshift.models.Session;
 import echoshift.models.UserStatistics;
+import echoshift.services.PowerupStorageService;
 import echoshift.services.UserDataSaveService;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
@@ -13,7 +14,9 @@ import java.io.IOException;
 
 /**
  * Controller for the Shop page.
- * Handles coin display and purchasing power-ups.
+ * Handles purchases, coin updates, and powerup management.
+ *
+ * @author Tudor Mihai Pristav
  */
 public class ShopController {
 
@@ -21,30 +24,40 @@ public class ShopController {
     private final ShopView view;
     private final Session session;
     private final UserDataSaveService saveService;
+    private final PowerupStorageService powerupStorageService;
+
+    /**
+     * Initializes the controller and sets up UI data and handlers.
+     *
+     * @param stage main application stage
+     * @param view shop view
+     * @param session current user session
+     */
     public ShopController(Stage stage, ShopView view, Session session) {
         this.stage = stage;
         this.view = view;
         this.session = session;
         this.saveService = new UserDataSaveService();
+        this.powerupStorageService = new PowerupStorageService();
 
         refreshCoinsDisplay();
+        refreshPowerupDisplay();
         attachHandlers();
     }
 
     /**
-     * Attaches button handlers.
+     * Attaches button event handlers.
      */
     private void attachHandlers() {
         view.getBackButton().setOnAction(e -> goBackToPlayerHome());
 
-        view.getItemOneButton().setOnAction(e -> buyItem("Easy Words", 25));
-        view.getItemTwoButton().setOnAction(e -> buyItem("Extra Life", 40));
-        view.getItemThreeButton().setOnAction(e -> buyItem("Instant Lure", 35));
-        view.getItemFourButton().setOnAction(e -> buyItem("Instant Repair", 30));
+        view.getItemOneButton().setOnAction(e -> buyItem("Easy Words", 25, PowerupType.EASY_WORDS));
+        view.getItemTwoButton().setOnAction(e -> buyItem("Extra Life", 40, PowerupType.EXTRA_LIFE));
+        view.getItemThreeButton().setOnAction(e -> buyItem("Instant Lure", 35, PowerupType.INSTANT_LURE));
     }
 
     /**
-     * Updates the coins label from the current session stats.
+     * Updates the displayed coin amount.
      */
     private void refreshCoinsDisplay() {
         int coins = session.getCurrentStatistics().getCoins();
@@ -52,19 +65,13 @@ public class ShopController {
     }
 
     /**
-     * Attempts to buy an item.
+     * Purchases a powerup if sufficient coins exist.
      *
-     * @param itemName item name
-     * @param cost item cost
+     * @param itemName name of the item
+     * @param cost cost in coins
+     * @param powerupType type of powerup
      */
-    /**
-     * Attempts to buy an item, deducts coins, updates the display,
-     * and saves the new statistics to the player's JSON file.
-     *
-     * @param itemName the item name
-     * @param cost the item cost
-     */
-    private void buyItem(String itemName, int cost) {
+    private void buyItem(String itemName, int cost, PowerupType powerupType) {
         UserStatistics stats = session.getCurrentStatistics();
         int currentCoins = stats.getCoins();
 
@@ -77,25 +84,38 @@ public class ShopController {
 
         try {
             String playerId = session.getCurrentUser().getId();
+
             saveService.saveStatistics(playerId, stats);
+            powerupStorageService.addPowerup(playerId, powerupType);
 
             refreshCoinsDisplay();
+            refreshPowerupDisplay();
+
             showInfo(itemName + " purchased successfully.");
-        } catch ( IOException e) {
+        } catch (IOException e) {
             showError("Could not save updated player data.");
             e.printStackTrace();
         }
     }
 
     /**
-     * Returns to the player home page.
+     * Navigates back to the player home page.
      */
     private void goBackToPlayerHome() {
         PlayerHomeView playerHomeView = new PlayerHomeView(session);
-        Scene scene = new Scene(playerHomeView.createPlayerHomePage(), 1000, 700);
-        stage.setScene(scene);
+        stage.getScene().setRoot(playerHomeView.createPlayerHomePage());
+        stage.setTitle("Echo Shift - Player Statistics");
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
+        new PlayerHomeController(stage, playerHomeView, session);
     }
 
+    /**
+     * Displays an information alert.
+     *
+     * @param message message to display
+     */
     private void showInfo(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Shop");
@@ -104,6 +124,11 @@ public class ShopController {
         alert.showAndWait();
     }
 
+    /**
+     * Displays an error alert.
+     *
+     * @param message error message
+     */
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Shop Error");
@@ -111,8 +136,25 @@ public class ShopController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-    /**
-     * Refreshes the coins label using the current session statistics.
-     */
 
+    /**
+     * Updates displayed powerup counts.
+     */
+    private void refreshPowerupDisplay() {
+        try {
+            String playerId = session.getCurrentUser().getId();
+
+            int easyWordsCount = powerupStorageService.getPowerupCount(playerId, PowerupType.EASY_WORDS);
+            int extraLifeCount = powerupStorageService.getPowerupCount(playerId, PowerupType.EXTRA_LIFE);
+            int instantLureCount = powerupStorageService.getPowerupCount(playerId, PowerupType.INSTANT_LURE);
+
+            view.setItemOneCountText("Owned: " + easyWordsCount);
+            view.setItemTwoCountText("Owned: " + extraLifeCount);
+            view.setItemThreeCountText("Owned: " + instantLureCount);
+
+        } catch (IOException e) {
+            showError("Could not load powerup counts.");
+            e.printStackTrace();
+        }
+    }
 }

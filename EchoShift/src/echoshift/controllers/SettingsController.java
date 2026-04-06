@@ -2,29 +2,31 @@ package echoshift.controllers;
 
 import echoshift.UI.SettingsView;
 import echoshift.animations.SoundEffects;
-import javafx.scene.Scene;
+import javafx.scene.Parent;
 import javafx.stage.Stage;
 
 /**
- * Controller for the settings page.
- * Handles settings interactions such as volume changes and navigation.
+ * Controller for the Settings page.
+ * Manages volume adjustments and navigation.
+ *
+ * @author Tudor Mihai Pristav
  */
 public class SettingsController {
 
     private final Stage stage;
-    private final Scene previousScene;
+    private final Parent previousRoot;
     private final SettingsView view;
 
     /**
-     * Creates the settings controller and wires up all event handlers.
+     * Initializes the controller and sets up handlers.
      *
-     * @param stage the main application stage
-     * @param previousScene the scene to return to when pressing back
-     * @param view the settings view
+     * @param stage main application stage
+     * @param previousRoot previous UI root for navigation
+     * @param view settings view
      */
-    public SettingsController(Stage stage, Scene previousScene, SettingsView view) {
+    public SettingsController(Stage stage, Parent previousRoot, SettingsView view) {
         this.stage = stage;
-        this.previousScene = previousScene;
+        this.previousRoot = previousRoot;
         this.view = view;
 
         initializeValues();
@@ -32,18 +34,18 @@ public class SettingsController {
     }
 
     /**
-     * Initializes the controls with the current application settings.
+     * Sets initial UI values based on current settings.
      */
     private void initializeValues() {
-        double currentVolume = SoundEffects.getVolume();   // 0.0 to 1.0
+        double currentVolume = SoundEffects.getVolume();
         view.getVolumeSlider().setValue(currentVolume * 100);
     }
 
     /**
-     * Registers all event handlers for the settings page.
+     * Attaches event handlers for UI interactions.
      */
     private void registerHandlers() {
-        view.getBackButton().setOnAction(e -> stage.setScene(previousScene));
+        view.getBackButton().setOnAction(e -> stage.getScene().setRoot(previousRoot));
 
         view.getVolumeSlider().valueProperty().addListener((obs, oldVal, newVal) -> {
             double volume = newVal.doubleValue() / 100.0;
