@@ -1,15 +1,15 @@
 {
   "statistics": {
-    "gamesPlayed": 1.0,
-    "averageWPM": 112.78194113930007,
+    "gamesPlayed": 11.0,
+    "averageWPM": 4.7138909500010415E-5,
     "peakWPM": 112.78194113930007,
-    "accuracy": 100.0,
-    "errorCount": 0,
+    "accuracy": 10.115824978455187,
+    "errorCount": 1,
     "totalTimePlayed": 0.0,
-    "highScore": 500,
-    "highestLevel": 1,
+    "highScore": 6100,
+    "highestLevel": 4,
     "wordsTyped": 0,
-    "coins": 0,
+    "coins": 9,
     "numExtraLives": 0,
     "numInstantLures": 0,
     "numEasierWords": 0

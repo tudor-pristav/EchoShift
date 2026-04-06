@@ -9,19 +9,12 @@ public class PlayerPowerups {
     private int instantLure;
     private int instantRepair;
 
-    public PlayerPowerups() {
-        this.easyWords = 0;
-        this.extraLife = 0;
-        this.instantLure = 0;
-        this.instantRepair = 0;
+    public PlayerPowerups(int ew, int el,int il) {
+        this.easyWords = ew;
+        this.extraLife = el;
+        this.instantLure = il;
     }
 
-    public PlayerPowerups(int easyWords, int extraLife, int instantLure, int instantRepair) {
-        this.easyWords = easyWords;
-        this.extraLife = extraLife;
-        this.instantLure = instantLure;
-        this.instantRepair = instantRepair;
-    }
 
     public int getEasyWords() {
         return easyWords;

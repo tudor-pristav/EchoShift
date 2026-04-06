@@ -108,7 +108,7 @@ public class UserStatistics {
      * @param curLevel The level the user has recently beaten.
      */
     public void setHighestLevel(int curLevel) {
-        if (curLevel == highestLevel) {
+        if (curLevel == highestLevel && curLevel < 3) {
             highestLevel += 1;
         }
     }

@@ -198,8 +198,7 @@ public class ShopView {
     private VBox createShopCard(String imagePath, String itemName,Label ownedLabel, Button button) {
         ImageView imageView = createItemImage(imagePath);
 
-        Label nameLabel = createCardTitle(itemName, 20);
-
+        Label nameLabel = createCardTitle(itemName, 10);
 
         VBox card = new VBox(15, imageView, nameLabel, button, ownedLabel);
         card.setAlignment(Pos.CENTER);

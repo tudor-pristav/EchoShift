@@ -214,7 +214,7 @@ public class AccountCreationService {
         Path filePath = folderPath.resolve(playerId + "-powerup.json");
 
         // reuse your model
-        echoshift.models.PlayerPowerups powerups = new echoshift.models.PlayerPowerups();
+        echoshift.models.PlayerPowerups powerups = new echoshift.models.PlayerPowerups(0,0,0);
 
         String json = gson.toJson(powerups);
         Files.writeString(filePath, json);

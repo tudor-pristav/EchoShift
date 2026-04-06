@@ -55,7 +55,7 @@ public class PowerupStorageService {
             return;
         }
 
-        PlayerPowerups powerups = new PlayerPowerups();
+        PlayerPowerups powerups = new PlayerPowerups(0,0,0);
 
         try (Writer writer = Files.newBufferedWriter(path)) {
             gson.toJson(powerups, writer);
@@ -80,7 +80,7 @@ public class PowerupStorageService {
             PlayerPowerups powerups = gson.fromJson(reader, PlayerPowerups.class);
 
             if (powerups == null) {
-                powerups = new PlayerPowerups();
+                powerups = new PlayerPowerups(0,0,0);
             }
 
             return powerups;
