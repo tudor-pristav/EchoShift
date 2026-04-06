@@ -11,18 +11,21 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 /**
- * Represents the Custom and Endless mode selection screen.
- * Allows players to choose between Endless and Custom game modes.
+ * A display of the special levels: Custom and Endless.
+ * Each special mode comes with their own respective level
+ * modifications.
+ * Players may choose between these special modes.
  *
  * @author Matthew Taylor
+ * @author Tudor Mihai Pristav
  */
 public class CustomAndEndlessView {
 
     /**
      * Creates the Custom and Endless mode selection page UI.
      *
-     * @param playerName the name of the player (currently unused in title)
-     * @return the root node containing the Custom and Endless mode UI
+     * @param playerName the name of the player (currently unused in title).
+     * @return the root node containing the Custom and Endless mode UI.
      */
     public Parent createCustomEndlessPage(String playerName) {
         BorderPane root = new BorderPane();
@@ -81,8 +84,8 @@ public class CustomAndEndlessView {
     /**
      * Creates a button for selecting a game mode.
      *
-     * @param text the text to display on the button
-     * @return the styled mode button
+     * @param text the text to display on the button.
+     * @return the styled mode button.
      */
     private Button createModeButton(String text) {
         Button button = new Button(text);
@@ -101,10 +104,10 @@ public class CustomAndEndlessView {
     /**
      * Creates a generic menu button with specified size.
      *
-     * @param text   the button text
-     * @param width  preferred width
-     * @param height preferred height
-     * @return the styled menu button
+     * @param text the button text.
+     * @param width preferred width.
+     * @param height preferred height.
+     * @return the styled menu button.
      */
     private Button createMenuButton(String text, double width, double height) {
         Button button = new Button(text);

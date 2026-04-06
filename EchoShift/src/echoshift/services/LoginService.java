@@ -11,6 +11,7 @@ import java.util.List;
 import echoshift.models.UserAccount;
 
 /**
+ * @author Tudor Mihai Pristav
  * Service responsible for handling user authentication.
  *
  * <p>This class provides functionality to:
@@ -93,5 +94,9 @@ public class LoginService {
         } catch (IOException e) {
             throw new RuntimeException("Failed to load accounts from file", e);
         }
+    }
+    public  List<UserAccount> returnAccounts(){
+        List<UserAccount> fullAccounts = loadAccounts();
+        return fullAccounts;
     }
 }

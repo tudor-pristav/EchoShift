@@ -1,21 +1,21 @@
 {
   "accounts": [
     {
-      "id": "player-1001",
-      "username": "tudor",
-      "password": "1234",
+      "id": "admin",
+      "username": "admin",
+      "password": "test",
+      "role": "admin"
+    },
+    {
+      "id": "C3IBUILF3C",
+      "username": "test",
+      "password": "test",
       "role": "player"
     },
     {
-      "id": "player-1002",
-      "username": "hugo",
-      "password": "6969",
-      "role": "player"
-    },
-    {
-      "id": "player-1002",
-      "username": "michael",
-      "password": "password",
+      "id": "FO5AOPZBL4",
+      "username": "test1",
+      "password": "test",
       "role": "player"
     }
   ]

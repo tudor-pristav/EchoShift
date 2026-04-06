@@ -1,25 +1,48 @@
 package echoshift;
 
 import echoshift.UI.MainMenuView;
+import echoshift.animations.SoundEffects;
+import echoshift.controllers.MainMenuController;
 import javafx.application.Application;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.stage.Stage;
 
+/**
+ * Main entry point for the EchoShift application.
+ * Initializes the UI and launches the main menu.
+ *
+ * @author Tudor Mihai Pristav
+ */
 public class App extends Application {
 
-      @Override
+    /**
+     * Starts the JavaFX application.
+     *
+     * @param stage primary stage
+     */
+    @Override
     public void start(Stage stage) {
         MainMenuView mainMenuView = new MainMenuView();
-        Scene scene = new Scene(mainMenuView.createMainMenu(), 1000, 700);
-        stage.setTitle("Echo Shift");
+        Parent root = mainMenuView.createMainMenu();
+
+        Scene scene = new Scene(root);
+
         stage.setScene(scene);
+        stage.setTitle("Echo Shift");
+        stage.setMaximized(true);
         stage.show();
+
+        SoundEffects.play();
+        new MainMenuController(stage, mainMenuView);
     }
 
+    /**
+     * Launches the application.
+     *
+     * @param args program arguments
+     */
     public static void main(String[] args) {
         launch();
-        //testing to see
     }
-    
 }

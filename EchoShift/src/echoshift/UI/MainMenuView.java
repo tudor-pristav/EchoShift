@@ -1,60 +1,55 @@
 package echoshift.UI;
 
+import echoshift.animations.ButtonEffects;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 
+/**
+ * Builds the Main Menu screen for Echo Shift.
+ * This class is responsible only for the frontend layout and UI elements.
+ * @author Tudor Mihai Pristav
+ */
 public class MainMenuView {
+
+    private final Button loginButton;
+    private final Button instructionsButton;
+    private final Button highScoresButton;
+    private final Button adminLoginButton;
+    private final Button settingsButton;
+    private final Button exitButton;
+
+    /**
+     * Creates reusable controls for the main menu page.
+     */
+    public MainMenuView() {
+        this.loginButton = createButton("Login", 220, 42);
+        this.instructionsButton = createButton("Instructions", 220, 42);
+        this.highScoresButton = createButton("High Scores", 220, 42);
+        this.adminLoginButton = createButton("Admin Login", 220, 42);
+        this.settingsButton = createButton("Settings", 220, 42);
+        this.exitButton = createButton("Exit", 200, 42);
+    }
+
+    /**
+     * Builds and returns the full Main Menu screen.
+     *
+     * @return the root node for this screen
+     */
     public Parent createMainMenu() {
-        BorderPane root = new BorderPane();
-        root.setStyle("-fx-background-color: #d9d9d9;");
+        BorderPane root = createRootLayout();
+        root.getStylesheets().add(
+                getClass().getResource("/echoshift/styles/buttonStyle.css").toExternalForm()
+        );
 
-        // Top bar with close button
-        HBox topBar = new HBox();
-        topBar.setAlignment(Pos.TOP_RIGHT);
-        topBar.setPadding(new Insets(15, 20, 10, 20));
-        topBar.setPrefHeight(60);
-        topBar.setStyle("-fx-background-color: #f4f4f4;");
-
-        Button closeButton = new Button("X");
-        closeButton.setFont(Font.font("Arial", 20));
-        closeButton.setStyle("""
-                -fx-background-color: transparent;
-                -fx-text-fill: black;
-                -fx-cursor: hand;
-                """);
-        closeButton.setOnAction(e -> System.exit(0));
-
-        topBar.getChildren().add(closeButton);
-        root.setTop(topBar);
-
-        // Center content
-        VBox centerBox = new VBox(18);
-        centerBox.setAlignment(Pos.CENTER);
-
-        Label title = new Label("Echo Shift");
-        title.setFont(Font.font("Arial", 64));
-        title.setStyle("-fx-text-fill: black;");
-
-        Button loginButton = createMenuButton("Login", 230, 55);
-        Button instructionsButton = createMenuButton("Instructions", 230, 55);
-        Button highScoresButton = createMenuButton("High Scores", 230, 55);
-        Button adminLoginButton = createMenuButton("Admin Login", 230, 55);
-        Button settingsButton = createMenuButton("Settings", 180, 50);
-
-        // TODO: replace with actual scene switching later
-        loginButton.setOnAction(e -> System.out.println("Login clicked"));
-        instructionsButton.setOnAction(e -> System.out.println("Instructions clicked"));
-        highScoresButton.setOnAction(e -> System.out.println("High Scores clicked"));
-        adminLoginButton.setOnAction(e -> System.out.println("Admin Login clicked"));
-        settingsButton.setOnAction(e -> System.out.println("Settings clicked"));
-
-        centerBox.getChildren().addAll(
-                title,
+        Label title = createLabel("Echo Shift", 50);
+        VBox buttonBox = new VBox(
+                20,
                 loginButton,
                 instructionsButton,
                 highScoresButton,
@@ -62,43 +57,117 @@ public class MainMenuView {
                 settingsButton
         );
 
-        root.setCenter(centerBox);
+        buttonBox.setAlignment(Pos.CENTER);
+        buttonBox.setMaxWidth(400);
+        buttonBox.setPadding(new Insets(60));
+        buttonBox.getStyleClass().add("container");
 
-        // Bottom bar with exit button and timer
-        BorderPane bottomBar = new BorderPane();
-        bottomBar.setPadding(new Insets(10, 20, 15, 20));
-        bottomBar.setPrefHeight(80);
-        bottomBar.setStyle("-fx-background-color: #f4f4f4;");
+        VBox centerContent = new VBox(20, title, buttonBox);
+        centerContent.setAlignment(Pos.CENTER);
 
-        Button exitButton = createMenuButton("Exit", 110, 45);
-        exitButton.setOnAction(e -> System.exit(0));
+        StackPane centerWrapper = new StackPane(centerContent);
+        centerWrapper.setPadding(new Insets(40));
 
-        Label timerLabel = new Label("TEST");
-        timerLabel.setFont(Font.font("Arial", 28));
-        timerLabel.setStyle("-fx-text-fill: black;");
-
-        bottomBar.setRight(exitButton);
-        bottomBar.setBottom(timerLabel);
-        BorderPane.setAlignment(timerLabel, Pos.BOTTOM_RIGHT);
-
-        root.setBottom(bottomBar);
+        root.setCenter(centerWrapper);
 
         return root;
     }
 
-    private Button createMenuButton(String text, double width, double height) {
+    /**
+     * Creates the root layout with a background image.
+     *
+     * @return the root BorderPane
+     */
+    private BorderPane createRootLayout() {
+        BorderPane root = new BorderPane();
+
+        BackgroundImage bg = new BackgroundImage(
+                new Image(getClass().getResource("/echoshift/images/bg2.png").toExternalForm()),
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundRepeat.NO_REPEAT,
+                BackgroundPosition.CENTER,
+                new BackgroundSize(100, 100, true, true, false, true)
+        );
+
+        root.setBackground(new Background(bg));
+
+        HBox topBar = new HBox();
+        topBar.setPrefHeight(60);
+        topBar.getStyleClass().add("top-bar");
+        root.setTop(topBar);
+
+        BorderPane bottom = new BorderPane();
+        bottom.getStyleClass().add("bottom-bar");
+
+        bottom.setPrefHeight(60);
+        bottom.setMinHeight(60);
+
+        bottom.setPadding(new Insets(10, 18, 10, 18));
+
+        bottom.setLeft(exitButton);
+        BorderPane.setAlignment(exitButton, Pos.CENTER_LEFT);
+
+        root.setBottom(bottom);
+
+        return root;
+    }
+
+    /**
+     * Creates a styled text label.
+     *
+     * @param text the label text
+     * @param size the font size
+     * @return the label
+     */
+    private Label createLabel(String text, double size) {
+        Label label = new Label(text);
+        label.setFont(Font.font("Verdana", size));
+        label.setStyle("-fx-text-fill: black;");
+        return label;
+    }
+
+    /**
+     * Creates a button styled through CSS.
+     *
+     * @param text the button text
+     * @param width preferred width
+     * @param height preferred height
+     * @return the styled button
+     */
+    private Button createButton(String text, double width, double height) {
         Button button = new Button(text);
         button.setPrefSize(width, height);
-        button.setFont(Font.font("Arial", 22));
-        button.setStyle("""
-                -fx-background-color: white;
-                -fx-text-fill: black;
-                -fx-border-color: #bdbdbd;
-                -fx-border-width: 1;
-                -fx-background-radius: 0;
-                -fx-border-radius: 0;
-                -fx-cursor: hand;
-                """);
+        button.setFont(Font.font("Verdana", 16));
+
+        button.getStyleClass().add("button");
+
+        ButtonEffects.hoverAnimation(button);
+        ButtonEffects.clickAnimation(button);
+
         return button;
+    }
+
+    public Button getLoginButton() {
+        return loginButton;
+    }
+
+    public Button getInstructionsButton() {
+        return instructionsButton;
+    }
+
+    public Button getHighScoresButton() {
+        return highScoresButton;
+    }
+
+    public Button getAdminLoginButton() {
+        return adminLoginButton;
+    }
+
+    public Button getSettingsButton() {
+        return settingsButton;
+    }
+
+    public Button getExitButton() {
+        return exitButton;
     }
 }
