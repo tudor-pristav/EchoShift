@@ -2,10 +2,14 @@ package echoshift.controllers;
 
 import echoshift.UI.*;
 import echoshift.models.Session;
+import echoshift.services.UserDataSaveService;
 import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class PlayerHomeController {
 
@@ -36,8 +40,45 @@ public class PlayerHomeController {
     }
 
     private void handleNewGame() {
-        System.out.println("Start new game");
-        // TODO: open gameplay / level 1 screen
+
+            Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+            confirm.setTitle("Confirm Reset");
+            confirm.setHeaderText(null);
+            confirm.setContentText("Are you sure you want to reset your highest level to 1?");
+
+            confirm.showAndWait().ifPresent(response -> {
+                if (response == javafx.scene.control.ButtonType.OK) {
+                    // do the reset
+                    session.getCurrentStatistics().setHighestLevel(1);
+
+                    try {
+                        new UserDataSaveService().saveStatistics(
+                                session.getCurrentUser().getId(),
+                                session.getCurrentStatistics()
+                        );
+
+                        showSuccess("Highest level reset successfully.");
+
+                    } catch (IOException ex) {
+                        showError("Could not reset highest level.");
+                        ex.printStackTrace();
+                    }
+                }
+            });
+    }
+    private void showSuccess(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Success");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
+    }
+    private void showError(String message) {
+        Alert alert = new Alert(Alert.AlertType.ERROR);
+        alert.setTitle("Error");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
     private void handleSelectLevel() {
