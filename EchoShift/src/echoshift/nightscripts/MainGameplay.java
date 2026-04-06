@@ -6,6 +6,7 @@ import echoshift.backend.GameMap;
 
 import echoshift.models.Session;
 import echoshift.models.UserStatistics;
+import echoshift.services.PowerupSaveService;
 import echoshift.services.UserDataSaveService;
 import javafx.animation.PauseTransition;
 import javafx.scene.control.Alert;
@@ -318,6 +319,17 @@ public class MainGameplay extends Application {
             stats.setHighestLevel(currentNight.getNightNum());
             stats.setCoins(score/1000);
             UserDataSaveService save = new UserDataSaveService();
+
+            PowerupSaveService powerupSaveService = new PowerupSaveService();
+
+            try {
+                powerupSaveService.savePowerups(
+                        session.getCurrentUser().getId(),
+                        session.getPowerUps()
+                );
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
 
             try {
                 save.saveStatistics(session.getCurrentUser().getId(), stats);
