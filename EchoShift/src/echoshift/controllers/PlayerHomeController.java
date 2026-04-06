@@ -41,8 +41,13 @@ public class PlayerHomeController {
     }
 
     private void handleSelectLevel() {
-        System.out.println("Open level selection");
-        // TODO: open select level screen
+        ChooseLevelView chooseLevelView = new ChooseLevelView(session);
+        stage.getScene().setRoot(chooseLevelView.createChooseLevelPage());
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
+        stage.setTitle("Echo Shift - Instructions");
+        new ChooseLevelController(stage,chooseLevelView,session);
     }
 
     private void handleInstructions() {

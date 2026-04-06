@@ -1,5 +1,7 @@
 package echoshift.UI;
 
+import echoshift.animations.ButtonEffects;
+import echoshift.models.Session;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -8,145 +10,308 @@ import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 
 /**
- * ConfirmLevelView displays the confirmation screen for a selected level,
- * showing level image, title, description, and play/back buttons.
- *
- * @author Matthew Taylor
+ * Builds the level confirmation page for Echo Shift.
+ * This page shows the selected level preview, level information,
+ * the player's name, and a button to start the level.
  */
 public class ConfirmLevelView {
 
+    private final Session session;
+    private final int levelNumber;
+
+    private final Label playerNameLabel;
+    private final Label levelLabel;
+    private final Label levelTitleLabel;
+    private final Label levelDescriptionLabel;
+
+    private final Button backButton;
+    private final Button playLevelButton;
+
     /**
-     * Creates the Confirm Level page UI.
+     * Creates the confirm level view.
      *
-     * @param playerName      the name of the player
-     * @param levelTitle      the title of the level
-     * @param levelDescription the description of the level
-     * @param levelImage      the image representing the level cover
-     * @return the root node containing the Confirm Level UI
+     * @param session the current player session
+     * @param levelNumber the selected level number
      */
-    public Parent createConfirmLevelPage(String playerName, String levelTitle, String levelDescription, Image levelImage) {
-        BorderPane root = new BorderPane();
-        // Try to load background image, fallback to grey background if fails
-        try {
-            Image bgImg = new Image(getClass().getResource("/echoshift/images/bg2.png").toExternalForm());
-            BackgroundImage bgImage = new BackgroundImage(
-                    bgImg,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundRepeat.NO_REPEAT,
-                    BackgroundPosition.CENTER,
-                    new BackgroundSize(100, 100, true, true, false, true)
-            );
-            root.setBackground(new Background(bgImage));
-        } catch (Exception e) {
-            root.setBackground(new Background(new BackgroundFill(Color.GREY, CornerRadii.EMPTY, Insets.EMPTY)));
-            System.err.println("Failed to load background image: " + e.getMessage());
-        }
+    public ConfirmLevelView(Session session, int levelNumber) {
+        this.session = session;
+        this.levelNumber = levelNumber;
 
-        // Greeting label at top
-        Label greeting = new Label("Good luck, " + playerName + ".");
-        greeting.setFont(Font.font("Arial", 28));
-        greeting.setStyle("-fx-text-fill: black;");
-        BorderPane.setAlignment(greeting, Pos.CENTER_LEFT);
-        root.setTop(greeting);
-        BorderPane.setMargin(greeting, new Insets(20, 20, 10, 20));
+        String username = session.getCurrentUser().getUsername();
 
-        // Center content: level image and description
-        HBox centerBox = new HBox(20);
-        centerBox.setPadding(new Insets(20));
-        centerBox.setAlignment(Pos.CENTER);
+        this.playerNameLabel = createMainLabel("Good luck, " + username + ".", 34);
+        this.levelLabel = createMainLabel("Night " + levelNumber, 28);
+        this.levelTitleLabel = createMainLabel(getLevelTitle(levelNumber), 26);
+        this.levelDescriptionLabel = createDescriptionLabel(getLevelDescription(levelNumber), 18);
 
-        // Level cover image or grey placeholder if loading fails
-        ImageView imageView;
-        try {
-            imageView = new ImageView(levelImage);
-            imageView.setFitWidth(400);
-            imageView.setFitHeight(400);
-            imageView.setPreserveRatio(true);
-        } catch (Exception e) {
-            System.err.println("Failed to load level image: " + e.getMessage());
-            // Create grey rectangle placeholder
-            Rectangle placeholder = new Rectangle(400, 400, Color.LIGHTGRAY);
-            placeholder.setStroke(Color.DARKGRAY);
-            placeholder.setStrokeWidth(1);
-            imageView = new ImageView();
-            StackPane placeholderPane = new StackPane(placeholder);
-            placeholderPane.setPrefSize(400, 400);
-            // Wrap placeholderPane in a Pane to add to centerBox later
-            centerBox.getChildren().add(placeholderPane);
-        }
+        this.backButton = createButton("Back", 180, 48);
+        this.playLevelButton = createButton("Play level", 260, 60);
+    }
 
-        // Description box container
-        VBox descriptionBox = new VBox(15);
-        descriptionBox.setStyle("""
-                -fx-background-color: white;
-                -fx-border-color: #bdbdbd;
-                -fx-border-width: 1;
-                -fx-padding: 20;
-                """);
-        descriptionBox.setPrefWidth(400);
+    /**
+     * Builds the full confirm level page.
+     *
+     * @return the page root
+     */
+    public Parent createConfirmLevelPage() {
+        BorderPane root = createRootLayout();
 
-        Label levelTitleLabel = new Label(levelTitle);
-        levelTitleLabel.setFont(Font.font("Arial", 24));
-        levelTitleLabel.setStyle("-fx-text-fill: black;");
+        root.getStylesheets().add(
+                getClass().getResource("/echoshift/styles/buttonStyle.css").toExternalForm()
+        );
+        root.getStylesheets().add(
+                getClass().getResource("/echoshift/styles/shopStyle.css").toExternalForm()
+        );
 
-        Label descriptionLabel = new Label(levelDescription);
-        descriptionLabel.setFont(Font.font("Arial", 16));
-        descriptionLabel.setWrapText(true);
-        descriptionLabel.setStyle("-fx-text-fill: black;");
-
-        Button playButton = createMenuButton("Play Level", 150, 50);
-
-        descriptionBox.getChildren().addAll(levelTitleLabel, descriptionLabel, playButton);
-
-        // Add imageView or placeholder and descriptionBox to centerBox
-        if (imageView.getImage() != null) {
-            centerBox.getChildren().addAll(imageView, descriptionBox);
-        } else if (!centerBox.getChildren().contains(descriptionBox)) {
-            // If placeholder already added, add descriptionBox now
-            centerBox.getChildren().add(descriptionBox);
-        }
-        root.setCenter(centerBox);
-
-        // Bottom bar with Back button
-        HBox bottomBar = new HBox();
-        bottomBar.setAlignment(Pos.CENTER_LEFT);
-        bottomBar.setPadding(new Insets(10, 20, 20, 20));
-
-        Button backButton = createMenuButton("Back", 110, 45);
-        bottomBar.getChildren().add(backButton);
-        root.setBottom(bottomBar);
-
-        // Example action handlers (to be replaced with actual navigation)
-        backButton.setOnAction(e -> System.out.println("Back clicked"));
-        playButton.setOnAction(e -> System.out.println("Play Level clicked"));
+        root.setTop(createTopSection());
+        root.setCenter(createCenterSection());
+        root.setBottom(createBottomSection());
 
         return root;
     }
 
     /**
-     * Creates a generic menu button with specified size.
+     * Creates the root layout with the shared background image.
      *
-     * @param text   the button text
-     * @param width  preferred width
-     * @param height preferred height
-     * @return the styled menu button
+     * @return the root layout
      */
-    private Button createMenuButton(String text, double width, double height) {
+    private BorderPane createRootLayout() {
+        BorderPane root = new BorderPane();
+        root.getStyleClass().add("shop-root");
+        return root;
+    }
+
+    /**
+     * Creates the top section with the top bar and player greeting.
+     *
+     * @return the top section
+     */
+    private VBox createTopSection() {
+        HBox topBar = new HBox();
+        topBar.setPrefHeight(60);
+        topBar.getStyleClass().add("top-bar");
+
+        VBox content = new VBox(playerNameLabel);
+        content.setAlignment(Pos.TOP_LEFT);
+        content.setPadding(new Insets(18, 35, 0, 35));
+
+        return new VBox(topBar, content);
+    }
+
+    /**
+     * Creates the central panel matching the wireframe layout.
+     *
+     * @return the center section
+     */
+    private StackPane createCenterSection() {
+        VBox leftColumn = createLeftColumn();
+        VBox rightColumn = createRightColumn();
+
+        HBox mainContent = new HBox(40, leftColumn, rightColumn);
+        mainContent.setAlignment(Pos.CENTER_LEFT);
+
+        HBox outerPanel = new HBox(mainContent);
+        outerPanel.setAlignment(Pos.CENTER_LEFT);
+        outerPanel.setPadding(new Insets(25));
+        outerPanel.setMaxWidth(1100);
+        outerPanel.setPrefHeight(430);
+        outerPanel.setMaxHeight(430);
+        outerPanel.getStyleClass().add("container");
+
+        StackPane wrapper = new StackPane(outerPanel);
+        wrapper.setPadding(new Insets(20, 40, 20, 40));
+
+        return wrapper;
+    }
+
+    /**
+     * Creates the left column with the night label and map preview.
+     *
+     * @return the left column
+     */
+    private VBox createLeftColumn() {
+        ImageView mapPreview = new ImageView(
+                new Image(getClass().getResource("/echoshift/images/content.png").toExternalForm())
+        );
+        mapPreview.setFitWidth(290);
+        mapPreview.setFitHeight(360);
+        mapPreview.setPreserveRatio(false);
+        mapPreview.setSmooth(true);
+
+        StackPane imageBox = new StackPane(mapPreview);
+        imageBox.setPrefSize(290, 360);
+        imageBox.setMaxSize(290, 360);
+        imageBox.setStyle("""
+                -fx-background-color: rgba(255,255,255,0.12);
+                -fx-border-color: rgba(0,0,0,0.55);
+                -fx-border-width: 1.5;
+                -fx-padding: 0;
+                """);
+
+        VBox leftColumn = new VBox(18, levelLabel, imageBox);
+        leftColumn.setAlignment(Pos.TOP_LEFT);
+
+        return leftColumn;
+    }
+
+    /**
+     * Creates the right column with the level title, description, and play button.
+     *
+     * @return the right column
+     */
+    private VBox createRightColumn() {
+        VBox infoPanel = new VBox(25);
+        infoPanel.setAlignment(Pos.TOP_LEFT);
+        infoPanel.setPrefWidth(560);
+        infoPanel.setPrefHeight(360);
+        infoPanel.setMinHeight(360);
+        infoPanel.setMaxHeight(360);
+        infoPanel.setPadding(new Insets(25));
+        infoPanel.setStyle("""
+                -fx-background-color: rgba(255,255,255,0.20);
+                -fx-border-color: rgba(0,0,0,0.35);
+                -fx-border-width: 1.5;
+                """);
+
+        VBox textGroup = new VBox(18, levelTitleLabel, levelDescriptionLabel);
+        textGroup.setAlignment(Pos.TOP_LEFT);
+
+        HBox buttonRow = new HBox(playLevelButton);
+        buttonRow.setAlignment(Pos.CENTER);
+
+        Region spacer = new Region();
+        VBox.setVgrow(spacer, Priority.ALWAYS);
+
+        infoPanel.getChildren().addAll(textGroup, spacer, buttonRow);
+
+        return infoPanel;
+    }
+
+    /**
+     * Creates the bottom section with the back button.
+     *
+     * @return the bottom section
+     */
+    private BorderPane createBottomSection() {
+        BorderPane bottomBar = new BorderPane();
+        bottomBar.getStyleClass().add("bottom-bar");
+        bottomBar.setPrefHeight(60);
+        bottomBar.setMinHeight(60);
+        bottomBar.setPadding(new Insets(10, 18, 10, 18));
+
+        bottomBar.setLeft(backButton);
+        BorderPane.setAlignment(backButton, Pos.CENTER_LEFT);
+
+        return bottomBar;
+    }
+
+    /**
+     * Creates a main text label.
+     *
+     * @param text the label text
+     * @param size the font size
+     * @return the label
+     */
+    private Label createMainLabel(String text, float size) {
+        Label label = new Label(text);
+        label.setFont(Font.font("Verdana", size));
+        label.setStyle("-fx-text-fill: black;");
+        return label;
+    }
+
+    /**
+     * Creates a wrapped description label.
+     *
+     * @param text the label text
+     * @param size the font size
+     * @return the description label
+     */
+    private Label createDescriptionLabel(String text, float size) {
+        Label label = new Label(text);
+        label.setFont(Font.font("Verdana", size));
+        label.setWrapText(true);
+        label.setMaxWidth(620);
+        label.setStyle("-fx-text-fill: black;");
+        return label;
+    }
+
+    /**
+     * Creates a styled button.
+     *
+     * @param text the button text
+     * @param width the preferred width
+     * @param height the preferred height
+     * @return the button
+     */
+    private Button createButton(String text, double width, double height) {
         Button button = new Button(text);
         button.setPrefSize(width, height);
-        button.setFont(Font.font("Arial", 22));
-        button.setStyle("""
-                -fx-background-color: white;
-                -fx-text-fill: black;
-                -fx-border-color: #bdbdbd;
-                -fx-border-width: 1;
-                -fx-cursor: hand;
-                """);
+        button.setFont(Font.font("Verdana", 20));
+        button.getStyleClass().add("button");
+
+        ButtonEffects.hoverAnimation(button);
+        ButtonEffects.clickAnimation(button);
+
         return button;
+    }
+
+    /**
+     * Returns the level title for the given level.
+     *
+     * @param levelNumber the level number
+     * @return the level title
+     */
+    private String getLevelTitle(int levelNumber) {
+        return switch (levelNumber) {
+            case 1 -> "Night 1 – The Breakout";
+            case 2 -> "Night 2 – The Hunter Learns";
+            case 3 -> "Night 3 – No Escape";
+            default -> "Unknown Level";
+        };
+    }
+
+    /**
+     * Returns the description for the given level.
+     *
+     * @param levelNumber the level number
+     * @return the level description
+     */
+    private String getLevelDescription(int levelNumber) {
+        return switch (levelNumber) {
+            case 1 -> "The Entity has just escaped. It moves slowly, still learning the layout of the facility and how to hunt. It may stumble and hesitate, but don’t underestimate it.";
+            case 2 -> "The Entity is adapting. It moves faster now and has begun to understand how to track you. Safe moments are fewer, and every second could bring it closer.";
+            case 3 -> "The Entity has fully adapted to the facility. It moves with terrifying speed and purpose, leaving almost no time to react. Survive the night, if you can.";
+            default -> "No description available.";
+        };
+    }
+
+    /**
+     * Gets the back button.
+     *
+     * @return the back button
+     */
+    public Button getBackButton() {
+        return backButton;
+    }
+
+    /**
+     * Gets the play level button.
+     *
+     * @return the play level button
+     */
+    public Button getPlayLevelButton() {
+        return playLevelButton;
+    }
+
+    /**
+     * Gets the selected level number.
+     *
+     * @return the level number
+     */
+    public int getLevelNumber() {
+        return levelNumber;
     }
 }
