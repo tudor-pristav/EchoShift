@@ -62,7 +62,7 @@ public class PlayerHomeController {
 
         confirm.showAndWait().ifPresent(response -> {
             if (response == javafx.scene.control.ButtonType.OK) {
-                session.getCurrentStatistics().setHighestLevel(1);
+                session.getCurrentStatistics().resetHighestLevel();
 
                 try {
                     new UserDataSaveService().saveStatistics(

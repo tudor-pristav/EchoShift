@@ -114,6 +114,10 @@ public class UserStatistics {
         }
     }
 
+    public void resetHighestLevel(){
+        highestLevel = 1;
+
+    }
     /**
      * Method sets the total words typed statistic.
      * @param curWords The number of words the user has typed out from the previous game.
