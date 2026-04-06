@@ -11,17 +11,12 @@ import javafx.scene.layout.*;
 import javafx.scene.text.Font;
 import echoshift.models.Session;
 
-
 /**
- * Builds the Player Home page for EchoShift.
- * Style follows the wireframe:
- * - welcome text top-left
- * - main navigation buttons on the left
- * - currency + shop on the top-right
- * - settings/logout bottom-left
- * - exit bottom-right
+ * View for the Player Home screen.
+ * Displays navigation, user info, and actions.
+ *
+ * @author Tudor Mihai Pristav
  */
-
 public class PlayerHomeView {
     private final Session session;
     private final Label welcomeLabel;
@@ -38,6 +33,11 @@ public class PlayerHomeView {
     private final Button shopButton;
     private final Button exitButton;
 
+    /**
+     * Initializes the player home view.
+     *
+     * @param session current user session
+     */
     public PlayerHomeView(Session session) {
         this.session = session;
 
@@ -59,6 +59,11 @@ public class PlayerHomeView {
         this.exitButton = createButton("Exit", 180, 48);
     }
 
+    /**
+     * Builds and returns the UI page.
+     *
+     * @return root node
+     */
     public Parent createPlayerHomePage() {
         BorderPane root = createRootLayout();
 
@@ -77,6 +82,11 @@ public class PlayerHomeView {
         return root;
     }
 
+    /**
+     * Creates the background layout.
+     *
+     * @return root layout
+     */
     private BorderPane createRootLayout() {
         BorderPane root = new BorderPane();
 
@@ -92,6 +102,11 @@ public class PlayerHomeView {
         return root;
     }
 
+    /**
+     * Creates the top section with welcome text and coins.
+     *
+     * @return top container
+     */
     private VBox createTopContainer() {
         HBox topBar = new HBox();
         topBar.setPrefHeight(60);
@@ -112,6 +127,11 @@ public class PlayerHomeView {
         return wrapper;
     }
 
+    /**
+     * Creates the main navigation buttons.
+     *
+     * @return left section
+     */
     private VBox createLeftSection() {
         VBox mainButtons = new VBox(
                 18,
@@ -125,6 +145,11 @@ public class PlayerHomeView {
         return mainButtons;
     }
 
+    /**
+     * Creates the bottom bar with settings and exit.
+     *
+     * @return bottom bar
+     */
     private BorderPane createBottomBar() {
         VBox bottomLeft = new VBox(12, settingsButton, logoutButton);
         bottomLeft.setAlignment(Pos.BOTTOM_LEFT);
@@ -143,6 +168,11 @@ public class PlayerHomeView {
         return bottomPane;
     }
 
+    /**
+     * Creates the right spacer section.
+     *
+     * @return right section
+     */
     private VBox createRightSection() {
         VBox rightSpacer = new VBox();
         rightSpacer.setAlignment(Pos.CENTER_RIGHT);
@@ -150,6 +180,9 @@ public class PlayerHomeView {
         return rightSpacer;
     }
 
+    /**
+     * Creates a styled label.
+     */
     private Label createLabel(String text, float size) {
         Label label = new Label(text);
         label.setFont(Font.font("Verdana", size));
@@ -157,6 +190,9 @@ public class PlayerHomeView {
         return label;
     }
 
+    /**
+     * Creates a styled small label.
+     */
     private Label createSmallLabel(String text, float size) {
         Label label = new Label(text);
         label.setFont(Font.font("Verdana", size));
@@ -169,6 +205,9 @@ public class PlayerHomeView {
         return label;
     }
 
+    /**
+     * Creates a styled button.
+     */
     private Button createButton(String text, double width, double height) {
         Button button = new Button(text);
         button.setPrefSize(width, height);
@@ -181,34 +220,42 @@ public class PlayerHomeView {
         return button;
     }
 
+    /** @return new game button */
     public Button getNewGameButton() {
         return newGameButton;
     }
 
+    /** @return select level button */
     public Button getSelectLevelButton() {
         return selectLevelButton;
     }
 
+    /** @return instructions button */
     public Button getInstructionsButton() {
         return instructionsButton;
     }
 
+    /** @return stats button */
     public Button getStatsButton() {
         return statsButton;
     }
 
+    /** @return settings button */
     public Button getSettingsButton() {
         return settingsButton;
     }
 
+    /** @return logout button */
     public Button getLogoutButton() {
         return logoutButton;
     }
 
+    /** @return shop button */
     public Button getShopButton() {
         return shopButton;
     }
 
+    /** @return exit button */
     public Button getExitButton() {
         return exitButton;
     }

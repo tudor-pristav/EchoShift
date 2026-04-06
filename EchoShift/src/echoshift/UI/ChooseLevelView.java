@@ -17,6 +17,7 @@ import javafx.scene.layout.*;
  * This class is responsible only for the frontend layout and UI elements.
  *
  * @author Matthew Taylor
+ * @author Tudor Mihai Pristav
  */
 public class ChooseLevelView {
 

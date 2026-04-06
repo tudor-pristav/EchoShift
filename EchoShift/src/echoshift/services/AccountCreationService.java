@@ -16,6 +16,7 @@ import java.util.Random;
 
 /**
  * Service responsible for creating new player accounts and default player statistics files.
+ * @author Tudor Mihai Pristav
  */
 public class AccountCreationService {
 

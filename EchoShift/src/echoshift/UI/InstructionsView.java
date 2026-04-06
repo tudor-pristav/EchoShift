@@ -11,9 +11,10 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 /**
- * Simple instructions page with:
- * - background image
- * - back button bottom-left
+ * View for the main instructions screen.
+ * Displays instructions and navigation back to main menu.
+ *
+ * @author Tudor Mihai Pristav
  */
 public class InstructionsView {
 
@@ -21,6 +22,11 @@ public class InstructionsView {
     private final MainMenuView mainMenuView;
     private final Button backButton;
 
+    /**
+     * Initializes the instructions view.
+     *
+     * @param stage main application stage
+     */
     public InstructionsView(Stage stage) {
         this.stage = stage;
         this.mainMenuView = new MainMenuView();
@@ -28,7 +34,9 @@ public class InstructionsView {
     }
 
     /**
-     * Builds the page.
+     * Builds and returns the UI page.
+     *
+     * @return root node
      */
     public Parent createPage() {
         BorderPane root = createRootLayout();
@@ -44,7 +52,9 @@ public class InstructionsView {
     }
 
     /**
-     * Background setup.
+     * Creates the background layout.
+     *
+     * @return root layout
      */
     private BorderPane createRootLayout() {
         BorderPane root = new BorderPane();
@@ -69,7 +79,9 @@ public class InstructionsView {
     }
 
     /**
-     * Bottom bar with back button.
+     * Creates the bottom bar with navigation.
+     *
+     * @return bottom layout
      */
     private BorderPane createBottomBar() {
         BorderPane bottom = new BorderPane();
@@ -84,7 +96,12 @@ public class InstructionsView {
     }
 
     /**
-     * Standard project button.
+     * Creates a styled button.
+     *
+     * @param text button text
+     * @param width button width
+     * @param height button height
+     * @return configured button
      */
     private Button createButton(String text, double width, double height) {
         Button button = new Button(text);
@@ -97,19 +114,30 @@ public class InstructionsView {
         return button;
     }
 
+    /**
+     * Attaches event handlers.
+     */
     private void attachHandlers() {
         backButton.setOnAction(e -> goBack());
     }
 
+    /**
+     * Navigates back to the main menu.
+     */
     private void goBack() {
         stage.getScene().setRoot(mainMenuView.createMainMenu());
         stage.setTitle("Echo Shift");
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(null);
         stage.setMaximized(true);
-        new MainMenuController(stage,mainMenuView);
+        new MainMenuController(stage, mainMenuView);
     }
 
+    /**
+     * Returns the back button.
+     *
+     * @return back button
+     */
     public Button getBackButton() {
         return backButton;
     }

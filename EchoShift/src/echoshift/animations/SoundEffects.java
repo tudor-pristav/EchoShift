@@ -7,7 +7,9 @@ import javafx.scene.media.MediaPlayer;
 import java.net.URL;
 
 /**
- * Utility class for playing UI sound effects and background music.
+ * Utility class for managing sound effects and background music.
+ *
+ * @author Tudor Mihai Pristav
  */
 public class SoundEffects {
 
@@ -18,10 +20,7 @@ public class SoundEffects {
     private static MediaPlayer mediaPlayer;
     private static boolean initialized = false;
 
-    /**
-     * Master volume for all game audio.
-     * Range: 0.0 to 1.0
-     */
+    /** Master volume (0.0 to 1.0). */
     private static double masterVolume = 1.0;
 
     static {
@@ -36,15 +35,14 @@ public class SoundEffects {
     }
 
     /**
-     * Plays the button click sound once.
+     * Plays the click sound once.
      */
     public static void playClickSound() {
         CLICK_SOUND.play();
     }
 
     /**
-     * Starts the background music if it is not already playing.
-     * Safe to call multiple times.
+     * Starts background music if not already playing.
      */
     public static void play() {
         if (!initialized) {
@@ -58,7 +56,7 @@ public class SoundEffects {
     }
 
     /**
-     * Pauses the background music.
+     * Pauses background music.
      */
     public static void pause() {
         if (mediaPlayer != null) {
@@ -67,7 +65,7 @@ public class SoundEffects {
     }
 
     /**
-     * Stops the background music and resets it to the beginning.
+     * Stops background music and resets it.
      */
     public static void stop() {
         if (mediaPlayer != null) {
@@ -76,9 +74,9 @@ public class SoundEffects {
     }
 
     /**
-     * Sets the master audio volume for both music and sound effects.
+     * Sets master volume for all audio.
      *
-     * @param volume volume between 0.0 and 1.0
+     * @param volume value between 0.0 and 1.0
      */
     public static void setVolume(double volume) {
         masterVolume = Math.max(0.0, Math.min(1.0, volume));
@@ -91,16 +89,16 @@ public class SoundEffects {
     }
 
     /**
-     * Returns the current master volume as a value between 0.0 and 1.0.
+     * Returns current master volume.
      *
-     * @return current volume
+     * @return volume value
      */
     public static double getVolume() {
         return masterVolume;
     }
 
     /**
-     * Creates the shared MediaPlayer once.
+     * Initializes the media player for background music.
      */
     private static void initializePlayer() {
         URL musicUrl = SoundEffects.class.getResource(MUSIC_PATH);

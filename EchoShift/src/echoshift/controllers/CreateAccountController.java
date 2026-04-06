@@ -4,15 +4,17 @@ import echoshift.UI.AdminPanelView;
 import echoshift.UI.CreateAccountView;
 import echoshift.models.UserAccount;
 import echoshift.services.AccountCreationService;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 import java.io.IOException;
 
 /**
- * Controller for the Create Account page.
- * Handles navigation and account creation actions for this screen.
+ * Controller for the create account screen.
+ * Handles user input, account creation requests, and navigation
+ * back to the admin panel.
+ *
+ * @author Tudor Mihai Pristav
  */
 public class CreateAccountController {
 
@@ -21,9 +23,10 @@ public class CreateAccountController {
     private final AccountCreationService accountCreationService;
 
     /**
-     * Creates the controller and attaches event handlers.
+     * Initializes the controller with the required view and service,
+     * then attaches all button event handlers for the screen.
      *
-     * @param stage the main application stage
+     * @param stage the main application stage used for screen navigation
      * @param view the create account view
      */
     public CreateAccountController(Stage stage, CreateAccountView view) {
@@ -35,7 +38,8 @@ public class CreateAccountController {
     }
 
     /**
-     * Attaches button event handlers.
+     * Attaches handlers for account creation and navigation buttons.
+     * This connects the UI controls to their corresponding actions.
      */
     private void attachHandlers() {
         view.getBackButton().setOnAction(e -> goBackToAdminPanel());
@@ -43,7 +47,9 @@ public class CreateAccountController {
     }
 
     /**
-     * Handles create account button logic.
+     * Reads the entered username and password, then attempts to create
+     * a new player account using the account creation service.
+     * Displays either a success message or an error alert.
      */
     private void handleCreateAccount() {
         String username = view.getUsernameField().getText();
@@ -70,7 +76,8 @@ public class CreateAccountController {
     }
 
     /**
-     * Navigates back to the admin panel page.
+     * Returns the user to the admin panel screen
+     * and recreates its controller.
      */
     private void goBackToAdminPanel() {
         AdminPanelView adminPanelView = new AdminPanelView();
@@ -83,9 +90,10 @@ public class CreateAccountController {
     }
 
     /**
-     * Shows an error alert.
+     * Shows an error alert with the provided message
+     * when account creation fails or validation is not met.
      *
-     * @param message the error message
+     * @param message the message to display in the error alert
      */
     private void showError(String message) {
         Alert errorAlert = new Alert(Alert.AlertType.ERROR);

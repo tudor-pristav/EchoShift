@@ -20,6 +20,7 @@ public class AdminLoginView {
 
     /**
      * Creates the reusable controls for the player login page.
+     * @author Tudor Mihai Pristav
      */
     public AdminLoginView() {
         this.usernameField = createUsernameField();

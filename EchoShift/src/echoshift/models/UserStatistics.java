@@ -2,6 +2,7 @@ package echoshift.models;
 
 /**
  * Represents all gameplay statistics and currency for a player.
+ * @author Tudor Mihai Pristav
  */
 public class UserStatistics {
 

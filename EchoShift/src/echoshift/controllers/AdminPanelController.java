@@ -3,40 +3,53 @@ package echoshift.controllers;
 import echoshift.UI.*;
 import javafx.scene.Parent;
 import javafx.stage.Stage;
-import echoshift.UI.AdminLoginView;
-import echoshift.models.Session;
-import echoshift.models.UserAccount;
-import echoshift.models.UserStatistics;
-import echoshift.services.AdminLoginService;
-import echoshift.services.UserDataRetrievalService;
-import javafx.scene.Scene;
-import javafx.scene.control.Alert;
-import javafx.stage.Stage;
 import echoshift.services.HighScoreManagementService;
+import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 
+/**
+ * Controller for the admin panel.
+ * Handles navigation and admin actions.
+ *
+ * @author Tudor Mihai Pristav
+ */
 public class AdminPanelController {
+
     private final Stage stage;
     private final AdminPanelView view;
     private final HighScoreManagementService highScoreManagementService;
     private final Parent previousRoot;
-    public AdminPanelController(Stage stage,AdminPanelView view) {
+
+    /**
+     * Initializes the controller and attaches handlers.
+     *
+     * @param stage the main application stage
+     * @param view the admin panel view
+     */
+    public AdminPanelController(Stage stage, AdminPanelView view) {
         this.stage = stage;
         this.view = view;
         this.highScoreManagementService = new HighScoreManagementService();
-        this.previousRoot =stage.getScene().getRoot();
+        this.previousRoot = stage.getScene().getRoot();
         attachHandlers();
     }
+
+    /**
+     * Attaches button event handlers.
+     */
     private void attachHandlers() {
         view.getLoginButton().setOnAction(e -> goToManageAccounts());
         view.getInstructionsButton().setOnAction(e -> goToCreateAccounts());
         view.getHighScoresButton().setOnAction(e -> goToResetHighScores());
         view.getSettingsButton().setOnAction(e -> goToSettings());
         view.getExitButton().setOnAction(e -> exitGame());
-        view.getLogoutButton().setOnAction(actionEvent -> logOut());
+        view.getLogoutButton().setOnAction(e -> logOut());
     }
 
-    private void goToManageAccounts(){
+    /**
+     * Navigates to manage accounts screen.
+     */
+    private void goToManageAccounts() {
         ManageAccountsView manageAccountsView = new ManageAccountsView();
 
         stage.getScene().setRoot(manageAccountsView.createManageAccountsPage());
@@ -46,18 +59,26 @@ public class AdminPanelController {
         stage.setMaximized(true);
 
         new ManageAccountsController(stage, previousRoot, manageAccountsView);
-
     }
-    private void goToCreateAccounts(){
+
+    /**
+     * Navigates to create account screen.
+     */
+    private void goToCreateAccounts() {
         CreateAccountView createAccountView = new CreateAccountView();
+
         stage.getScene().setRoot(createAccountView.createCreateAccountPage());
         stage.setTitle("Echo Shift - Create Account");
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(null);
         stage.setMaximized(true);
+
         new CreateAccountController(stage, createAccountView);
     }
 
+    /**
+     * Prompts and resets all player high scores.
+     */
     private void goToResetHighScores() {
         Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmAlert.setTitle("Reset High Scores");
@@ -85,8 +106,13 @@ public class AdminPanelController {
             }
         });
     }
+
+    /**
+     * Navigates to settings screen.
+     */
     private void goToSettings() {
         SettingsView settingsView = new SettingsView();
+
         stage.getScene().setRoot(settingsView.createSettingsPage());
         stage.setTitle("Echo Shift - Settings");
         stage.setFullScreenExitHint("");
@@ -96,12 +122,19 @@ public class AdminPanelController {
         new SettingsController(stage, previousRoot, settingsView);
     }
 
-    private void exitGame(){
+    /**
+     * Exits the application.
+     */
+    private void exitGame() {
         stage.close();
     }
 
-    private void logOut(){
-       MainMenuView mainMenuView= new MainMenuView();
+    /**
+     * Logs out and returns to main menu.
+     */
+    private void logOut() {
+        MainMenuView mainMenuView = new MainMenuView();
+
         stage.getScene().setRoot(mainMenuView.createMainMenu());
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(null);

@@ -14,6 +14,7 @@ import java.util.List;
 
 /**
  * Service responsible for resetting all account high scores.
+ * @author Tudor Mihai Pristav
  */
 public class HighScoreManagementService {
 

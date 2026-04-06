@@ -16,6 +16,12 @@ import echoshift.UI.PlayerHomeView;
 
 import java.io.IOException;
 
+/**
+ * Controller responsible for handling player login
+ * and navigation from the login screen.
+ *
+ * @author Tudor Mihai Pristav
+ */
 public class PlayerLoginController {
     private final Stage stage;
     private final PlayerLoginView view;
@@ -23,6 +29,12 @@ public class PlayerLoginController {
     private final LoginService loginService;
     private final UserDataRetrievalService dataService;
 
+    /**
+     * Constructs the controller and attaches event handlers.
+     *
+     * @param stage the main application stage
+     * @param view the player login view
+     */
     public PlayerLoginController(Stage stage, PlayerLoginView view) {
         this.stage = stage;
         this.view = view;
@@ -32,6 +44,9 @@ public class PlayerLoginController {
         attachHandlers();
     }
 
+    /**
+     * Attaches UI event handlers.
+     */
     private void attachHandlers() {
         view.getLoginButton().setOnAction(e -> {
             try {
@@ -43,6 +58,12 @@ public class PlayerLoginController {
         view.getMenuButton().setOnAction(e -> goToMenu());
     }
 
+    /**
+     * Validates credentials, loads player data,
+     * and creates the session on successful login.
+     *
+     * @throws IOException if player data cannot be loaded
+     */
     private void handleLogin() throws IOException {
 
         String username = view.getUsernameField().getText().trim();
@@ -60,21 +81,22 @@ public class PlayerLoginController {
             return;
         }
 
-        //  Load stats AFTER login
         UserStatistics stats = dataService.retrieveStatistics(account.getId());
         PowerupStorageService powerupStorageService = new PowerupStorageService();
         PlayerPowerups powerups = powerupStorageService.loadPowerups(account.getId());
 
         Session session = new Session(account, stats, powerups);
 
-
-        //  Navigate
         goToPlayerHome(session);
     }
 
+    /**
+     * Navigates to the player home screen.
+     *
+     * @param session the current player session
+     */
     private void goToPlayerHome(Session session) {
 
-        // create next page
         PlayerHomeView homeView = new PlayerHomeView(session);
 
         stage.getScene().setRoot(homeView.createPlayerHomePage());
@@ -82,15 +104,16 @@ public class PlayerLoginController {
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(null);
         stage.setMaximized(true);
-        // attach controller
-        new PlayerHomeController(stage, homeView, session);
 
-        // switch scene
+        new PlayerHomeController(stage, homeView, session);
     }
 
+    /**
+     * Navigates back to the main menu.
+     */
     private void goToMenu() {
         MainMenuView mainMenuView = new MainMenuView();
-        MainMenuController mainMenuController = new MainMenuController(stage,mainMenuView);
+        MainMenuController mainMenuController = new MainMenuController(stage, mainMenuView);
         stage.getScene().setRoot(mainMenuView.createMainMenu());
         stage.setTitle("Echo Shift");
         stage.setFullScreenExitHint("");
@@ -98,6 +121,11 @@ public class PlayerLoginController {
         stage.setMaximized(true);
     }
 
+    /**
+     * Displays a login error alert.
+     *
+     * @param message the error message
+     */
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Login Error");
@@ -106,6 +134,11 @@ public class PlayerLoginController {
         alert.showAndWait();
     }
 
+    /**
+     * Displays an information alert.
+     *
+     * @param message the information message
+     */
     private void showInfo(String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Info");

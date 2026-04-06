@@ -14,6 +14,7 @@ import java.nio.file.Paths;
 
 /**
  * Handles creation, loading, and updating of player powerup files.
+ * @author Tudor Mihai Pristav
  */
 public class PowerupStorageService {
 

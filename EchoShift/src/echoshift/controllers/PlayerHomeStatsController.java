@@ -11,7 +11,10 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 /**
- * Controller for the Player Stats screen.
+ * Controller responsible for displaying a player's statistics
+ * and handling navigation back to the Manage Accounts screen.
+ *
+ * @author Tudor Mihai Pristav
  */
 public class PlayerHomeStatsController {
 
@@ -24,6 +27,15 @@ public class PlayerHomeStatsController {
     private final AccountManagementService accountManagementService;
     private final UserDataRetrievalService dataRetrievalService;
 
+    /**
+     * Constructs the controller and initializes data and handlers.
+     *
+     * @param stage the main application stage
+     * @param manageAccountsRoot the root node of the manage accounts screen
+     * @param view the player stats view
+     * @param playerId the player's unique ID
+     * @param username the player's username
+     */
     public PlayerHomeStatsController(
             Stage stage,
             Parent manageAccountsRoot,
@@ -44,6 +56,9 @@ public class PlayerHomeStatsController {
         attachHandlers();
     }
 
+    /**
+     * Loads player statistics and updates the view.
+     */
     private void loadPlayerData() {
         try {
             UserStatistics stats = dataRetrievalService.retrieveStatistics(playerId);
@@ -66,12 +81,15 @@ public class PlayerHomeStatsController {
         }
     }
 
+    /**
+     * Attaches UI event handlers.
+     */
     private void attachHandlers() {
         view.getBackButton().setOnAction(e -> goBack());
     }
 
     /**
-     * Back → returns to Manage Accounts (no reload)
+     * Navigates back to the Manage Accounts screen.
      */
     private void goBack() {
         stage.getScene().setRoot(manageAccountsRoot);
@@ -79,6 +97,11 @@ public class PlayerHomeStatsController {
         stage.show();
     }
 
+    /**
+     * Displays an error alert with the given message.
+     *
+     * @param message the error message to display
+     */
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");

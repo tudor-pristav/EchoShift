@@ -11,6 +11,7 @@ import java.util.List;
 import echoshift.models.UserAccount;
 
 /**
+ * @author Tudor Mihai Pristav
  * Service responsible for handling user authentication.
  *
  * <p>This class provides functionality to:

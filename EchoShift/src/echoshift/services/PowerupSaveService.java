@@ -9,6 +9,7 @@ import java.io.IOException;
 
 /**
  * Service responsible for saving player powerups to JSON files.
+ * @author Tudor Mihai Pristav
  */
 public class PowerupSaveService {
 

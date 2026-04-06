@@ -1,7 +1,9 @@
 package echoshift.models;
 
 /**
- * Represents the different powerups available in the shop.
+ * Enum representing available powerup types.
+ *
+ * @author Tudor Mihai Pristav
  */
 public enum PowerupType {
     EASY_WORDS,

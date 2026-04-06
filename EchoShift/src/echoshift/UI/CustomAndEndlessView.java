@@ -17,6 +17,7 @@ import javafx.scene.text.Font;
  * Players may choose between these special modes.
  *
  * @author Matthew Taylor
+ * @author Tudor Mihai Pristav
  */
 public class CustomAndEndlessView {
 

@@ -1,7 +1,6 @@
 package echoshift.UI;
 
 import echoshift.animations.ButtonEffects;
-import echoshift.controllers.MainMenuController;
 import echoshift.controllers.PlayerHomeController;
 import echoshift.models.Session;
 import javafx.geometry.Insets;
@@ -13,9 +12,10 @@ import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 /**
- * Simple instructions page with:
- * - background image
- * - back button bottom-left
+ * View for the player instructions screen.
+ * Displays instructions and navigation back to player home.
+ *
+ * @author Tudor Mihai Pristav
  */
 public class InstructionsPlayerHomeView {
 
@@ -23,6 +23,13 @@ public class InstructionsPlayerHomeView {
     private final PlayerHomeView playerHomeView;
     private final Button backButton;
     private final Session session;
+
+    /**
+     * Initializes the instructions view.
+     *
+     * @param stage main application stage
+     * @param session current user session
+     */
     public InstructionsPlayerHomeView(Stage stage, Session session) {
         this.stage = stage;
         this.playerHomeView = new PlayerHomeView(session);
@@ -31,7 +38,9 @@ public class InstructionsPlayerHomeView {
     }
 
     /**
-     * Builds the page.
+     * Builds and returns the UI page.
+     *
+     * @return root node
      */
     public Parent createPage() {
         BorderPane root = createRootLayout();
@@ -47,7 +56,9 @@ public class InstructionsPlayerHomeView {
     }
 
     /**
-     * Background setup.
+     * Creates the background layout.
+     *
+     * @return root layout
      */
     private BorderPane createRootLayout() {
         BorderPane root = new BorderPane();
@@ -72,7 +83,9 @@ public class InstructionsPlayerHomeView {
     }
 
     /**
-     * Bottom bar with back button.
+     * Creates the bottom bar with navigation.
+     *
+     * @return bottom layout
      */
     private BorderPane createBottomBar() {
         BorderPane bottom = new BorderPane();
@@ -87,7 +100,12 @@ public class InstructionsPlayerHomeView {
     }
 
     /**
-     * Standard project button.
+     * Creates a styled button.
+     *
+     * @param text button text
+     * @param width button width
+     * @param height button height
+     * @return configured button
      */
     private Button createButton(String text, double width, double height) {
         Button button = new Button(text);
@@ -100,19 +118,30 @@ public class InstructionsPlayerHomeView {
         return button;
     }
 
+    /**
+     * Attaches event handlers.
+     */
     private void attachHandlers() {
         backButton.setOnAction(e -> goBack());
     }
 
+    /**
+     * Navigates back to the player home screen.
+     */
     private void goBack() {
         stage.getScene().setRoot(playerHomeView.createPlayerHomePage());
         stage.setTitle("Echo Shift - Player Home");
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(null);
         stage.setMaximized(true);
-        new PlayerHomeController(stage,playerHomeView,session);
+        new PlayerHomeController(stage, playerHomeView, session);
     }
 
+    /**
+     * Returns the back button.
+     *
+     * @return back button
+     */
     public Button getBackButton() {
         return backButton;
     }

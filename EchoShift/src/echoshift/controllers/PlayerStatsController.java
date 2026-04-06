@@ -11,12 +11,15 @@ import javafx.scene.control.Alert;
 import javafx.stage.Stage;
 
 /**
- * Controller for the Player Stats screen.
+ * Controller responsible for displaying player statistics
+ * and handling account actions from the admin side.
+ *
+ * @author Tudor Mihai Pristav
  */
 public class PlayerStatsController {
 
     private final Stage stage;
-    private final  Parent manageAccountsRoot;   // where "Back" goes
+    private final Parent manageAccountsRoot;   // where "Back" goes
     private final Parent adminPanelRoot;       // where ManageAccounts "Back" goes
     private final PlayerStatsView view;
     private final String playerId;
@@ -25,6 +28,16 @@ public class PlayerStatsController {
     private final AccountManagementService accountManagementService;
     private final UserDataRetrievalService dataRetrievalService;
 
+    /**
+     * Constructs the controller and initializes data and handlers.
+     *
+     * @param stage the main application stage
+     * @param manageAccountsRoot the manage accounts root node
+     * @param adminPanelRoot the admin panel root node
+     * @param view the player stats view
+     * @param playerId the player's unique ID
+     * @param username the player's username
+     */
     public PlayerStatsController(
             Stage stage,
             Parent manageAccountsRoot,
@@ -47,6 +60,9 @@ public class PlayerStatsController {
         attachHandlers();
     }
 
+    /**
+     * Loads player statistics and updates the view.
+     */
     private void loadPlayerData() {
         try {
             UserStatistics stats = dataRetrievalService.retrieveStatistics(playerId);
@@ -69,13 +85,16 @@ public class PlayerStatsController {
         }
     }
 
+    /**
+     * Attaches UI event handlers.
+     */
     private void attachHandlers() {
         view.getBackButton().setOnAction(e -> goBack());
         view.getDeleteAccountButton().setOnAction(e -> handleDeleteAccount());
     }
 
     /**
-     * Back → returns to Manage Accounts (no reload)
+     * Navigates back to the Manage Accounts screen.
      */
     private void goBack() {
         stage.getScene().setRoot(manageAccountsRoot);
@@ -84,7 +103,7 @@ public class PlayerStatsController {
     }
 
     /**
-     * Reload Manage Accounts AFTER deletion
+     * Reloads the Manage Accounts page after an account is deleted.
      */
     private void reloadManageAccountsPage() {
         ManageAccountsView manageAccountsView = new ManageAccountsView();
@@ -102,6 +121,9 @@ public class PlayerStatsController {
         stage.show();
     }
 
+    /**
+     * Confirms and deletes the selected player account.
+     */
     private void handleDeleteAccount() {
         Alert confirmAlert = new Alert(Alert.AlertType.CONFIRMATION);
         confirmAlert.setTitle("Delete Account");
@@ -120,7 +142,7 @@ public class PlayerStatsController {
                         successAlert.setContentText("Account deleted successfully.");
                         successAlert.showAndWait();
 
-                        reloadManageAccountsPage(); //
+                        reloadManageAccountsPage();
 
                     } else {
                         showError("Account not found. Nothing was deleted.");
@@ -135,6 +157,11 @@ public class PlayerStatsController {
         });
     }
 
+    /**
+     * Displays an error alert with the given message.
+     *
+     * @param message the error message
+     */
     private void showError(String message) {
         Alert alert = new Alert(Alert.AlertType.ERROR);
         alert.setTitle("Error");

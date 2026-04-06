@@ -41,6 +41,7 @@ import java.util.List;
  * @author Ho Long Adrian Lee
  * @author Bob Zhang
  * @author Yasmine Suojhayer
+ * @author Tudor Mihai Pristav
  */
 public class MainGameplay extends Application {
     private Stage stage;
@@ -90,7 +91,7 @@ public class MainGameplay extends Application {
      * Method the triggers the start of the night, and maintains buttons, stats, ann in game actions.
      *
      * @param nightNumber The stage on which the night will be displayed.
-     * @throws IOException If the method is unable to receive input from the player, the method will
+     *
      * throw an IOException.
      */
     public MainGameplay(int nightNumber, Session session) {

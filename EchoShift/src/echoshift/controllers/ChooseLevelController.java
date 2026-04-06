@@ -4,14 +4,13 @@ import echoshift.UI.ChooseLevelView;
 import echoshift.UI.ConfirmLevelView;
 import echoshift.UI.PlayerHomeView;
 import echoshift.models.Session;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
- * Controller for the Choose Level page.
- * Handles navigation between the level selector and other player pages.
+ * Controller for the level selection screen.
+ * Handles navigation between levels and player home.
  *
- * @author Tudor
+ * @author Tudor Mihai Pristav
  */
 public class ChooseLevelController {
 
@@ -20,11 +19,11 @@ public class ChooseLevelController {
     private final Session session;
 
     /**
-     * Creates the controller and attaches handlers.
+     * Initializes the controller and attaches handlers.
      *
      * @param stage the main application stage
      * @param view the choose level view
-     * @param session the current player session
+     * @param session the current session
      */
     public ChooseLevelController(Stage stage, ChooseLevelView view, Session session) {
         this.stage = stage;
@@ -35,7 +34,7 @@ public class ChooseLevelController {
     }
 
     /**
-     * Attaches all button handlers for the page.
+     * Attaches button event handlers.
      */
     private void attachHandlers() {
         view.getBackButton().setOnAction(e -> goBackToPlayerHome());
@@ -52,64 +51,69 @@ public class ChooseLevelController {
     }
 
     /**
-     * Navigates back to the player home screen.
+     * Navigates to player home.
      */
     private void goBackToPlayerHome() {
         PlayerHomeView playerHomeView = new PlayerHomeView(session);
+
         stage.getScene().setRoot(playerHomeView.createPlayerHomePage());
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(null);
         stage.setMaximized(true);
         stage.setTitle("Echo Shift - Player Home");
-        new PlayerHomeController(stage,playerHomeView,session);
+
+        new PlayerHomeController(stage, playerHomeView, session);
     }
 
     /**
-     * Starts level 1.
-     * Replace this with your real Level 1 page/controller.
+     * Navigates to level 1 confirmation.
      */
     private void goToLevel1() {
-        ConfirmLevelView confirmLevelView = new ConfirmLevelView(session,1);
+        ConfirmLevelView confirmLevelView = new ConfirmLevelView(session, 1);
+
         stage.getScene().setRoot(confirmLevelView.createConfirmLevelPage());
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(null);
         stage.setMaximized(true);
         stage.setTitle("Echo Shift - Night 1");
-        new ConfirmLevelController(stage,confirmLevelView,session,1);
+
+        new ConfirmLevelController(stage, confirmLevelView, session, 1);
     }
 
     /**
-     * Starts level 2.
-     * Replace this with your real Level 2 page/controller.
+     * Navigates to level 2 confirmation.
      */
     private void goToLevel2() {
-        ConfirmLevelView confirmLevelView = new ConfirmLevelView(session,2);
+        ConfirmLevelView confirmLevelView = new ConfirmLevelView(session, 2);
+
         stage.getScene().setRoot(confirmLevelView.createConfirmLevelPage());
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(null);
         stage.setMaximized(true);
         stage.setTitle("Echo Shift - Night 2");
-        new ConfirmLevelController(stage,confirmLevelView,session,2);
+
+        new ConfirmLevelController(stage, confirmLevelView, session, 2);
     }
 
     /**
-     * Starts level 3.
-     * Replace this with your real Level 3 page/controller.
+     * Navigates to level 3 confirmation.
      */
     private void goToLevel3() {
-        ConfirmLevelView confirmLevelView = new ConfirmLevelView(session,3);
+        ConfirmLevelView confirmLevelView = new ConfirmLevelView(session, 3);
+
         stage.getScene().setRoot(confirmLevelView.createConfirmLevelPage());
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(null);
         stage.setMaximized(true);
         stage.setTitle("Echo Shift - Night 3");
-        new ConfirmLevelController(stage,confirmLevelView,session,3);
+
+        new ConfirmLevelController(stage, confirmLevelView, session, 3);
     }
 
     /**
-     * Gets the highest unlocked level for the current player.
+     * Returns the highest unlocked level.
      *
-     * @return the highest unlocked level, minimum 1
+     * @return highest level (min 1)
      */
     private int getHighestUnlockedLevel() {
         try {

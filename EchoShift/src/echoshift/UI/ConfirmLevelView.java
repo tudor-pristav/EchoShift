@@ -16,6 +16,7 @@ import javafx.scene.text.Font;
  * Builds the level confirmation page for Echo Shift.
  * This page shows the selected level preview, level information,
  * the player's name, and a button to start the level.
+ * @author Tudor Mihai Pristav
  */
 public class ConfirmLevelView {
 
