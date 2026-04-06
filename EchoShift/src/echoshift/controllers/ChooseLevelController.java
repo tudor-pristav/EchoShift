@@ -74,14 +74,8 @@ public class ChooseLevelController {
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(null);
         stage.setMaximized(true);
-        stage.setTitle("Echo Shift - Night 3");
-        new ConfirmLevelController(stage,confirmLevelView,session);
-
-        // Example:
-        // Level1View level1View = new Level1View(session);
-        // Scene scene = new Scene(level1View.createLevel1Page(), 1000, 700);
-        // stage.setScene(scene);
-        // new Level1Controller(stage, level1View, session);
+        stage.setTitle("Echo Shift - Night 1");
+        new ConfirmLevelController(stage,confirmLevelView,session,1);
     }
 
     /**
@@ -95,12 +89,7 @@ public class ChooseLevelController {
         stage.setFullScreenExitKeyCombination(null);
         stage.setMaximized(true);
         stage.setTitle("Echo Shift - Night 2");
-
-        // Example:
-        // Level2View level2View = new Level2View(session);
-        // Scene scene = new Scene(level2View.createLevel2Page(), 1000, 700);
-        // stage.setScene(scene);
-        // new Level2Controller(stage, level2View, session);
+        new ConfirmLevelController(stage,confirmLevelView,session,2);
     }
 
     /**
@@ -114,12 +103,7 @@ public class ChooseLevelController {
         stage.setFullScreenExitKeyCombination(null);
         stage.setMaximized(true);
         stage.setTitle("Echo Shift - Night 3");
-
-        // Example:
-        // Level3View level3View = new Level3View(session);
-        // Scene scene = new Scene(level3View.createLevel3Page(), 1000, 700);
-        // stage.setScene(scene);
-        // new Level3Controller(stage, level3View, session);
+        new ConfirmLevelController(stage,confirmLevelView,session,3);
     }
 
     /**

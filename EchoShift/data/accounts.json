@@ -17,12 +17,6 @@
       "username": "test1",
       "password": "test",
       "role": "player"
-    },
-    {
-      "id": "EGBJLHK97X",
-      "username": "bob",
-      "password": "bob123",
-      "role": "player"
     }
   ]
 }

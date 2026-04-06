@@ -4,6 +4,7 @@ import echoshift.UI.MapRenderer;
 import echoshift.backend.Entity;
 import echoshift.backend.GameMap;
 
+import echoshift.models.Session;
 import echoshift.models.UserStatistics;
 import echoshift.services.UserDataRetrievalService;
 import echoshift.services.UserDataSaveService;
@@ -73,22 +74,30 @@ public class MainGameplay extends Application {
 
     private UserStatistics stats;
 
+    private int nightNumber;
+
+    private final Session session;
+
     /**
      * Method the triggers the start of the night, and maintains buttons, stats, ann in game actions.
      *
-     * @param stage The stage on which the night will be displayed.
+     * @param nightNumber The stage on which the night will be displayed.
      * @throws IOException If the method is unable to receive input from the player, the method will
      * throw an IOException.
      */
+    public MainGameplay(int nightNumber,Session session){
+        this.nightNumber = nightNumber;
+        this.session = session;
+    }
     @Override
     public void start(Stage stage) throws IOException {
         this.stage = stage;
         gameMap = new GameMap();
 
         // Example word list
-        engine = new TypingEngine(createWordBank.create(3));
+        engine = new TypingEngine(createWordBank.create(nightNumber));
         // Start night
-        loadNight();
+        loadNight(nightNumber);
         // Live indicator
         HBox liveBox = new HBox();
         liveBox.setSpacing(10);
@@ -113,9 +122,9 @@ public class MainGameplay extends Application {
         // Power-up buttons
         VBox powerUpBar = new VBox();
         powerUpBar.setAlignment(Pos.CENTER_LEFT);
-        VBox instantHealthVBox = createPowerUpBox(instantHealth);
-        VBox easierWordsVBox = createPowerUpBox(easyWord);
-        VBox instantLureVBox = createPowerUpBox(lure);
+        VBox instantHealthVBox = createPowerUpBox(instantHealth,session.getPowerUps().getExtraLife());
+        VBox easierWordsVBox = createPowerUpBox(easyWord,session.getPowerUps().getEasyWords());
+        VBox instantLureVBox = createPowerUpBox(lure,session.getPowerUps().getInstantLure());
         powerUpBar.getChildren().addAll(instantHealthVBox, instantLureVBox, easierWordsVBox);
         powerUpBar.setSpacing(20);
 
@@ -201,11 +210,11 @@ public class MainGameplay extends Application {
      * @param image Image that represents the current powerup that will display on screen.
      * @return A VBox object that will be displayed on the button.
      */
-    private VBox createPowerUpBox(Image image) {
+    private VBox createPowerUpBox(Image image, int no) {
         ImageView powerUpImage = new ImageView(image);
 
         //Number of a specific powerup a user has on hand.
-        Label powerUpLabel = new Label("1");
+        Label powerUpLabel = new Label(String.valueOf(no));
         VBox powerUpVBox = new VBox(powerUpImage, powerUpLabel);
 
         //Format powerup buttons.
@@ -256,14 +265,15 @@ public class MainGameplay extends Application {
     /**
      * Method that creates a new night object with set parameters, and handles game ending events.
      */
-    private void loadNight() {
+    private void loadNight(int nightNumber) {
         //Remember to change the first parameter to a variable that matches the current night
-        currentNight = new Night(5, entity, renderer);
+        currentNight = new Night(nightNumber, entity, renderer);
 
         // TODO: Fix stat saves.
         currentNight.setOnNightEnd(() -> {
             stats = new UserStatistics();
             stats.setGamesPlayed();
+
             stats.setAverageWPM(engine.calculateWPM());
             stats.setPeakWPM(engine.calculateWPM());
             stats.setAccuracy(engine.calculateAccuracy());
@@ -274,7 +284,7 @@ public class MainGameplay extends Application {
             UserDataSaveService save = new UserDataSaveService();
 
             try {
-                save.saveStatistics("0", stats);
+                save.saveStatistics(session.getCurrentUser().getId(), stats);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

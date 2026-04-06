@@ -1,14 +1,18 @@
 package echoshift.controllers;
 
 import echoshift.UI.*;
+import echoshift.models.PlayerPowerups;
 import echoshift.models.Session;
 import echoshift.models.UserAccount;
 import echoshift.models.UserStatistics;
 import echoshift.services.AdminLoginService;
+import echoshift.services.PowerupStorageService;
 import echoshift.services.UserDataRetrievalService;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.stage.Stage;
+
+import java.io.IOException;
 
 public class AdminLoginController {
     private final Stage stage;
@@ -27,11 +31,17 @@ public class AdminLoginController {
     }
 
     private void attachHandlers() {
-        view.getLoginButton().setOnAction(e -> handleLogin());
+        view.getLoginButton().setOnAction(e -> {
+            try {
+                handleLogin();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
         view.getMenuButton().setOnAction(e -> goToMenu());
     }
 
-    private void handleLogin() {
+    private void handleLogin() throws IOException {
 
         String username = view.getUsernameField().getText().trim();
         String password = view.getPasswordField().getText();
@@ -51,8 +61,10 @@ public class AdminLoginController {
         //  Load stats AFTER login
         UserStatistics stats = dataService.retrieveStatistics(account.getId());
 
+        PowerupStorageService powerupStorageService = new PowerupStorageService();
+        PlayerPowerups powerups = powerupStorageService.loadPowerups(account.getId());
         //  Create session
-        Session session = new Session(account, stats);
+        Session session = new Session(account, stats,powerups);
 
         //  Navigate
         goToPlayerHome(session);
