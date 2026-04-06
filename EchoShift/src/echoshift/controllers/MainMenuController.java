@@ -1,6 +1,7 @@
 package echoshift.controllers;
 
 import echoshift.UI.*;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 public class MainMenuController {
@@ -28,7 +29,7 @@ public class MainMenuController {
     private void goToLogin() {
         PlayerLoginView loginView = new PlayerLoginView();
         new PlayerLoginController(stage, loginView);
-        stage.setScene(new Scene(loginView.createPlayerLoginPage()));
+        stage.getScene().setRoot(loginView.createPlayerLoginPage());
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(null);
         stage.setMaximized(true);
@@ -37,6 +38,12 @@ public class MainMenuController {
     }
 
     private void goToInstructions() {
+        InstructionsView instructionsView = new InstructionsView(stage);
+        stage.getScene().setRoot(instructionsView.createPage());
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
+        stage.setTitle("Echo Shift - Instructions");
 
     }
 
@@ -51,26 +58,25 @@ public class MainMenuController {
     private void goToAdminLogin() {
         AdminLoginView adminLoginView = new AdminLoginView();
         new AdminLoginController(stage,adminLoginView);
-        stage.setMaximized(true);
-        stage.setScene(new Scene(adminLoginView.createPlayerLoginPage()));
-        stage.setMaximized(true);
+
+        stage.getScene().setRoot(adminLoginView.createPlayerLoginPage());
         stage.setTitle("Echo Shift - Admin Login");
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
 
     }
 
     private void goToSettings() {
         SettingsView settingsView = new SettingsView();
-        Scene settingsScene = new Scene(settingsView.createSettingsPage(), 1000, 700);
-
-        new SettingsController(stage, stage.getScene(), settingsView);
-
-        stage.setScene(settingsScene);
+        Parent previousRoot = stage.getScene().getRoot();
+        stage.getScene().setRoot(settingsView.createSettingsPage());
         stage.setTitle("Echo Shift - Settings");
         stage.setFullScreenExitHint("");
         stage.setFullScreenExitKeyCombination(null);
         stage.setMaximized(true);
+
+        new SettingsController(stage, previousRoot, settingsView);
     }
 
     private void exitGame() {

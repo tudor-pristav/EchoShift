@@ -62,8 +62,17 @@
     -fx-max-width: 210;
 }
 .coins {
-
     -fx-font-size: 30px;      /* was ~18 → now 27 */
+
+    -fx-background-insets: 0;
+    -fx-text-fill: black;
+    -fx-background-color: #efeddc;
+    -fx-padding: 8 18 8 18;
+    -fx-background-radius: 4;
+}
+.owned {
+
+    -fx-font-size: 15px;      /* was ~18 → now 27 */
 
     -fx-background-insets: 0;
     -fx-text-fill: black;

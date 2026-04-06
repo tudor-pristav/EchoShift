@@ -23,8 +23,7 @@ public class SettingsView {
 
     private final Button backButton;
     private final Slider volumeSlider;
-    private final CheckBox keyboardNavigationCheckBox;
-    private final ComboBox<String> fontSizeComboBox;
+
 
     /**
      * Creates reusable controls for the settings page.
@@ -33,11 +32,7 @@ public class SettingsView {
         this.backButton = createButton("Back", 200, 42);
 
         this.volumeSlider = new Slider(0, 100, 100);
-        this.keyboardNavigationCheckBox = new CheckBox("Enable");
 
-        this.fontSizeComboBox = new ComboBox<>();
-        this.fontSizeComboBox.getItems().addAll("50%", "100%", "150%", "200%");
-        this.fontSizeComboBox.setValue("100%");
     }
 
     /**
@@ -116,10 +111,9 @@ public class SettingsView {
         settingsBox.getStyleClass().add("container");
 
         HBox volumeRow = createVolumeRow();
-        HBox keyboardRow = createKeyboardRow();
-        HBox fontSizeRow = createFontSizeRow();
 
-        settingsBox.getChildren().addAll(volumeRow, keyboardRow, fontSizeRow);
+
+        settingsBox.getChildren().addAll(volumeRow);
 
         return settingsBox;
     }
@@ -157,42 +151,6 @@ public class SettingsView {
         return row;
     }
 
-    /**
-     * Creates the keyboard navigation setting row.
-     *
-     * @return keyboard navigation row
-     */
-    private HBox createKeyboardRow() {
-        Label keyboardLabel = createSettingLabel("Keyboard Navigation");
-
-        keyboardNavigationCheckBox.setStyle(
-                "-fx-text-fill: black; -fx-font-size: 15px; -fx-font-weight: bold;"
-        );
-
-        HBox row = new HBox(30, keyboardLabel, keyboardNavigationCheckBox);
-        row.setAlignment(Pos.CENTER_LEFT);
-
-        return row;
-    }
-
-    /**
-     * Creates the font size setting row.
-     *
-     * @return font size row
-     */
-    private HBox createFontSizeRow() {
-        Label fontSizeLabel = createSettingLabel("Font Size");
-
-        fontSizeComboBox.setPrefWidth(160);
-        fontSizeComboBox.setStyle(
-                "-fx-font-size: 14px;"
-        );
-
-        HBox row = new HBox(30, fontSizeLabel, fontSizeComboBox);
-        row.setAlignment(Pos.CENTER_LEFT);
-
-        return row;
-    }
 
     /**
      * Creates a styled page title label.
@@ -250,11 +208,4 @@ public class SettingsView {
         return volumeSlider;
     }
 
-    public CheckBox getKeyboardNavigationCheckBox() {
-        return keyboardNavigationCheckBox;
-    }
-
-    public ComboBox<String> getFontSizeComboBox() {
-        return fontSizeComboBox;
-    }
 }

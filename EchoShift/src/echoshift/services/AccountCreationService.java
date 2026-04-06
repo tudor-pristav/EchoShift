@@ -61,7 +61,7 @@ public class AccountCreationService {
 
         saveAccountsFile(accountsFile);
         createDefaultStatisticsFile(uniqueId);
-
+        createDefaultPowerupFile(uniqueId);
         return newAccount;
     }
 
@@ -199,6 +199,24 @@ public class AccountCreationService {
                 new PlayerStatisticsFile(new UserStatistics());
 
         String json = gson.toJson(statisticsFile);
+        Files.writeString(filePath, json);
+    }
+    /**
+     * Creates a default powerup file for the new player.
+     *
+     * @param playerId the player ID
+     * @throws IOException if writing fails
+     */
+    private void createDefaultPowerupFile(String playerId) throws IOException {
+        Path folderPath = Paths.get("data/powerups");
+        Files.createDirectories(folderPath);
+
+        Path filePath = folderPath.resolve(playerId + "-powerup.json");
+
+        // reuse your model
+        echoshift.models.PlayerPowerups powerups = new echoshift.models.PlayerPowerups();
+
+        String json = gson.toJson(powerups);
         Files.writeString(filePath, json);
     }
 }

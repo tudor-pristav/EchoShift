@@ -1,6 +1,7 @@
 package echoshift.controllers;
 
 import echoshift.UI.*;
+import javafx.scene.Parent;
 import javafx.stage.Stage;
 import echoshift.UI.AdminLoginView;
 import echoshift.models.Session;
@@ -18,10 +19,12 @@ public class AdminPanelController {
     private final Stage stage;
     private final AdminPanelView view;
     private final HighScoreManagementService highScoreManagementService;
+    private final Parent previousRoot;
     public AdminPanelController(Stage stage,AdminPanelView view) {
         this.stage = stage;
         this.view = view;
         this.highScoreManagementService = new HighScoreManagementService();
+        this.previousRoot =stage.getScene().getRoot();
         attachHandlers();
     }
     private void attachHandlers() {
@@ -35,18 +38,23 @@ public class AdminPanelController {
 
     private void goToManageAccounts(){
         ManageAccountsView manageAccountsView = new ManageAccountsView();
-        Scene manageAccountsScene = new Scene(manageAccountsView.createManageAccountsPage(), 1000, 700);
 
-        new ManageAccountsController(stage, stage.getScene(), manageAccountsView);
-
-        stage.setScene(manageAccountsScene);
+        stage.getScene().setRoot(manageAccountsView.createManageAccountsPage());
         stage.setTitle("Echo Shift - Manage Accounts");
-        stage.show();
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
+
+        new ManageAccountsController(stage, previousRoot, manageAccountsView);
+
     }
     private void goToCreateAccounts(){
         CreateAccountView createAccountView = new CreateAccountView();
-        Scene scene = new Scene(createAccountView.createCreateAccountPage(), 1000, 700);
-        stage.setScene(scene);
+        stage.getScene().setRoot(createAccountView.createCreateAccountPage());
+        stage.setTitle("Echo Shift - Create Account");
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
         new CreateAccountController(stage, createAccountView);
     }
 
@@ -77,24 +85,29 @@ public class AdminPanelController {
             }
         });
     }
-    private void goToSettings(){
+    private void goToSettings() {
         SettingsView settingsView = new SettingsView();
-        Scene settingsScene = new Scene(settingsView.createSettingsPage(), 1000, 700);
-
-        new SettingsController(stage, stage.getScene(), settingsView);
-        stage.setScene(settingsScene);
+        stage.getScene().setRoot(settingsView.createSettingsPage());
         stage.setTitle("Echo Shift - Settings");
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
+
+        new SettingsController(stage, previousRoot, settingsView);
     }
 
     private void exitGame(){
         stage.close();
     }
+
     private void logOut(){
        MainMenuView mainMenuView= new MainMenuView();
-        Scene mainMenuScene = new Scene(mainMenuView.createMainMenu(), 1000, 700);
+        stage.getScene().setRoot(mainMenuView.createMainMenu());
+        stage.setFullScreenExitHint("");
+        stage.setFullScreenExitKeyCombination(null);
+        stage.setMaximized(true);
 
         new MainMenuController(stage, mainMenuView);
-        stage.setScene(mainMenuScene);
         stage.setTitle("Echo Shift");
     }
 }

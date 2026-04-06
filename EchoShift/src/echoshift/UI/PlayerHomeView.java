@@ -66,15 +66,13 @@ public class PlayerHomeView {
                 getClass().getResource("/echoshift/styles/buttonStyle.css").toExternalForm()
         );
 
-        root.setTop(createTopSection());
+        root.setTop(createTopContainer());
         root.setLeft(createLeftSection());
         root.setRight(createRightSection());
-        root.setBottom(createBottomSection());
+        root.setBottom(createBottomBar());
 
-        BorderPane.setMargin(root.getTop(), new Insets(30, 30, 0, 30));
         BorderPane.setMargin(root.getLeft(), new Insets(20, 0, 20, 20));
         BorderPane.setMargin(root.getRight(), new Insets(20, 20, 20, 0));
-        BorderPane.setMargin(root.getBottom(), new Insets(0, 20, 20, 20));
 
         return root;
     }
@@ -94,18 +92,23 @@ public class PlayerHomeView {
         return root;
     }
 
-    private VBox createTopSection() {
+    private VBox createTopContainer() {
+        HBox topBar = new HBox();
+        topBar.setPrefHeight(60);
+        topBar.getStyleClass().add("top-bar");
+
         VBox topLeft = new VBox(welcomeLabel);
         topLeft.setAlignment(Pos.TOP_LEFT);
 
         VBox topRight = new VBox(15, coinsLabel, shopButton);
         topRight.setAlignment(Pos.TOP_RIGHT);
 
-        BorderPane topPane = new BorderPane();
-        topPane.setLeft(topLeft);
-        topPane.setRight(topRight);
+        BorderPane contentPane = new BorderPane();
+        contentPane.setLeft(topLeft);
+        contentPane.setRight(topRight);
+        contentPane.setPadding(new Insets(20, 30, 0, 30));
 
-        VBox wrapper = new VBox(topPane);
+        VBox wrapper = new VBox(topBar, contentPane);
         return wrapper;
     }
 
@@ -122,7 +125,7 @@ public class PlayerHomeView {
         return mainButtons;
     }
 
-    private BorderPane createBottomSection() {
+    private BorderPane createBottomBar() {
         VBox bottomLeft = new VBox(12, settingsButton, logoutButton);
         bottomLeft.setAlignment(Pos.BOTTOM_LEFT);
 
@@ -130,6 +133,10 @@ public class PlayerHomeView {
         bottomRight.setAlignment(Pos.BOTTOM_RIGHT);
 
         BorderPane bottomPane = new BorderPane();
+        bottomPane.getStyleClass().add("bottom-bar");
+        bottomPane.setPrefHeight(60);
+        bottomPane.setMinHeight(60);
+        bottomPane.setPadding(new Insets(10, 18, 10, 18));
         bottomPane.setLeft(bottomLeft);
         bottomPane.setRight(bottomRight);
 
@@ -173,6 +180,7 @@ public class PlayerHomeView {
 
         return button;
     }
+
     public Button getNewGameButton() {
         return newGameButton;
     }
