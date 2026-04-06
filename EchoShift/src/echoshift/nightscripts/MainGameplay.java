@@ -281,8 +281,8 @@ public class MainGameplay extends Application {
             stats.setTotalTimePlayed(currentNight.getCurrentHour());
             stats.setHighScore(score);
             stats.setHighestLevel(currentNight.getNightNum());
+            stats.setCoins(score/1000);
             UserDataSaveService save = new UserDataSaveService();
-
             try {
                 save.saveStatistics(session.getCurrentUser().getId(), stats);
             } catch (IOException e) {

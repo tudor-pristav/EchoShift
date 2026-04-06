@@ -126,7 +126,7 @@ public class UserStatistics {
      * @param coins the new coin amount
      */
     public void setCoins(int coins) {
-        this.coins = coins;
+        this.coins += coins;
     }
 
     /**
