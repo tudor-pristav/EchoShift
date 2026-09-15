@@ -147,7 +147,7 @@ public class MainGameplay extends Application {
                 -fx-text-alignment: center;
                 """);
 
-        hour = new Label(currentNight.getCurrentHour() + "AM");
+        hour = new Label((currentNight.getCurrentHour() == 0 ? 12 : currentNight.getCurrentHour()) + " AM");
         hour.setStyle("""
                 -fx-background-color: #FFFFFF70;
                 -fx-font-size: 18;
@@ -155,10 +155,10 @@ public class MainGameplay extends Application {
                 -fx-border-color: white;
                 -fx-border-width: 1;
                 -fx-text-alignment: CENTER;
-                -fx-alighnment: RIGHT;
+                -fx-alignment: CENTER_RIGHT;
                 """);
 
-        currentNight.setOnHourChange(() -> Platform.runLater(() -> hour.setText(currentNight.getCurrentHour() + "AM")));
+        currentNight.setOnHourChange(() -> Platform.runLater(() -> hour.setText((currentNight.getCurrentHour() == 0 ? 12 : currentNight.getCurrentHour()) + " AM")));
 
         VBox rightCorner = new VBox(scoreLabel, hour);
         Region spacer = new Region();
@@ -168,6 +168,7 @@ public class MainGameplay extends Application {
         topBar.setAlignment(Pos.CENTER_LEFT);
 
         root = new BorderPane();
+        root.setPadding(new javafx.geometry.Insets(24));
         root.setBackground(Background.fill(Color.valueOf("#1f1e33")));
         root.setTop(topBar);
         root.setCenter(renderer.getMapPane());
@@ -176,7 +177,7 @@ public class MainGameplay extends Application {
 
         Scene scene = new Scene(root, 1000, 700);
         stage.setScene(scene);
-        stage.setTitle("EchoShift Integration Test");
+        stage.setTitle("Echo Shift - Night " + nightNumber);
         stage.setMaximized(true);
         stage.show();
 
@@ -202,7 +203,8 @@ public class MainGameplay extends Application {
         instantLureVBox.setOnMouseClicked(_ -> instantLure());
     }
     private void instantLure(){
-        if (session.getPowerUps().getExtraLife() <= 0) {
+        if (currentNight.hasEnded()) return;
+        if (session.getPowerUps().getInstantLure() <= 0) {
             showAlert("Powerup", "You ran out of this Power-Up!");
         } else {
             currentNight.instantLure();
@@ -211,6 +213,7 @@ public class MainGameplay extends Application {
         }
     }
     private void addHealth() {
+        if (currentNight.hasEnded()) return;
         if (session.getPowerUps().getExtraLife() <= 0) {
             showAlert("Powerup", "You ran out of this Power-Up!");
         } else {
@@ -220,6 +223,7 @@ public class MainGameplay extends Application {
         }
     }
     private void easyWords() throws IOException {
+        if (currentNight.hasEnded()) return;
         if (session.getPowerUps().getEasyWords() <= 0) {
             showAlert("Powerup", "You ran out of this Power-Up!");
         } else {
@@ -274,7 +278,7 @@ public class MainGameplay extends Application {
      */
     private HBox handleTyping() {
         //Format the HBox to be returned that handles the interface for typing.
-        HBox typingBox = new HBox(40, wordLabel, typedLabel, statusLabel);
+        HBox typingBox = new HBox(16, wordLabel, typedLabel, statusLabel);
         wordLabel.setAlignment(Pos.CENTER_LEFT);
         wordLabel.setStyle("""
                 -fx-font-size: 28;
@@ -306,8 +310,20 @@ public class MainGameplay extends Application {
         //Remember to change the first parameter to a variable that matches the current night
         currentNight = new Night(nightNumber, entity, renderer);
 
-        // TODO: Fix stat saves.
+        // Save each completed or interrupted shift once.
         currentNight.setOnNightEnd(() -> {
+            statusLabel.setText(currentNight.isWon() ? "6 AM - Shift survived!" : "Shift ended");
+            javafx.scene.control.Button home = new javafx.scene.control.Button("Return to Player Home");
+            home.setOnAction(event -> {
+                stage.setOnCloseRequest(null);
+                echoshift.UI.PlayerHomeView view = new echoshift.UI.PlayerHomeView(session);
+                stage.getScene().setRoot(view.createPlayerHomePage());
+                stage.setTitle("Echo Shift - Player Home");
+                new echoshift.controllers.PlayerHomeController(stage, view, session);
+            });
+            VBox summary = new VBox(12, statusLabel, home);
+            summary.setAlignment(Pos.CENTER);
+            root.setBottom(summary);
             stats = session.getCurrentStatistics();
             stats.setGamesPlayed();
 
@@ -317,7 +333,8 @@ public class MainGameplay extends Application {
             stats.setErrorCount(engine.getErrorCount());
             stats.setTotalTimePlayed(currentNight.getCurrentHour());
             stats.setHighScore(score);
-            stats.setHighestLevel(currentNight.getNightNum());
+            stats.setWordsTyped(engine.getWordsCompleted());
+            if (currentNight.isWon()) stats.setHighestLevel(currentNight.getNightNum());
             stats.setCoins(score/1000);
             UserDataSaveService save = new UserDataSaveService();
 
@@ -366,8 +383,9 @@ public class MainGameplay extends Application {
      * @param character Represents the word that will be loaded onto the game for the player to type.
      */
     private void handleTyping(String character) {
+        if (waitingForNextWord || currentNight.hasEnded() || character.isEmpty()
+                || Character.isISOControl(character.charAt(0))) return;
         statusLabel.setText("");
-        if (waitingForNextWord) return;
 
         //Prepare the next correct character that should be typed by the player.
         char c = character.charAt(0);
@@ -488,7 +506,7 @@ public class MainGameplay extends Application {
      * that was typed by the player.
      */
     private void updateScore(TypingEngine result) {
-        this.score = (result.getChar()*100) - (result.getErrorCount()*300);
+        this.score = Math.max(0, (result.getChar()*100) - (result.getErrorCount()*300));
     }
 
     /**

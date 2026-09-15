@@ -47,10 +47,10 @@ public class HighScoresPage {
     private void setupBackground(StackPane root) {
         Image backgroundImage = null;
         try {
-            String imagePath = getClass().getResource("/src/echoshift/images/bg3.png").toExternalForm();
+            String imagePath = getClass().getResource("/echoshift/images/bg3.png").toExternalForm();
             backgroundImage = new Image(imagePath);
         } catch (Exception e) {
-            System.err.println("Could not find background image: /src/echoshift/images/bg3.png");
+            System.err.println("Could not find background image: /echoshift/images/bg3.png");
             root.setStyle("-fx-background-color: #8c8c8c;");
         }
 

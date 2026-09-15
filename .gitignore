@@ -77,3 +77,9 @@ node_modules/
 ################################
 
 hs_err_pid*
+
+# Locally supplied dependencies and new player saves
+lib/
+data/**/*.json
+data/accounts.json
+__pycache__/

@@ -14,6 +14,7 @@ public class Night {
     private final HourDiff difficulty;
     private final int nightNum;
     private long startTime;
+    private boolean ended;
     private int currentHour = 0;
 
     private AnimationTimer gameTimer;
@@ -62,7 +63,7 @@ public class Night {
 
                 // Update hour every 60 seconds
                 int newHour = (int) (elapsedMs / 60000L);
-                if (newHour > currentHour && newHour <= 5) {
+                if (newHour > currentHour && newHour <= 6) {
                     currentHour = newHour;
                     difficulty.setHourDiff(currentHour, nightNum);
                     System.out.println("Hour is now " + currentHour + " | Difficulty = " + difficulty.getDifficulty());
@@ -72,16 +73,17 @@ public class Night {
                         onHourChange.run();
                     }
                 }
+                // Reaching 6 AM wins before another enemy move can be processed.
+                if (elapsedMs >= 360000) {
+                    stopNight();
+                    return;
+                }
                 //Set a minimum timer on the rate at which the entity will move, depending on the difficulty.
                 if (elapsedMs - lastUpdate >= (10-difficulty.getDifficulty())*1000) {
                     lastUpdate = elapsedMs;
                     updateEnemies();
                 }
 
-                // Night ends after 225 seconds (5 hours)
-                if (elapsedMs >= 360000) {
-                    stopNight();
-                }
             }
         };
 
@@ -122,6 +124,10 @@ public class Night {
         return currentHour;
     }
 
+    public boolean hasEnded() { return ended; }
+
+    public boolean isWon() { return ended && playerHealth > 0 && currentHour >= 6; }
+
     public int getNightNum(){
         return nightNum;
     }
@@ -132,6 +138,8 @@ public class Night {
      * @param code The error code.
      */
     public void stopNight(int code) {
+        if (ended) return;
+        ended = true;
         if (gameTimer != null) {
             gameTimer.stop();
         }
@@ -141,7 +149,7 @@ public class Night {
         if (code == 1){
             System.out.println("You died at hour " + (currentHour+1));
         }
-        nightEndCallback.run();
+        if (nightEndCallback != null) nightEndCallback.run();
     }
 
     /**

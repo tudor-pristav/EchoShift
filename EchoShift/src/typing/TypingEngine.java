@@ -36,7 +36,12 @@ public class TypingEngine {
      * @param arr An array of words that will act as the word bank for the level.
      */
     public TypingEngine(String[] arr) {
-        wordList = arr;
+        if (arr == null || arr.length == 0 ||
+                java.util.Arrays.stream(arr).anyMatch(w -> w == null || w.isBlank())) {
+            throw new IllegalArgumentException("Word bank must contain non-empty words.");
+        }
+        wordList = java.util.Arrays.stream(arr)
+                .map(w -> w.toLowerCase(java.util.Locale.ROOT)).toArray(String[]::new);
         wordsCompleted = 0;
         totalCharactersTyped = 0;
         typingTime = 0;
@@ -97,7 +102,7 @@ public class TypingEngine {
 
         // Handles if the character is correct
         if (correct) {
-            typedWord += c;
+            typedWord += lowerC;
             if (typedWord.equals(givenWord)) { // Tracks if the word is completed
                 wordsCompleted++;
                 endWordTimer(); // finalize typing time

@@ -56,7 +56,7 @@ public class UserStatistics {
      * @param curWPM The words per minute from them ost previously played game.
      */
     public void setAverageWPM(double curWPM) {
-        averageWPM = ((this.getAverageWPM() + curWPM) / gamesPlayed);
+        averageWPM = (gamesPlayed <= 1 ? curWPM : (averageWPM * (gamesPlayed - 1) + curWPM) / gamesPlayed);
     }
 
     /**
@@ -74,7 +74,7 @@ public class UserStatistics {
      * @param curAccuracy The accuracy of the user, calculated across all games played.
      */
     public void setAccuracy(double curAccuracy) {
-        accuracy = ((this.getAccuracy() + curAccuracy) / gamesPlayed);
+        accuracy = (gamesPlayed <= 1 ? curAccuracy : (accuracy * (gamesPlayed - 1) + curAccuracy) / gamesPlayed);
     }
 
     /**
@@ -166,6 +166,8 @@ public class UserStatistics {
     }
 
     // --- Getters ---
+
+    public double getGamesPlayed() { return gamesPlayed; }
 
     /**
      * Method retrieves the average words per minute statistic.

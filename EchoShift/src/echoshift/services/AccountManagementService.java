@@ -147,5 +147,6 @@ public class AccountManagementService {
     private void deletePlayerDataFile(String playerId) throws IOException {
         Path playerDataPath = Paths.get(PLAYER_DATA_FOLDER, playerId + ".json");
         Files.deleteIfExists(playerDataPath);
+        Files.deleteIfExists(Paths.get("data/powerups", playerId + "-powerup.json"));
     }
 }

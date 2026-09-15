@@ -117,7 +117,7 @@ public class PlayerLoginView {
         //custom spacing setting and grouping of the fields
         VBox usernameGroup = new VBox(6, usernameText, usernameField);
         VBox passwordGroup = new VBox(6, passwordText, passwordField);
-        VBox loginButtonSpacing = new VBox(130, passwordGroup, buttonWrapper);
+        VBox loginButtonSpacing = new VBox(24, passwordGroup, buttonWrapper);
 
         //Main container on page, vertical list
         VBox card = new VBox(40,
@@ -126,7 +126,7 @@ public class PlayerLoginView {
         );
 
         card.setAlignment(Pos.CENTER);
-        card.setPadding(new Insets(300));
+        card.setPadding(new Insets(32));
         card.setMaxWidth(400);
         card.getStyleClass().add("container");
         return card;
